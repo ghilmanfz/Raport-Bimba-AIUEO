@@ -8,7 +8,7 @@
 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
   <div>
     <h1 class="text-2xl lg:text-3xl font-bold text-[#171a1f] tracking-tight">Dashboard Motivator</h1>
-    <p class="text-[#565d6d] mt-1">Selamat datang kembali! Berikut adalah ringkasan progres kelas hari ini.</p>
+    <p class="text-[#565d6d] mt-1">Selamat datang kembali, Ibu Maya! Berikut adalah ringkasan progres kelas hari ini.</p>
   </div>
   <div class="flex items-center gap-3">
     <button class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
@@ -84,12 +84,9 @@
         <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
       </a>
     </div>
-    <!-- Chart Placeholder -->
-    <div class="h-48 bg-gradient-to-b from-[#F1F6FE] to-white rounded-xl border border-[#dee1e6]/50 flex items-center justify-center">
-      <div class="text-center text-[#565d6d]">
-        <iconify-icon icon="lucide:bar-chart-2" width="36" class="mb-2 opacity-30"></iconify-icon>
-        <p class="text-xs">Grafik akan tampil di sini</p>
-      </div>
+    <!-- Line Chart -->
+    <div class="h-56">
+      <canvas id="dashboardLineChart"></canvas>
     </div>
     <div class="flex justify-center gap-6 mt-4">
       <div class="flex items-center gap-2"><div class="w-3 h-3 bg-[#3d8af5] rounded-sm"></div><span class="text-xs text-[#171a1f]">Level 1</span></div>
@@ -101,9 +98,10 @@
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
     <h2 class="text-lg font-bold text-[#171a1f]">Status Kompetensi</h2>
     <p class="text-sm text-[#565d6d] mb-6">Berdasarkan penilaian terbaru (K, B, P, T)</p>
-    <!-- Donut placeholder -->
-    <div class="w-40 h-40 rounded-full bg-gradient-conic mx-auto mb-6 flex items-center justify-center" style="background: conic-gradient(#63e98f 0% 45%, #86d2f9 45% 75%, #F2930D 75% 90%, #E2E8F0 90% 100%);">
-      <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center">
+    <!-- Donut Chart -->
+    <div class="relative w-40 h-40 mx-auto mb-6">
+      <canvas id="dashboardDonutChart"></canvas>
+      <div class="absolute inset-0 flex items-center justify-center">
         <div class="text-center"><p class="text-lg font-bold text-[#171a1f]">24</p><p class="text-xs text-[#565d6d]">murid</p></div>
       </div>
     </div>
@@ -217,3 +215,76 @@
   </div>
 </div>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+@endpush
+
+@push('scripts')
+<script>
+// --- Line Chart: Kemajuan Level Siswa (Level 1 turun, Level 4 naik) ---
+const ctxLine = document.getElementById('dashboardLineChart').getContext('2d');
+new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+    datasets: [
+      {
+        label: 'Level 1',
+        data: [10, 9, 7, 5, 3, 1],
+        borderColor: '#3d8af5',
+        backgroundColor: 'rgba(61,138,245,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#3d8af5'
+      },
+      {
+        label: 'Level 4',
+        data: [0, 1, 2, 4, 7, 12],
+        borderColor: '#F2930D',
+        backgroundColor: 'rgba(242,147,13,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: '#F2930D'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
+      y: { beginAtZero: true, max: 12, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } }
+    }
+  }
+});
+
+// --- Donut Chart: Status Kompetensi ---
+const ctxDonut = document.getElementById('dashboardDonutChart').getContext('2d');
+new Chart(ctxDonut, {
+  type: 'doughnut',
+  data: {
+    labels: ['Terampil (T)', 'Paham (P)', 'Belajar (B)', 'Kenal (K)'],
+    datasets: [{
+      data: [45, 30, 15, 10],
+      backgroundColor: ['#63e98f', '#86d2f9', '#F2930D', '#E2E8F0'],
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    cutout: '62%',
+    plugins: { legend: { display: false } }
+  }
+});
+</script>
+@endpush

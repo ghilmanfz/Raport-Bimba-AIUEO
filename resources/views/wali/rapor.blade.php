@@ -224,15 +224,8 @@
   <div class="lg:col-span-8 bg-white rounded-[32px] p-8 shadow-soft">
     <h3 class="text-xl font-bold text-[#171a1f] mb-1 font-poppins">Grafik Perkembangan Kemampuan</h3>
     <p class="text-sm text-[#565d6d] font-roboto mb-8">Visualisasi pertumbuhan belajar Ananda selama 5 bulan terakhir.</p>
-    <div class="relative h-[260px] bg-[#f3f4f6]/50 rounded-xl border border-[#dee1e6] flex flex-col items-center justify-center gap-3 overflow-hidden">
-      <div class="absolute left-4 top-6 bottom-8 flex flex-col justify-between text-[10px] text-[#565d6d]">
-        <span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
-      </div>
-      <div class="absolute bottom-3 left-14 right-6 flex justify-between text-[10px] text-[#565d6d]">
-        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mei</span>
-      </div>
-      <iconify-icon icon="lucide:line-chart" width="48" class="text-[#dee1e6]"></iconify-icon>
-      <p class="text-sm text-[#565d6d]">Grafik pertumbuhan belajar</p>
+    <div class="h-[260px]">
+      <canvas id="waliRaporChart"></canvas>
     </div>
   </div>
 
@@ -415,3 +408,65 @@
   </div>
 </footer>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+@endpush
+
+@push('scripts')
+<script>
+const raporCtx = document.getElementById('waliRaporChart').getContext('2d');
+new Chart(raporCtx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
+    datasets: [
+      {
+        label: 'Membaca',
+        data: [40, 52, 60, 68, 80],
+        borderColor: '#3d8af5',
+        backgroundColor: 'rgba(61,138,245,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#3d8af5'
+      },
+      {
+        label: 'Menulis',
+        data: [25, 35, 42, 50, 58],
+        borderColor: '#63e98f',
+        backgroundColor: 'rgba(99,233,143,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#63e98f'
+      },
+      {
+        label: 'Berhitung',
+        data: [50, 55, 63, 72, 85],
+        borderColor: '#f2bf8c',
+        backgroundColor: 'rgba(242,191,140,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#f2bf8c'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { size: 11, family: 'Roboto' } } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
+      y: { beginAtZero: true, max: 100, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } }
+    }
+  }
+});
+</script>
+@endpush

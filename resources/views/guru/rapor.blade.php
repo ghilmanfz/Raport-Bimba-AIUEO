@@ -164,24 +164,12 @@
       </div>
     </div>
 
-    <!-- Right: Radar Chart Placeholder -->
+    <!-- Right: Radar Chart -->
     <div class="bg-[#F1F6FE]/30 border border-[#3d8af5]/10 rounded-2xl p-6 flex flex-col items-center justify-center min-h-[280px] relative">
       <h3 class="text-sm font-bold text-[#565d6d] mb-4 font-poppins">Peta Kompetensi</h3>
-      <!-- Radar placeholder using nested divs -->
-      <div class="relative w-44 h-44">
-        <div class="absolute inset-0 border-2 border-[#3d8af5]/20 rounded-full"></div>
-        <div class="absolute inset-4 border-2 border-[#3d8af5]/15 rounded-full"></div>
-        <div class="absolute inset-8 border-2 border-[#3d8af5]/10 rounded-full"></div>
-        <div class="absolute inset-12 border-2 border-[#3d8af5]/10 rounded-full bg-[#3d8af5]/5"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <iconify-icon icon="lucide:hexagon" width="64" class="text-[#3d8af5]/20"></iconify-icon>
-        </div>
+      <div class="w-full max-w-[240px] h-[200px]">
+        <canvas id="raporRadarChart"></canvas>
       </div>
-      <!-- Axis labels -->
-      <div class="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-[#565d6d]">Kemampuan Baca</div>
-      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-semibold text-[#565d6d]">Minat Belajar</div>
-      <div class="absolute top-1/2 left-4 -translate-y-1/2 text-[10px] font-semibold text-[#565d6d]">Tulis</div>
-      <div class="absolute top-1/2 right-4 -translate-y-1/2 text-[10px] font-semibold text-[#565d6d]">Hitung</div>
     </div>
   </div>
 
@@ -271,3 +259,44 @@
   </a>
 </div>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+@endpush
+
+@push('scripts')
+<script>
+const radarCtx = document.getElementById('raporRadarChart').getContext('2d');
+new Chart(radarCtx, {
+  type: 'radar',
+  data: {
+    labels: ['Membaca', 'Menulis', 'Berhitung', 'Minat Belajar'],
+    datasets: [{
+      label: 'Kompetensi',
+      data: [85, 55, 70, 92],
+      borderColor: '#3d8af5',
+      backgroundColor: 'rgba(61,138,245,0.15)',
+      borderWidth: 2,
+      pointRadius: 4,
+      pointBackgroundColor: '#3d8af5',
+      pointHoverRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 100,
+        ticks: { stepSize: 25, font: { size: 9, family: 'Roboto' }, color: '#9095a0', backdropColor: 'transparent' },
+        grid: { color: 'rgba(61,138,245,0.12)' },
+        angleLines: { color: 'rgba(61,138,245,0.12)' },
+        pointLabels: { font: { size: 10, family: 'Inter', weight: 600 }, color: '#565d6d' }
+      }
+    }
+  }
+});
+</script>
+@endpush

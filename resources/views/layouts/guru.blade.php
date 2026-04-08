@@ -45,7 +45,7 @@
       </button>
       <div class="flex items-center gap-3 pl-4 border-l border-[#dee1e6]">
         <div class="text-right hidden sm:block">
-          <p class="text-sm font-semibold text-[#171a1f] font-roboto leading-none">{{ auth()->user()->name ?? 'Guru BiMBA' }}</p>
+          <p class="text-sm font-semibold text-[#171a1f] font-roboto leading-none">{{ auth()->user()->name ?? 'Ibu Guru Maya' }}</p>
           <p class="text-xs text-[#565d6d] font-roboto mt-0.5">Motivator</p>
         </div>
         <div class="w-9 h-9 rounded-full bg-[#63e98f] flex items-center justify-center text-white font-bold text-sm">

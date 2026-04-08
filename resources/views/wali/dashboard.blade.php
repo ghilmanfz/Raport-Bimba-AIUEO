@@ -133,17 +133,8 @@
   <div class="xl:col-span-2 bg-white rounded-xl p-6 custom-shadow">
     <h3 class="text-lg font-bold text-[#171a1f] mb-1">Grafik Perkembangan Kemampuan</h3>
     <p class="text-sm text-[#565d6d] mb-6">Visualisasi pertumbuhan belajar Ananda selama 5 bulan terakhir</p>
-    <div class="relative h-[300px] bg-[#f3f4f6]/50 rounded-xl border border-[#dee1e6] flex flex-col items-center justify-center gap-3 overflow-hidden">
-      <!-- Y-axis labels -->
-      <div class="absolute left-4 top-6 bottom-8 flex flex-col justify-between text-[10px] text-[#565d6d] pointer-events-none">
-        <span>100</span><span>75</span><span>50</span><span>25</span><span>0</span>
-      </div>
-      <!-- X-axis labels -->
-      <div class="absolute bottom-3 left-14 right-6 flex justify-between text-[10px] text-[#565d6d]">
-        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mei</span>
-      </div>
-      <iconify-icon icon="lucide:line-chart" width="48" class="text-[#dee1e6]"></iconify-icon>
-      <p class="text-sm text-[#565d6d]">Grafik perkembangan</p>
+    <div class="h-[300px]">
+      <canvas id="waliDashboardChart"></canvas>
     </div>
   </div>
 
@@ -233,3 +224,65 @@
   <p class="text-xs text-[#565d6d]">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
 </footer>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+@endpush
+
+@push('scripts')
+<script>
+const waliCtx = document.getElementById('waliDashboardChart').getContext('2d');
+new Chart(waliCtx, {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
+    datasets: [
+      {
+        label: 'Membaca',
+        data: [45, 55, 62, 70, 82],
+        borderColor: '#3d8af5',
+        backgroundColor: 'rgba(61,138,245,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#3d8af5'
+      },
+      {
+        label: 'Menulis',
+        data: [30, 38, 45, 52, 60],
+        borderColor: '#63e98f',
+        backgroundColor: 'rgba(99,233,143,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#63e98f'
+      },
+      {
+        label: 'Berhitung',
+        data: [55, 58, 65, 75, 88],
+        borderColor: '#f2bf8c',
+        backgroundColor: 'rgba(242,191,140,0.08)',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#f2bf8c'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { size: 11, family: 'Roboto' } } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
+      y: { beginAtZero: true, max: 100, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } }
+    }
+  }
+});
+</script>
+@endpush

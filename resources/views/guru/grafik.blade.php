@@ -74,29 +74,19 @@
         <p class="text-sm text-[#565d6d]">Visualisasi perkembangan level per periode</p>
       </div>
       <div class="flex bg-[#f3f4f6] rounded-full p-1">
-        <button class="px-4 py-1.5 bg-white rounded-full text-xs font-semibold text-[#171a1f] shadow-sm">Line</button>
-        <button class="px-4 py-1.5 text-[#565d6d] text-xs font-semibold">Bar</button>
+        <button id="btnLine" class="flex items-center gap-1.5 px-4 py-1.5 bg-white rounded-full text-xs font-semibold text-[#171a1f] shadow-sm">
+          <iconify-icon icon="lucide:trending-up" width="14"></iconify-icon> Line
+        </button>
+        <button id="btnBar" class="flex items-center gap-1.5 px-4 py-1.5 text-[#565d6d] text-xs font-semibold rounded-full">
+          <iconify-icon icon="lucide:bar-chart-2" width="14"></iconify-icon> Bar
+        </button>
       </div>
     </div>
 
-    <!-- Chart Placeholder -->
+    <!-- Chart Canvas -->
     <div class="p-6">
-      <div class="h-[350px] bg-[#f3f4f6]/50 rounded-xl border border-[#dee1e6] flex flex-col items-center justify-center gap-4 relative overflow-hidden">
-        <!-- Y-axis labels -->
-        <div class="absolute left-4 top-6 bottom-12 flex flex-col justify-between text-[10px] text-[#565d6d] font-roboto">
-          <span>100%</span>
-          <span>75%</span>
-          <span>50%</span>
-          <span>25%</span>
-          <span>0%</span>
-        </div>
-        <!-- X-axis labels -->
-        <div class="absolute bottom-4 left-14 right-6 flex justify-between text-[10px] text-[#565d6d] font-roboto">
-          <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>Mei</span><span>Jun</span>
-        </div>
-        <!-- Chart icon placeholder -->
-        <iconify-icon icon="lucide:bar-chart-2" width="48" class="text-[#dee1e6]"></iconify-icon>
-        <p class="text-sm text-[#565d6d]">Grafik akan tampil di sini</p>
+      <div class="h-[350px]">
+        <canvas id="grafikTrenChart"></canvas>
       </div>
 
       <!-- Legend -->
@@ -114,11 +104,11 @@
     <!-- Donut Chart + Status % -->
     <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow p-6">
       <h3 class="text-base font-semibold text-[#171a1f] mb-4">Distribusi Status Kelas</h3>
-      <!-- Donut Placeholder -->
+      <!-- Donut Chart -->
       <div class="flex items-center justify-center mb-5">
-        <div class="w-28 h-28 rounded-full border-8 border-[#3d8af5] relative flex items-center justify-center"
-          style="background: conic-gradient(#B0EC93 0% 45%, #6EC9F7 45% 75%, #F7C96E 75% 90%, #C5CCD3 90% 100%);">
-          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+        <div class="relative w-28 h-28">
+          <canvas id="grafikDonutChart"></canvas>
+          <div class="absolute inset-0 flex items-center justify-center">
             <span class="text-xs font-bold text-[#171a1f] text-center leading-tight">24<br><span class="text-[10px] text-[#565d6d]">Murid</span></span>
           </div>
         </div>
@@ -318,3 +308,131 @@
   </div>
 </footer>
 @endsection
+
+@push('head')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+@endpush
+
+@push('scripts')
+<script>
+// --- Tren Kemajuan Level Siswa (4 levels, area chart) ---
+const trendCtx = document.getElementById('grafikTrenChart').getContext('2d');
+let currentChartType = 'line';
+
+const trendLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
+const trendDatasets = [
+  {
+    label: 'Level 1',
+    data: [10, 9, 7, 5, 3, 1],
+    borderColor: '#3d8af5',
+    backgroundColor: 'rgba(61,138,245,0.10)',
+    borderWidth: 2.5,
+    fill: true,
+    tension: 0.4,
+    pointRadius: 3,
+    pointBackgroundColor: '#3d8af5'
+  },
+  {
+    label: 'Level 2',
+    data: [5, 7, 8, 11, 9, 7],
+    borderColor: '#63e98f',
+    backgroundColor: 'rgba(99,233,143,0.10)',
+    borderWidth: 2.5,
+    fill: true,
+    tension: 0.4,
+    pointRadius: 3,
+    pointBackgroundColor: '#63e98f'
+  },
+  {
+    label: 'Level 3',
+    data: [2, 4, 6, 9, 10, 15],
+    borderColor: '#f2bf8c',
+    backgroundColor: 'rgba(242,191,140,0.10)',
+    borderWidth: 2.5,
+    fill: true,
+    tension: 0.4,
+    pointRadius: 3,
+    pointBackgroundColor: '#f2bf8c'
+  },
+  {
+    label: 'Level 4',
+    data: [0, 1, 3, 4, 7, 9],
+    borderColor: '#bf93ec',
+    backgroundColor: 'rgba(191,147,236,0.10)',
+    borderWidth: 2.5,
+    fill: true,
+    tension: 0.4,
+    pointRadius: 3,
+    pointBackgroundColor: '#bf93ec'
+  }
+];
+
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
+    y: { beginAtZero: true, max: 16, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0', callback: v => v + ' M' } }
+  }
+};
+
+let trendChart = new Chart(trendCtx, {
+  type: 'line',
+  data: { labels: trendLabels, datasets: trendDatasets },
+  options: chartOptions
+});
+
+// Toggle Line / Bar
+document.getElementById('btnLine').addEventListener('click', function() {
+  if (currentChartType === 'line') return;
+  currentChartType = 'line';
+  trendChart.destroy();
+  trendChart = new Chart(trendCtx, {
+    type: 'line',
+    data: { labels: trendLabels, datasets: trendDatasets.map(ds => ({...ds, fill: true})) },
+    options: chartOptions
+  });
+  this.classList.add('bg-white', 'shadow-sm', 'text-[#171a1f]');
+  this.classList.remove('text-[#565d6d]');
+  document.getElementById('btnBar').classList.remove('bg-white', 'shadow-sm', 'text-[#171a1f]');
+  document.getElementById('btnBar').classList.add('text-[#565d6d]');
+});
+
+document.getElementById('btnBar').addEventListener('click', function() {
+  if (currentChartType === 'bar') return;
+  currentChartType = 'bar';
+  trendChart.destroy();
+  trendChart = new Chart(trendCtx, {
+    type: 'bar',
+    data: { labels: trendLabels, datasets: trendDatasets.map(ds => ({...ds, fill: false, borderWidth: 0, borderRadius: 6, barPercentage: 0.7})) },
+    options: {...chartOptions, scales: {...chartOptions.scales, x: {...chartOptions.scales.x}}}
+  });
+  this.classList.add('bg-white', 'shadow-sm', 'text-[#171a1f]');
+  this.classList.remove('text-[#565d6d]');
+  document.getElementById('btnLine').classList.remove('bg-white', 'shadow-sm', 'text-[#171a1f]');
+  document.getElementById('btnLine').classList.add('text-[#565d6d]');
+});
+
+// --- Donut Chart: Distribusi Status ---
+const donutCtx = document.getElementById('grafikDonutChart').getContext('2d');
+new Chart(donutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Terampil', 'Paham', 'Belajar', 'Kenal'],
+    datasets: [{
+      data: [45, 30, 15, 10],
+      backgroundColor: ['#B0EC93', '#6EC9F7', '#F7C96E', '#C5CCD3'],
+      borderWidth: 0,
+      hoverOffset: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    cutout: '58%',
+    plugins: { legend: { display: false } }
+  }
+});
+</script>
+@endpush
