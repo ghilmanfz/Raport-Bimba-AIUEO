@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cetak Rapor Digital - E-Rapor BiMBA AIUEO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #1e293b;
+      background-color: #f8fafc;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Poppins", ui-sans-serif, system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .font-roboto {
+      font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    * {
+      transition: all 0.2s ease;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .report-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .gradient-border-top {
+      position: relative;
+    }
+
+    .gradient-border-top::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: linear-gradient(90deg, #3d8af5 0%, #63e98f 50%, #f2bf8c 100%);
+      border-radius: 16px 16px 0 0;
+    }
+
+    .print-only {
+      display: none;
+    }
+
+    @media print {
+      .print-only {
+        display: block;
+      }
+      .no-print {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+      .report-shadow {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+      }
+      .sidebar {
+        display: none;
+      }
+      .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3d8af5',
+            secondary: '#565d6d',
+            success: '#16A34A',
+            danger: '#D92626',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f3f4f6]/20">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 h-[65px] glass-effect border-b border-[#dee1e6] z-50 flex items-center justify-between px-6 lg:px-12">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+        <img src="./assets/IMG_3.svg" alt="Logo" class="w-[22px] h-[22px]">
+      </div>
+      <span class="text-primary font-bold text-xl tracking-tight">E-Rapor BiMBA AIUEO</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <button class="p-2 text-secondary hover:bg-gray-100 rounded-md">
+        <img src="./assets/IMG_1.svg" alt="Notifications" class="w-5 h-5">
+      </button>
+      <div class="h-9 w-[1px] bg-[#dee1e6] mx-2"></div>
+      <div class="flex items-center gap-3 text-right">
+        <div>
+          <p class="text-sm font-medium text-[#171a1f] font-roboto">Ibu Guru Maya</p>
+          <p class="text-[12px] text-secondary font-roboto">guru</p>
+        </div>
+        <div class="w-9 h-9 rounded-full overflow-hidden border border-orange-100">
+          <img src="./assets/IMG_2.webp" alt="Avatar" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-[65px] min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#fafafb] border-r border-[#dee1e6] fixed h-[calc(100vh-65px)] hidden lg:flex flex-col justify-between py-6 no-print">
+      <nav class="px-4 space-y-2">
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary font-medium font-roboto rounded-lg hover:bg-gray-100">
+          <img src="./assets/IMG_4.svg" alt="Dashboard" class="w-5 h-5">
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary font-medium font-roboto rounded-lg hover:bg-gray-100">
+          <img src="./assets/IMG_5.svg" alt="Pengolahan Nilai" class="w-5 h-5">
+          <span>Pengolahan Nilai</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary font-medium font-roboto rounded-lg hover:bg-gray-100">
+          <img src="./assets/IMG_6.svg" alt="Grafik Perkembangan" class="w-5 h-5">
+          <span>Grafik Perkembangan</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2 text-primary bg-primary/10 font-medium font-roboto rounded-lg">
+          <img src="./assets/IMG_5.svg" alt="Cetak Rapor" class="w-5 h-5" style="filter: invert(48%) sepia(91%) saturate(1831%) hue-rotate(201deg) brightness(101%) contrast(93%);">
+          <span>Cetak Rapor</span>
+        </a>
+      </nav>
+
+      <div class="px-4 border-t border-[#dee1e6] pt-4">
+        <button class="flex items-center gap-3 px-4 py-2 text-danger font-medium font-roboto w-full rounded-lg hover:bg-red-50">
+          <img src="./assets/IMG_7.svg" alt="Logout" class="w-5 h-5">
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 p-6 lg:p-12 overflow-x-hidden">
+      <!-- Page Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 no-print">
+        <div>
+          <h1 class="text-3xl font-extrabold text-[#171a1f] tracking-tight">Cetak Rapor Digital</h1>
+          <p class="text-lg text-secondary font-roboto mt-1">Pratinjau dan unduh laporan perkembangan murid.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6] rounded-md text-sm font-medium hover:bg-gray-50">
+            <img src="./assets/IMG_8.svg" alt="Excel" class="w-4 h-4">
+            <span>Excel</span>
+          </button>
+          <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6] rounded-md text-sm font-medium hover:bg-gray-50">
+            <img src="./assets/IMG_9.svg" alt="Print" class="w-4 h-4">
+            <span>Cetak</span>
+          </button>
+          <button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md text-sm font-medium shadow-sm hover:bg-blue-600">
+            <img src="./assets/IMG_10.svg" alt="PDF" class="w-4 h-4">
+            <span>Export PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Report Card Container -->
+      <div class="max-w-[1088px] mx-auto bg-white rounded-2xl report-shadow gradient-border-top overflow-hidden mb-12">
+        <div class="p-10">
+          <!-- Report Header -->
+          <div class="flex flex-col md:flex-row justify-between items-start border-b border-dashed border-[#dee1e6] pb-6 mb-8">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center">
+                <img src="./assets/IMG_11.svg" alt="Award" class="w-8 h-8">
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-[#171a1f]">BiMBA AIUEO</h2>
+                <p class="text-[12px] text-secondary font-medium tracking-[1.2px] uppercase font-roboto">Pusat Belajar Anak Kreatif</p>
+              </div>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+              <h3 class="text-2xl font-black text-primary italic uppercase font-poppins leading-tight">
+                Laporan<br>Perkembangan
+              </h3>
+            </div>
+          </div>
+
+          <!-- Student Info -->
+          <div class="flex flex-col md:flex-row justify-between items-start border-b border-[#dee1e6] pb-8 mb-10">
+            <div class="flex items-center gap-5">
+              <div class="w-20 h-20 rounded-full overflow-hidden shadow-sm border border-gray-100">
+                <img src="./assets/IMG_12.webp" alt="Student" class="w-full h-full object-cover">
+              </div>
+              <div>
+                <h2 class="text-2xl font-bold text-[#171a1f]">Ananda Rizky Pratama</h2>
+                <div class="flex flex-wrap gap-2 mt-2">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-[#F1F6FE] border border-primary/20 rounded-full text-[12px] font-semibold text-primary font-roboto">
+                    <img src="./assets/IMG_13.svg" alt="User" class="w-3 h-3">
+                    ID: BMB-2023-089
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-[#EDFDF1] border border-[#63e98f]/20 rounded-full text-[12px] font-semibold text-[#19191F] font-roboto">
+                    <img src="./assets/IMG_14.svg" alt="Book" class="w-3 h-3">
+                    Level 2 (Lanjut)
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-[#FDF7F2] border border-[#f2bf8c]/20 rounded-full text-[12px] font-semibold text-[#19191F] font-roboto">
+                    <img src="./assets/IMG_15.svg" alt="Calendar" class="w-3 h-3">
+                    Gabung: 15 Jan 2023
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-6 md:mt-0 text-right">
+              <p class="text-sm font-semibold text-secondary tracking-[0.7px] uppercase font-roboto">Periode Laporan</p>
+              <p class="text-xl font-bold text-[#171a1f]">November 2023</p>
+              <p class="text-sm italic text-primary font-medium mt-1 font-roboto">"Terus Semangat, Rizky!"</p>
+            </div>
+          </div>
+
+          <!-- Radar Chart Section -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+            <div>
+              <div class="flex items-center gap-2 mb-4">
+                <img src="./assets/IMG_6.svg" alt="Chart" class="w-5 h-5" style="filter: invert(48%) sepia(91%) saturate(1831%) hue-rotate(201deg) brightness(101%) contrast(93%);">
+                <h3 class="text-lg font-bold text-[#171a1f]">Analisis Grafik Radar</h3>
+              </div>
+              <p class="text-sm text-secondary leading-relaxed font-roboto mb-6">
+                Grafik di samping menunjukkan keseimbangan antara kemampuan akademis dan karakter minat belajar anak. Area yang lebih luas menunjukkan penguasaan yang lebih matang.
+              </p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="p-4 bg-[#fafafb] border border-[#dee1e6] rounded-2xl shadow-sm">
+                  <p class="text-[10px] font-bold text-secondary uppercase tracking-wider font-roboto mb-1">Pencapaian Tertinggi</p>
+                  <p class="text-xl font-bold text-[#19191F]">Minat Belajar</p>
+                </div>
+                <div class="p-4 bg-[#fafafb] border border-[#dee1e6] rounded-2xl shadow-sm">
+                  <p class="text-[10px] font-bold text-secondary uppercase tracking-wider font-roboto mb-1">Fokus Pengembangan</p>
+                  <p class="text-xl font-bold text-primary">Tulis Dasar</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-[#F1F6FE]/30 border border-primary/10 rounded-2xl p-4 flex items-center justify-center min-h-[300px]">
+              <div class="relative w-full max-w-[450px]">
+                <img src="./assets/IMG_16.svg" alt="Radar Chart" class="w-full h-auto">
+                <!-- Labels (Approximate positions based on design) -->
+                <span class="absolute top-0 left-1/2 -translate-x-1/2 text-[10px] font-medium font-roboto">Kemampuan Baca</span>
+                <span class="absolute top-[25%] right-0 text-[10px] font-medium font-roboto">Kemampuan Tulis</span>
+                <span class="absolute bottom-[25%] right-0 text-[10px] font-medium font-roboto">Kemampuan Hitung</span>
+                <span class="absolute bottom-0 left-1/2 -translate-x-1/2 text-[10px] font-medium font-roboto">Kemandirian</span>
+                <span class="absolute bottom-[25%] left-0 text-[10px] font-medium font-roboto">Kepercayaan Diri</span>
+                <span class="absolute top-[25%] left-0 text-[10px] font-medium font-roboto">Minat Belajar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Section -->
+          <div class="mb-12">
+            <div class="flex items-center gap-2 mb-6">
+              <img src="./assets/IMG_14.svg" alt="Book" class="w-5 h-5" style="filter: invert(48%) sepia(91%) saturate(1831%) hue-rotate(201deg) brightness(101%) contrast(93%);">
+              <h3 class="text-lg font-bold text-[#171a1f]">Detail Progres Materi Pembelajaran</h3>
+            </div>
+            <div class="border border-[#dee1e6] rounded-2xl overflow-hidden shadow-sm">
+              <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50/50">
+                  <tr>
+                    <th class="px-6 py-4 text-sm font-bold text-secondary font-roboto">Kategori</th>
+                    <th class="px-6 py-4 text-sm font-bold text-secondary font-roboto">Nama Materi Pembelajaran</th>
+                    <th class="px-6 py-4 text-sm font-bold text-secondary font-roboto text-center">Status</th>
+                    <th class="px-6 py-4 text-sm font-bold text-secondary font-roboto text-right">Tanggal Tercapai</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[#dee1e6]">
+                  <tr class="hover:bg-gray-50/30">
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-semibold text-secondary font-roboto">Baca</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-[#171a1f] font-roboto">Pengenalan Huruf Vokal (A-I-U-E-O)</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="px-3 py-1 bg-[#63e98f] rounded-full text-[12px] font-bold text-[#19191F] font-roboto">T - Terampil</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary text-right font-roboto">12 Okt 2023</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50/30">
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-semibold text-secondary font-roboto">Baca</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-[#171a1f] font-roboto">Membaca Kata Sederhana (B-O-B-O)</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-bold text-[#171a1f] font-roboto">P - Paham</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary text-right font-roboto">05 Nov 2023</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50/30">
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-semibold text-secondary font-roboto">Hitung</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-[#171a1f] font-roboto">Menulis Angka 1-10</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="px-3 py-1 bg-[#63e98f] rounded-full text-[12px] font-bold text-[#19191F] font-roboto">T - Terampil</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary text-right font-roboto">20 Okt 2023</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50/30">
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-semibold text-secondary font-roboto">Hitung</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-[#171a1f] font-roboto">Penjumlahan Dasar (1-5)</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-bold text-[#171a1f] font-roboto">B - Belajar</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary text-right font-roboto">15 Nov 2023</td>
+                  </tr>
+                  <tr class="hover:bg-gray-50/30">
+                    <td class="px-6 py-4">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-semibold text-secondary font-roboto">Tulis</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-semibold text-[#171a1f] font-roboto">Menulis Huruf Abjad Kapital</td>
+                    <td class="px-6 py-4 text-center">
+                      <span class="px-3 py-1 bg-gray-100 rounded-full text-[12px] font-bold text-[#171a1f] font-roboto">P - Paham</span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-secondary text-right font-roboto">10 Nov 2023</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Legend & Signature -->
+          <div class="border-t border-dashed border-[#dee1e6] pt-8 flex flex-col lg:flex-row justify-between gap-8">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-4">
+                <img src="./assets/IMG_17.svg" alt="Info" class="w-4 h-4">
+                <h4 class="text-sm font-bold text-[#171a1f]">Legenda Penilaian BiMBA</h4>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8">
+                <div class="flex items-start gap-3">
+                  <div class="w-4 h-4 rounded-full bg-[#E2E8F0] mt-0.5"></div>
+                  <div>
+                    <p class="text-[12px] font-bold text-[#171a1f] font-roboto">K - Kurang</p>
+                    <p class="text-[10px] text-secondary font-roboto">Belum menunjukkan ketertarikan pada materi.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-4 h-4 rounded-full bg-[#F2930D] mt-0.5"></div>
+                  <div>
+                    <p class="text-[12px] font-bold text-[#171a1f] font-roboto">B - Belajar</p>
+                    <p class="text-[10px] text-secondary font-roboto">Mulai mencoba dan mengenal materi baru.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-4 h-4 rounded-full bg-[#86d2f9] mt-0.5"></div>
+                  <div>
+                    <p class="text-[12px] font-bold text-[#171a1f] font-roboto">P - Paham</p>
+                    <p class="text-[10px] text-secondary font-roboto">Mampu mengerjakan dengan sedikit bantuan.</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-4 h-4 rounded-full bg-[#63e98f] mt-0.5"></div>
+                  <div>
+                    <p class="text-[12px] font-bold text-[#171a1f] font-roboto">T - Terampil</p>
+                    <p class="text-[10px] text-secondary font-roboto">Menguasai materi sepenuhnya secara mandiri.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-full lg:w-64 text-center">
+              <p class="text-[10px] font-bold text-secondary uppercase tracking-wider font-roboto mb-4">Tanda Tangan Pembimbing</p>
+              <div class="relative inline-block">
+                <div class="absolute -top-6 -right-4 px-2 py-0.5 bg-[#63e98f]/20 border border-[#63e98f]/30 rounded-full text-[8px] font-bold text-[#19191F] font-roboto">VERIFIED</div>
+                <div class="mb-2">
+                  <span class="text-2xl font-normal italic text-primary/40 font-inter">Maya S.Pd</span>
+                </div>
+                <div class="w-32 h-[1px] bg-[#171a1f] mx-auto mb-2"></div>
+                <p class="text-[12px] font-bold text-[#171a1f] font-roboto">Ibu Guru Maya</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Quote -->
+        <div class="bg-[#fafafb] border-t border-[#dee1e6] py-4 text-center">
+          <p class="text-[12px] italic text-secondary font-roboto">"Tujuan utama bukan hanya bisa baca, tapi MINAT baca yang tumbuh sepanjang hayat."</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 no-print">
+        <a href="#" class="flex items-center gap-5 p-6 bg-white rounded-xl border-2 border-dashed border-[#dee1e6] shadow-sm hover:border-primary/50 group">
+          <div class="w-12 h-12 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
+            <img src="./assets/IMG_6.svg" alt="Chart" class="w-6 h-6" style="filter: invert(48%) sepia(91%) saturate(1831%) hue-rotate(201deg) brightness(101%) contrast(93%);">
+          </div>
+          <div class="flex-1">
+            <h4 class="text-base font-bold text-[#171a1f]">Lihat Grafik Lengkap</h4>
+            <p class="text-sm text-secondary font-roboto">Lihat tren perkembangan murid dalam 6 bulan terakhir.</p>
+          </div>
+          <img src="./assets/IMG_18.svg" alt="Arrow" class="w-6 h-6 text-secondary group-hover:translate-x-1">
+        </a>
+        <a href="#" class="flex items-center gap-5 p-6 bg-white rounded-xl border-2 border-dashed border-[#dee1e6] shadow-sm hover:border-success/50 group">
+          <div class="w-12 h-12 bg-[#EDFDF1] rounded-2xl flex items-center justify-center">
+            <img src="./assets/IMG_5.svg" alt="File" class="w-6 h-6">
+          </div>
+          <div class="flex-1">
+            <h4 class="text-base font-bold text-[#171a1f]">Update Nilai Baru</h4>
+            <p class="text-sm text-secondary font-roboto">Lanjutkan pengisian materi untuk kurikulum selanjutnya.</p>
+          </div>
+          <img src="./assets/IMG_18.svg" alt="Arrow" class="w-6 h-6 text-secondary group-hover:translate-x-1">
+        </a>
+      </div>
+
+      <!-- Page Footer -->
+      <footer class="text-center py-8 border-t border-[#dee1e6] no-print">
+        <p class="text-sm text-secondary font-roboto">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+</body>
+</html>

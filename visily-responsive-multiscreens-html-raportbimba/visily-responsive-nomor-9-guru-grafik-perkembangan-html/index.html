@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grafik Perkembangan - E-Rapor BiMBA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #1e293b;
+      background-color: #ffffff;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+      color: #171a1f;
+      letter-spacing: -0.025em;
+    }
+
+    .text-roboto {
+      font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .sidebar-active {
+      background-color: rgba(61, 138, 245, 0.1);
+      color: #3d8af5;
+      font-weight: 600;
+    }
+
+    .custom-shadow {
+      box-shadow: 0px 1px 2.5px 0px rgba(23, 26, 31, 0.07), 0px 0px 2px 0px rgba(23, 26, 31, 0.08);
+    }
+
+    button, a, input, select {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-72 bg-[#fafafb] border-r border-[#dee1e6] fixed h-full z-20">
+      <div class="p-6 flex items-center gap-3">
+        <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+          <img src="./assets/IMG_1.svg" class="w-5 h-5" alt="Logo">
+        </div>
+        <span class="text-xl font-normal text-[#3d8af5]">E-Rapor BiMBA</span>
+      </div>
+
+      <nav class="flex-1 px-4 mt-4 space-y-2">
+        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#565d6d] hover:bg-gray-100 text-sm font-medium text-roboto">
+          <img src="./assets/IMG_2.svg" class="w-5 h-5 opacity-70" alt="Dashboard">
+          Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#565d6d] hover:bg-gray-100 text-sm font-medium text-roboto">
+          <img src="./assets/IMG_3.svg" class="w-5 h-5 opacity-70" alt="Pengolahan Nilai">
+          Pengolahan Nilai
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl sidebar-active text-sm text-roboto">
+          <img src="./assets/IMG_4.svg" class="w-5 h-5" alt="Grafik Perkembangan">
+          Grafik Perkembangan
+        </a>
+        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-[#565d6d] hover:bg-gray-100 text-sm font-medium text-roboto">
+          <img src="./assets/IMG_5.svg" class="w-5 h-5 opacity-70" alt="Cetak Rapor">
+          Cetak Rapor
+        </a>
+      </nav>
+
+      <div class="p-6 border-t border-[#dee1e6]">
+        <button class="flex items-center gap-3 w-full px-4 py-2 text-[#D92626] hover:bg-red-50 rounded-lg text-sm font-medium text-roboto">
+          <img src="./assets/IMG_6.svg" class="w-5 h-5" alt="Logout">
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-72 min-w-0">
+      <!-- Header -->
+      <header class="h-20 glass-panel border-b border-[#dee1e6] flex items-center justify-between px-6 lg:px-10 sticky top-0 z-10">
+        <div class="flex items-center gap-2">
+          <span class="bg-[#3d8af5]/5 border border-[#3d8af5]/20 text-[#3d8af5] text-[12px] font-semibold px-3 py-0.5 rounded-full text-roboto">
+            Role: Motivator
+          </span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <div class="relative">
+            <img src="./assets/IMG_8.svg" class="w-5 h-5 text-[#565d6d]" alt="Notifications">
+            <div class="absolute top-0 right-0 w-2 h-2 bg-[#D92626] border-2 border-white rounded-full"></div>
+          </div>
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-bold text-[#171a1f] text-roboto leading-tight">Ibu Guru Maya</p>
+            <p class="text-[12px] text-[#565d6d] text-roboto">guru</p>
+          </div>
+          <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
+            <img src="./assets/IMG_7.webp" class="w-full h-full object-cover" alt="Avatar">
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="p-6 lg:p-10 space-y-8">
+        <!-- Title & Export -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight">Grafik Perkembangan</h1>
+            <p class="text-[#565d6d] text-lg mt-1 text-roboto">Analisis progres belajar murid dan tren pencapaian level secara mendalam.</p>
+          </div>
+          <div class="flex gap-3">
+            <button class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6]/60 rounded-md text-sm font-medium text-[#171a1f] hover:bg-gray-50 text-roboto">
+              <img src="./assets/IMG_9.svg" class="w-4 h-4" alt="Export PDF">
+              Export PDF
+            </button>
+            <button class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6]/60 rounded-md text-sm font-medium text-[#171a1f] hover:bg-gray-50 text-roboto">
+              <img src="./assets/IMG_9.svg" class="w-4 h-4" alt="Export Excel">
+              Export Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-[#fafafb] p-5 rounded-xl custom-shadow grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+          <div class="space-y-1.5">
+            <label class="text-[12px] font-bold text-[#565d6d] uppercase tracking-wider text-roboto">Kelas</label>
+            <div class="relative">
+              <select class="w-full bg-white border border-[#dee1e6]/40 rounded-md px-3 py-2 text-sm appearance-none text-roboto">
+                <option>KB - AIUEO 1</option>
+              </select>
+              <img src="./assets/IMG_10.svg" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" alt="Arrow">
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-[12px] font-bold text-[#565d6d] uppercase tracking-wider text-roboto">Aspek</label>
+            <div class="relative">
+              <select class="w-full bg-white border border-[#dee1e6]/40 rounded-md px-3 py-2 text-sm appearance-none text-roboto">
+                <option>Membaca (B)</option>
+              </select>
+              <img src="./assets/IMG_10.svg" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" alt="Arrow">
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-[12px] font-bold text-[#565d6d] uppercase tracking-wider text-roboto">Periode</label>
+            <div class="relative">
+              <select class="w-full bg-white border border-[#dee1e6]/40 rounded-md px-3 py-2 text-sm appearance-none text-roboto">
+                <option>Semester Ini</option>
+              </select>
+              <img src="./assets/IMG_10.svg" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" alt="Arrow">
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-[12px] font-bold text-[#565d6d] uppercase tracking-wider text-roboto">Rentang Tanggal</label>
+            <div class="relative">
+              <div class="w-full bg-white border border-[#dee1e6]/40 rounded-md px-3 py-2 text-sm flex items-center gap-2 text-[#565d6d] text-roboto">
+                <img src="./assets/IMG_11.svg" class="w-3.5 h-3.5" alt="Calendar">
+                Jan 01, 2026 - Jun 30, 2026
+              </div>
+            </div>
+          </div>
+          <button class="bg-[#3d8af5] text-white font-bold py-2 rounded-md flex items-center justify-center gap-2 hover:bg-blue-600 custom-shadow text-roboto">
+            <img src="./assets/IMG_12.svg" class="w-4 h-4" alt="Filter">
+            Filter Data
+          </button>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <!-- Main Chart -->
+          <div class="xl:col-span-2 bg-white p-6 rounded-xl custom-shadow">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h2 class="text-xl font-bold tracking-tight">Tren Kemajuan Level Siswa</h2>
+                <p class="text-sm text-[#565d6d] text-roboto">Distribusi jumlah siswa per level dalam 6 bulan terakhir.</p>
+              </div>
+              <div class="bg-[#f3f4f6] p-1 rounded-xl flex gap-1">
+                <button class="bg-white px-4 py-1.5 rounded-lg text-[12px] font-bold flex items-center gap-2 custom-shadow text-roboto">
+                  <img src="./assets/IMG_4.svg" class="w-3.5 h-3.5" alt="Line"> Line
+                </button>
+                <button class="px-4 py-1.5 rounded-lg text-[12px] font-bold flex items-center gap-2 text-[#171a1f] hover:bg-gray-200 text-roboto">
+                  <img src="./assets/IMG_13.svg" class="w-3.5 h-3.5" alt="Bar"> Bar
+                </button>
+              </div>
+            </div>
+            
+            <div class="relative h-[350px] w-full">
+              <img src="./assets/IMG_14.svg" class="w-full h-full object-contain" alt="Main Chart Visualization">
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-6 mt-4">
+              <div class="flex items-center gap-2">
+                <img src="./assets/IMG_15.svg" class="w-3.5 h-3.5" alt="Level 1">
+                <span class="text-[12px] text-[#3d8af5] text-roboto">level1</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <img src="./assets/IMG_16.svg" class="w-3.5 h-3.5" alt="Level 2">
+                <span class="text-[12px] text-[#63e98f] text-roboto">level2</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <img src="./assets/IMG_17.svg" class="w-3.5 h-3.5" alt="Level 3">
+                <span class="text-[12px] text-[#f2bf8c] text-roboto">level3</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <img src="./assets/IMG_18.svg" class="w-3.5 h-3.5" alt="Level 4">
+                <span class="text-[12px] text-[#bf93ec] text-roboto">level4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Stats -->
+          <div class="space-y-8">
+            <!-- Status Kompetensi -->
+            <div class="bg-white p-6 rounded-xl custom-shadow">
+              <h2 class="text-xl font-bold tracking-tight">Status Kompetensi</h2>
+              <p class="text-sm text-[#565d6d] mb-6 text-roboto">Berdasarkan penilaian terbaru kelas.</p>
+              
+              <div class="flex justify-center mb-6">
+                <img src="./assets/IMG_19.svg" class="w-full max-w-[240px]" alt="Donut Chart">
+              </div>
+              
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-[#fafafb] border border-[#dee1e6]/40 p-3 rounded-xl flex flex-col">
+                  <div class="flex items-center gap-2 mb-1">
+                    <div class="w-3 h-3 bg-[#B0EC93] rounded-full"></div>
+                    <span class="text-[10px] font-bold text-[#565d6d] uppercase text-roboto">Terampil</span>
+                  </div>
+                  <span class="text-lg font-extrabold text-[#171a1f] text-roboto">45%</span>
+                </div>
+                <div class="bg-[#fafafb] border border-[#dee1e6]/40 p-3 rounded-xl flex flex-col">
+                  <div class="flex items-center gap-2 mb-1">
+                    <div class="w-3 h-3 bg-[#6EC9F7] rounded-full"></div>
+                    <span class="text-[10px] font-bold text-[#565d6d] uppercase text-roboto">Paham</span>
+                  </div>
+                  <span class="text-lg font-extrabold text-[#171a1f] text-roboto">30%</span>
+                </div>
+                <div class="bg-[#fafafb] border border-[#dee1e6]/40 p-3 rounded-xl flex flex-col">
+                  <div class="flex items-center gap-2 mb-1">
+                    <div class="w-3 h-3 bg-[#F7C96E] rounded-full"></div>
+                    <span class="text-[10px] font-bold text-[#565d6d] uppercase text-roboto">Belajar</span>
+                  </div>
+                  <span class="text-lg font-extrabold text-[#171a1f] text-roboto">15%</span>
+                </div>
+                <div class="bg-[#fafafb] border border-[#dee1e6]/40 p-3 rounded-xl flex flex-col">
+                  <div class="flex items-center gap-2 mb-1">
+                    <div class="w-3 h-3 bg-[#C5CCD3] rounded-full"></div>
+                    <span class="text-[10px] font-bold text-[#565d6d] uppercase text-roboto">Kenal</span>
+                  </div>
+                  <span class="text-lg font-extrabold text-[#171a1f] text-roboto">10%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini Cards -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white p-5 rounded-xl custom-shadow">
+                <div class="flex justify-between items-start mb-4">
+                  <div class="w-9 h-9 bg-[#3d8af5] rounded-2xl flex items-center justify-center">
+                    <img src="./assets/IMG_20.svg" class="w-5 h-5 text-white" alt="Users">
+                  </div>
+                  <span class="bg-[#fafafb] text-[12px] font-semibold px-2 py-0.5 rounded-full text-roboto">+2 bln ini</span>
+                </div>
+                <p class="text-2xl font-bold tracking-tight">24</p>
+                <p class="text-sm font-medium text-[#171a1f] text-roboto">Total Murid</p>
+                <p class="text-[12px] text-[#565d6d] text-roboto">Siswa aktif</p>
+              </div>
+              
+              <div class="bg-white p-5 rounded-xl custom-shadow">
+                <div class="flex justify-between items-start mb-4">
+                  <img src="./assets/IMG_21.svg" class="w-5 h-5" alt="Trending">
+                  <span class="bg-[#fafafb] text-[12px] font-semibold px-2 py-0.5 rounded-full text-roboto">+12%</span>
+                </div>
+                <p class="text-2xl font-bold tracking-tight">Lev 2.4</p>
+                <p class="text-sm font-medium text-[#171a1f] text-roboto">Rata-rata</p>
+                <p class="text-[12px] text-[#565d6d] text-roboto">Kemajuan kelas</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl custom-shadow">
+                <div class="mb-4">
+                  <img src="./assets/IMG_22.svg" class="w-5 h-5" alt="Check">
+                </div>
+                <p class="text-2xl font-bold tracking-tight">18</p>
+                <p class="text-sm font-medium text-[#171a1f] text-roboto">Terampil</p>
+                <p class="text-[12px] text-[#565d6d] text-roboto">Mencapai target</p>
+              </div>
+
+              <div class="bg-white p-5 rounded-xl custom-shadow">
+                <div class="mb-4">
+                  <div class="w-9 h-9 bg-[#D92626] rounded-2xl flex items-center justify-center">
+                    <img src="./assets/IMG_23.svg" class="w-5 h-5 text-white" alt="Alert">
+                  </div>
+                </div>
+                <p class="text-2xl font-bold tracking-tight">3</p>
+                <p class="text-sm font-medium text-[#171a1f] text-roboto">Perhatian</p>
+                <p class="text-[12px] text-[#565d6d] text-roboto">Butuh tindak lanjut</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student List Table -->
+        <div class="bg-white rounded-xl custom-shadow overflow-hidden">
+          <div class="p-6 bg-[#fafafb]/40 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#dee1e6]">
+            <div>
+              <h2 class="text-xl font-bold tracking-tight">Daftar Murid Aktif</h2>
+              <p class="text-sm text-[#565d6d] text-roboto">Kelola dan pantau progres individu murid Anda.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <div class="relative w-full sm:w-72">
+                <img src="./assets/IMG_24.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Search">
+                <input type="text" placeholder="Cari nama murid..." class="w-full pl-10 pr-4 py-2 bg-white border border-[#dee1e6]/60 rounded-full text-sm focus:outline-none text-roboto">
+              </div>
+              <button class="bg-[#3d8af5] text-white font-bold px-6 py-2 rounded-full flex items-center justify-center gap-2 hover:bg-blue-600 text-roboto">
+                <img src="./assets/IMG_25.svg" class="w-4 h-4" alt="Plus">
+                Input Nilai Baru
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto scrollbar-hide">
+            <table class="w-full text-left min-w-[1000px]">
+              <thead class="bg-[#f3f4f6]/30 border-b border-[#dee1e6]">
+                <tr>
+                  <th class="px-8 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-roboto">Nama Murid</th>
+                  <th class="px-4 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-roboto">Level Saat Ini</th>
+                  <th class="px-4 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-roboto">Status Belajar</th>
+                  <th class="px-4 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-roboto">Progres Materi</th>
+                  <th class="px-4 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-roboto">Terakhir Update</th>
+                  <th class="px-8 py-4 text-[12px] font-bold text-[#565d6d] uppercase tracking-widest text-right text-roboto">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#dee1e6]">
+                <!-- Row 1 -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-8 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full overflow-hidden bg-[#eff9dc]">
+                        <img src="./assets/IMG_26.webp" class="w-full h-full object-cover" alt="Ananda">
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#171a1f] text-roboto">Ananda Rizky</p>
+                        <p class="text-[11px] text-[#565d6d] text-roboto">ID: BIMBA-1001</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#fafafb] border border-[#dee1e6]/40 px-3 py-1 rounded-full text-[12px] font-semibold text-[#171a1f] text-roboto">Level 3</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="border border-[#dee1e6] px-3 py-1 rounded-full text-[10px] font-bold text-[#171a1f] text-roboto">Terampil (T)</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="w-40">
+                      <div class="flex justify-between mb-1">
+                        <span class="text-[10px] font-bold text-[#565d6d] text-roboto">Progres</span>
+                        <span class="text-[10px] font-bold text-[#3d8af5] text-roboto">85%</span>
+                      </div>
+                      <div class="w-full h-2 bg-[#c4dbfc] rounded-full overflow-hidden">
+                        <div class="bg-[#3d8af5] h-full" style="width: 85%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm font-medium text-[#565d6d] text-roboto">2 jam lalu</td>
+                  <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_27.svg" class="w-4 h-4 opacity-70" alt="Edit"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_28.svg" class="w-4 h-4 opacity-70" alt="Delete"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_29.svg" class="w-4 h-4 opacity-70" alt="More"></button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-8 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full overflow-hidden bg-[#e8e6f8]">
+                        <img src="./assets/IMG_30.webp" class="w-full h-full object-cover" alt="Budi">
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#171a1f] text-roboto">Budi Santoso</p>
+                        <p class="text-[11px] text-[#565d6d] text-roboto">ID: BIMBA-2002</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#fafafb] border border-[#dee1e6]/40 px-3 py-1 rounded-full text-[12px] font-semibold text-[#171a1f] text-roboto">Level 2</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="border border-[#dee1e6] px-3 py-1 rounded-full text-[10px] font-bold text-[#171a1f] text-roboto">Paham (P)</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="w-40">
+                      <div class="flex justify-between mb-1">
+                        <span class="text-[10px] font-bold text-[#565d6d] text-roboto">Progres</span>
+                        <span class="text-[10px] font-bold text-[#3d8af5] text-roboto">45%</span>
+                      </div>
+                      <div class="w-full h-2 bg-[#c4dbfc] rounded-full overflow-hidden">
+                        <div class="bg-[#3d8af5] h-full" style="width: 45%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm font-medium text-[#565d6d] text-roboto">1 hari lalu</td>
+                  <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_27.svg" class="w-4 h-4 opacity-70" alt="Edit"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_28.svg" class="w-4 h-4 opacity-70" alt="Delete"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_29.svg" class="w-4 h-4 opacity-70" alt="More"></button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-8 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full overflow-hidden bg-[#fafad0]">
+                        <img src="./assets/IMG_31.webp" class="w-full h-full object-cover" alt="Citra">
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#171a1f] text-roboto">Citra Lestari</p>
+                        <p class="text-[11px] text-[#565d6d] text-roboto">ID: BIMBA-3003</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#fafafb] border border-[#dee1e6]/40 px-3 py-1 rounded-full text-[12px] font-semibold text-[#171a1f] text-roboto">Level 4</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="border border-[#dee1e6] px-3 py-1 rounded-full text-[10px] font-bold text-[#171a1f] text-roboto">Terampil (T)</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="w-40">
+                      <div class="flex justify-between mb-1">
+                        <span class="text-[10px] font-bold text-[#565d6d] text-roboto">Progres</span>
+                        <span class="text-[10px] font-bold text-[#3d8af5] text-roboto">92%</span>
+                      </div>
+                      <div class="w-full h-2 bg-[#c4dbfc] rounded-full overflow-hidden">
+                        <div class="bg-[#3d8af5] h-full" style="width: 92%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm font-medium text-[#565d6d] text-roboto">5 jam lalu</td>
+                  <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_27.svg" class="w-4 h-4 opacity-70" alt="Edit"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_28.svg" class="w-4 h-4 opacity-70" alt="Delete"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_29.svg" class="w-4 h-4 opacity-70" alt="More"></button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 4 -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-8 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full overflow-hidden bg-[#e0e6ff]">
+                        <img src="./assets/IMG_32.webp" class="w-full h-full object-cover" alt="Deni">
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#171a1f] text-roboto">Deni Pratama</p>
+                        <p class="text-[11px] text-[#565d6d] text-roboto">ID: BIMBA-4004</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#fafafb] border border-[#dee1e6]/40 px-3 py-1 rounded-full text-[12px] font-semibold text-[#171a1f] text-roboto">Level 1</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="border border-[#dee1e6] px-3 py-1 rounded-full text-[10px] font-bold text-[#171a1f] text-roboto">Belajar (B)</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="w-40">
+                      <div class="flex justify-between mb-1">
+                        <span class="text-[10px] font-bold text-[#565d6d] text-roboto">Progres</span>
+                        <span class="text-[10px] font-bold text-[#3d8af5] text-roboto">20%</span>
+                      </div>
+                      <div class="w-full h-2 bg-[#c4dbfc] rounded-full overflow-hidden">
+                        <div class="bg-[#3d8af5] h-full" style="width: 20%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm font-medium text-[#565d6d] text-roboto">3 hari lalu</td>
+                  <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_27.svg" class="w-4 h-4 opacity-70" alt="Edit"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_28.svg" class="w-4 h-4 opacity-70" alt="Delete"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_29.svg" class="w-4 h-4 opacity-70" alt="More"></button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Row 5 -->
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-8 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full overflow-hidden bg-[#ede0fe]">
+                        <img src="./assets/IMG_33.webp" class="w-full h-full object-cover" alt="Eka">
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-[#171a1f] text-roboto">Eka Wijaya</p>
+                        <p class="text-[11px] text-[#565d6d] text-roboto">ID: BIMBA-5005</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#fafafb] border border-[#dee1e6]/40 px-3 py-1 rounded-full text-[12px] font-semibold text-[#171a1f] text-roboto">Level 2</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <span class="bg-[#f3f4f6] px-3 py-1 rounded-full text-[10px] font-bold text-[#171a1f] text-roboto">Kenal (K)</span>
+                  </td>
+                  <td class="px-4 py-4">
+                    <div class="w-40">
+                      <div class="flex justify-between mb-1">
+                        <span class="text-[10px] font-bold text-[#565d6d] text-roboto">Progres</span>
+                        <span class="text-[10px] font-bold text-[#3d8af5] text-roboto">10%</span>
+                      </div>
+                      <div class="w-full h-2 bg-[#c4dbfc] rounded-full overflow-hidden">
+                        <div class="bg-[#3d8af5] h-full" style="width: 10%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-4 text-sm font-medium text-[#565d6d] text-roboto">Baru saja</td>
+                  <td class="px-8 py-4 text-right">
+                    <div class="flex justify-end gap-1">
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_27.svg" class="w-4 h-4 opacity-70" alt="Edit"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_28.svg" class="w-4 h-4 opacity-70" alt="Delete"></button>
+                      <button class="p-2 hover:bg-gray-100 rounded-md"><img src="./assets/IMG_29.svg" class="w-4 h-4 opacity-70" alt="More"></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-6 bg-[#fafafb]/30 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#dee1e6]">
+            <span class="text-[12px] font-medium text-[#565d6d] text-roboto">Menampilkan 5 dari 24 murid aktif</span>
+            <div class="flex gap-3">
+              <button class="px-6 py-2 bg-white border border-[#dee1e6] rounded-md text-sm font-bold text-[#171a1f] opacity-40 cursor-not-allowed text-roboto">Sebelumnya</button>
+              <button class="px-6 py-2 bg-white border border-[#3d8af5] rounded-md text-sm font-bold text-[#3d8af5] hover:bg-blue-50 text-roboto">Berikutnya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="p-6 lg:p-10 border-t border-[#dee1e6] bg-[#fafafb]/20 flex flex-col lg:flex-row justify-between items-center gap-4">
+        <p class="text-[12px] font-medium text-[#565d6d] text-roboto">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a href="#" class="text-[12px] font-medium text-[#565d6d] hover:text-[#3d8af5] text-roboto">Pusat Bantuan</a>
+          <a href="#" class="text-[12px] font-medium text-[#565d6d] hover:text-[#3d8af5] text-roboto">Kebijakan Privasi</a>
+          <a href="#" class="text-[12px] font-medium text-[#565d6d] hover:text-[#3d8af5] text-roboto">Syarat & Ketentuan</a>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+</body>
+</html>

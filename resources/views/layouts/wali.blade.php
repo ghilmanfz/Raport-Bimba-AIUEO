@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@yield('title', 'E-Rapor BiMBA AIUEO - Wali Murid')</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: #1e293b; background-color: #f3f4f6; }
+    h1, h2, h3, h4, h5, h6 { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; font-weight: 700; color: #171a1f; }
+    * { transition: all 0.2s ease; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .sidebar-active-item { background: #3d8af51a; color: #3d8af5; }
+    .custom-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
+    .hero-gradient { background: linear-gradient(135deg, #F1F6FE 0%, #ffffff 100%); }
+  </style>
+  @stack('head')
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 h-16 bg-white/60 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-12">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+        <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-5 h-5">
+      </div>
+      <span class="text-[#3d8af5] font-bold text-lg lg:text-xl font-['Inter']">E-Rapor BiMBA AIUEO</span>
+    </div>
+    <div class="flex items-center gap-4 lg:gap-6">
+      <button class="p-2 hover:bg-gray-100 rounded-full">
+        <iconify-icon icon="lucide:bell" width="20" class="text-[#565d6d]"></iconify-icon>
+      </button>
+      <div class="h-8 w-px bg-[#dee1e6] hidden sm:block"></div>
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-medium text-[#171a1f] leading-none">{{ auth()->user()->name ?? 'Wali Murid' }}</p>
+          <p class="text-xs text-[#565d6d] mt-1">Wali</p>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-[#f2bf8c] flex items-center justify-center text-white font-bold text-sm">
+          {{ strtoupper(substr(auth()->user()->name ?? 'W', 0, 1)) }}
+        </div>
+      </div>
+      <button id="mobile-menu-btn" class="lg:hidden p-2">
+        <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
+      </button>
+    </div>
+  </header>
+
+  <div class="flex pt-16 min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out pt-16 flex flex-col">
+      <nav class="flex-1 px-4 py-6 space-y-2">
+        <a href="{{ route('wali.dashboard') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.dashboard') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:layout-dashboard" width="18"></iconify-icon>
+          Dashboard
+        </a>
+        <a href="{{ route('wali.rapor') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.rapor') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:file-text" width="18"></iconify-icon>
+          Laporan Rapor
+        </a>
+      </nav>
+      <div class="p-4 border-t border-[#dee1e6]">
+        <form method="POST" action="{{ route('logout') }}">
+          @csrf
+          <button type="submit" class="flex items-center gap-3 px-3 py-2.5 text-[#D92626] hover:bg-red-50 w-full rounded-lg font-medium text-sm">
+            <iconify-icon icon="lucide:log-out" width="18"></iconify-icon>
+            Logout
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 p-4 lg:p-8 overflow-x-hidden">
+      @yield('content')
+    </main>
+  </div>
+
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+  <script>
+    const btn = document.getElementById('mobile-menu-btn');
+    const sb  = document.getElementById('sidebar');
+    const ov  = document.getElementById('sidebar-overlay');
+    if (btn) btn.addEventListener('click', () => { sb.classList.toggle('-translate-x-full'); ov.classList.toggle('hidden'); });
+    if (ov)  ov.addEventListener('click',  () => { sb.classList.add('-translate-x-full'); ov.classList.add('hidden'); });
+  </script>
+  @stack('scripts')
+</body>
+</html>

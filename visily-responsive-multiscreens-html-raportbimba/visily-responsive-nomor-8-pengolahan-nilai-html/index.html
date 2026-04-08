@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengolahan Nilai Progres - E-Rapor BiMBA AIUEO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #1e293b;
+      background-color: #fafafb;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .sidebar-active-gradient {
+      background: rgba(61, 138, 245, 0.1);
+      border-radius: 10px;
+    }
+
+    .table-row-hover:hover {
+      background-color: #f8fafc;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+
+    .status-badge {
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    button, a, input, select {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    :focus-visible {
+      outline: 2px solid #3d8af5;
+      outline-offset: 2px;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: white;
+      }
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #dee1e6 !important;
+      }
+    }
+
+    /* Custom scrollbar for sidebar and main content */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #dee1e6;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 w-full h-16 glass-panel border-b border-[#dee1e6] px-4 lg:px-12 flex items-center justify-between no-print">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+        <img src="./assets/IMG_3.svg" alt="Logo" class="w-5 h-5">
+      </div>
+      <span class="text-[#3d8af5] font-bold text-lg lg:text-xl">E-Rapor BiMBA AIUEO</span>
+    </div>
+
+    <div class="flex items-center gap-4 lg:gap-6">
+      <button class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-md relative">
+        <img src="./assets/IMG_1.svg" alt="Notifications" class="w-5 h-5">
+      </button>
+      
+      <div class="h-8 w-[1px] bg-[#dee1e6] hidden sm:block"></div>
+      
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <p class="text-sm font-medium text-[#171a1f] leading-tight">Ibu Guru Maya</p>
+          <p class="text-xs text-[#565d6d]">guru</p>
+        </div>
+        <div class="w-9 h-9 rounded-full overflow-hidden border border-gray-200">
+          <img src="./assets/IMG_2.webp" alt="User Avatar" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-[#fafafb] border-r border-[#dee1e6] flex-col hidden lg:flex no-print">
+      <nav class="flex-1 p-4 space-y-2">
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[#565d6d] hover:bg-gray-100 rounded-lg font-medium text-sm">
+          <img src="./assets/IMG_4.svg" alt="Dashboard" class="w-5 h-5">
+          Dashboard
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[#3d8af5] sidebar-active-gradient rounded-lg font-medium text-sm">
+          <img src="./assets/IMG_5.svg" alt="Pengolahan Nilai" class="w-5 h-5">
+          Pengolahan Nilai
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[#565d6d] hover:bg-gray-100 rounded-lg font-medium text-sm">
+          <img src="./assets/IMG_6.svg" alt="Grafik" class="w-5 h-5">
+          Grafik Perkembangan
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-[#565d6d] hover:bg-gray-100 rounded-lg font-medium text-sm">
+          <img src="./assets/IMG_5.svg" alt="Cetak Rapor" class="w-5 h-5">
+          Cetak Rapor
+        </a>
+      </nav>
+      
+      <div class="p-4 border-t border-[#dee1e6]">
+        <button class="flex items-center gap-3 px-3 py-2.5 text-[#D92626] hover:bg-red-50 w-full rounded-lg font-medium text-sm">
+          <img src="./assets/IMG_7.svg" alt="Logout" class="w-5 h-5">
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-4 lg:p-8">
+      <div class="max-w-[1120px] mx-auto space-y-6">
+        
+        <!-- Page Header Card -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-[#dee1e6] flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-[#3d8af5]/10 rounded-xl flex items-center justify-center shrink-0">
+              <img src="./assets/IMG_3.svg" alt="Icon" class="w-6 h-6">
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-[#171a1f]">Pengolahan Nilai Progres</h1>
+              <p class="text-sm text-[#565d6d]">Input hasil belajar harian dan evaluasi materi murid.</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <div class="relative w-full sm:w-64">
+              <img src="./assets/IMG_10.svg" alt="Search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]">
+              <select class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#dee1e6] rounded-xl text-sm appearance-none focus:ring-2 focus:ring-[#3d8af5]/20 outline-none">
+                <option>Andi Wijaya (Level 1)</option>
+                <option>Budi Santoso (Level 1)</option>
+              </select>
+              <img src="./assets/IMG_8.svg" alt="Chevron" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none">
+            </div>
+            <button class="w-full sm:w-auto px-6 py-2.5 bg-[#3d8af5] text-white rounded-lg text-sm font-medium shadow-md hover:bg-[#3478d6] flex items-center justify-center gap-2">
+              <img src="./assets/IMG_9.svg" alt="Save" class="w-4 h-4">
+              Simpan Semua
+            </button>
+          </div>
+        </div>
+
+        <!-- Level Tabs & Info -->
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="bg-[#f3f4f6] p-1 rounded-full flex w-fit">
+            <button class="px-6 py-1.5 bg-[#3d8af5] text-white rounded-full text-sm font-medium shadow-sm">Level 1</button>
+            <button class="px-6 py-1.5 text-[#565d6d] hover:text-[#171a1f] rounded-full text-sm font-medium">Level 2</button>
+            <button class="px-6 py-1.5 text-[#565d6d] hover:text-[#171a1f] rounded-full text-sm font-medium">Level 3</button>
+            <button class="px-6 py-1.5 text-[#565d6d] hover:text-[#171a1f] rounded-full text-sm font-medium">Level 4</button>
+          </div>
+          
+          <div class="flex items-center gap-2 px-4 py-2 border border-[#dee1e6] rounded-xl bg-white/50 text-xs font-medium text-[#171a1f]">
+            <img src="./assets/IMG_11.svg" alt="Info" class="w-4 h-4">
+            Status penilaian dihitung otomatis berdasarkan kelengkapan tanggal progres.
+          </div>
+        </div>
+
+        <!-- Subject Tabs -->
+        <div class="border-b border-[#dee1e6] flex gap-8">
+          <button class="flex items-center gap-2 px-2 py-3 border-b-2 border-[#3d8af5] text-[#3d8af5] font-semibold text-base">
+            <img src="./assets/IMG_12.svg" alt="Baca" class="w-5 h-5">
+            Baca
+          </button>
+          <button class="flex items-center gap-2 px-2 py-3 border-b-2 border-transparent text-[#565d6d] hover:text-[#171a1f] font-semibold text-base">
+            <img src="./assets/IMG_13.svg" alt="Tulis" class="w-5 h-5">
+            Tulis
+          </button>
+          <button class="flex items-center gap-2 px-2 py-3 border-b-2 border-transparent text-[#565d6d] hover:text-[#171a1f] font-semibold text-base">
+            <img src="./assets/IMG_14.svg" alt="Hitung" class="w-5 h-5">
+            Hitung
+          </button>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-[#dee1e6] overflow-hidden">
+          <div class="p-6 border-b border-[#dee1e6] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold text-[#171a1f]">Modul Pembelajaran: Baca - level 1</h2>
+              <p class="text-sm text-[#565d6d]">Detail progres materi untuk Andi Wijaya</p>
+            </div>
+            <button class="px-4 py-1.5 border border-[#dee1e6] rounded-lg text-xs font-medium text-[#171a1f] hover:bg-gray-50">
+              Reset Form
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#f3f4f6]/50 text-sm font-semibold text-[#171a1f]">
+                  <th class="px-6 py-4 min-w-[280px]">Nama Materi</th>
+                  <th class="px-6 py-4 min-w-[180px]">Tanggal Mulai</th>
+                  <th class="px-6 py-4 min-w-[180px]">Tanggal Paham</th>
+                  <th class="px-6 py-4 min-w-[180px]">Tanggal Terampil</th>
+                  <th class="px-6 py-4 text-center min-w-[140px]">Status (K/B/P/T)</th>
+                  <th class="px-6 py-4 text-right min-w-[80px]">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#dee1e6]">
+                <!-- Row 1 -->
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-[#3d8af5] shrink-0"></div>
+                      <span class="text-sm font-medium text-[#171a1f]">Pengenalan Huruf Vokal (A-I-U-E-O)</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-01" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-10" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-15" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full bg-[#A7F3D0] border border-[#6EE7B7] text-[10px] font-bold text-[#047857] uppercase">T - Terampil</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-gray-400 hover:text-gray-600"><iconify-icon icon="lucide:more-vertical"></iconify-icon></button>
+                  </td>
+                </tr>
+                <!-- Row 2 -->
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-[#3d8af5] shrink-0"></div>
+                      <span class="text-sm font-medium text-[#171a1f]">Membaca Suku Kata Terbuka (Ba, Bi, Bu)</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-16" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-25" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full bg-[#BAE6FD] border border-[#7DD3FC] text-[10px] font-bold text-[#0369A1] uppercase">P - Paham</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-gray-400 hover:text-gray-600"><iconify-icon icon="lucide:more-vertical"></iconify-icon></button>
+                  </td>
+                </tr>
+                <!-- Row 3 -->
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-[#3d8af5] shrink-0"></div>
+                      <span class="text-sm font-medium text-[#171a1f]">Pengenalan Kata Bermakna 4 Huruf</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-26" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full bg-[#FDE68A] border border-[#FCD34D] text-[10px] font-bold text-[#B45309] uppercase">B - Belum</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-gray-400 hover:text-gray-600"><iconify-icon icon="lucide:more-vertical"></iconify-icon></button>
+                  </td>
+                </tr>
+                <!-- Row 4 -->
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-[#3d8af5] shrink-0"></div>
+                      <span class="text-sm font-medium text-[#171a1f]">Kalimat Sederhana (3 Kata)</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" alt="Calendar">
+                      <input type="text" placeholder="" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full bg-[#E2E8F0] border border-[#CBD5E1] text-[10px] font-bold text-[#334155] uppercase">K - Kenal</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-gray-400 hover:text-gray-600"><iconify-icon icon="lucide:more-vertical"></iconify-icon></button>
+                  </td>
+                </tr>
+                <!-- Row 5 -->
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-2 h-2 rounded-full bg-[#3d8af5] shrink-0"></div>
+                      <span class="text-sm font-medium text-[#171a1f]">Pengenalan Huruf Konsonan B-D-G-K</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-02-15" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-02-28" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="relative">
+                      <img src="./assets/IMG_15.svg" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#565d6d]" alt="Calendar">
+                      <input type="text" value="2024-03-05" class="w-full pl-9 pr-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span class="inline-flex items-center px-3 py-0.5 rounded-full bg-[#A7F3D0] border border-[#6EE7B7] text-[10px] font-bold text-[#047857] uppercase">T - Terampil</span>
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-gray-400 hover:text-gray-600"><iconify-icon icon="lucide:more-vertical"></iconify-icon></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="p-4 bg-[#f3f4f6]/30 border-t border-[#dee1e6] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <p class="text-sm text-[#565d6d]">
+              Menampilkan <span class="font-semibold text-[#171a1f]">5</span> materi di aspek <span class="font-semibold text-[#171a1f]">Baca</span>
+            </p>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">Import Excel</button>
+              <button class="px-4 py-2 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">Export PDF</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Legend Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-[#F1F6FE] p-6 rounded-xl shadow-sm border border-[#dee1e6]/30 text-center">
+            <h3 class="text-2xl font-bold text-[#3d8af5] mb-1">K</h3>
+            <p class="text-xs font-bold text-[#3d8af5]/70 tracking-widest uppercase mb-2">Kenal</p>
+            <p class="text-sm text-[#3d8af5]/60">Belum ada progres</p>
+          </div>
+          <div class="bg-[#FCF0E3] p-6 rounded-xl shadow-sm border border-[#dee1e6]/30 text-center">
+            <h3 class="text-2xl font-bold text-[#19191F] mb-1">B</h3>
+            <p class="text-xs font-bold text-[#19191F]/70 tracking-widest uppercase mb-2">Belum</p>
+            <p class="text-sm text-[#19191F]/60">Baru mulai belajar</p>
+          </div>
+          <div class="bg-[#E1F4FE] p-6 rounded-xl shadow-sm border border-[#dee1e6]/30 text-center">
+            <h3 class="text-2xl font-bold text-[#19191F] mb-1">P</h3>
+            <p class="text-xs font-bold text-[#19191F]/70 tracking-widest uppercase mb-2">Paham</p>
+            <p class="text-sm text-[#19191F]/60">Materi dikuasai</p>
+          </div>
+          <div class="bg-[#DCFAE6] p-6 rounded-xl shadow-sm border border-[#dee1e6]/30 text-center">
+            <h3 class="text-2xl font-bold text-[#19191F] mb-1">T</h3>
+            <p class="text-xs font-bold text-[#19191F]/70 tracking-widest uppercase mb-2">Terampil</p>
+            <p class="text-sm text-[#19191F]/60">Dapat mengaplikasikan</p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="pt-8 pb-4 border-t border-[#dee1e6] text-center">
+          <p class="text-sm text-[#565d6d]">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- Mobile Navigation (Bottom Bar) -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#dee1e6] flex justify-around items-center h-16 px-2 no-print z-50">
+    <button class="flex flex-col items-center gap-1 text-[#565d6d]">
+      <iconify-icon icon="lucide:layout-dashboard" width="20"></iconify-icon>
+      <span class="text-[10px]">Dashboard</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-[#3d8af5]">
+      <iconify-icon icon="lucide:file-text" width="20"></iconify-icon>
+      <span class="text-[10px]">Nilai</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-[#565d6d]">
+      <iconify-icon icon="lucide:chart-line" width="20"></iconify-icon>
+      <span class="text-[10px]">Grafik</span>
+    </button>
+    <button class="flex flex-col items-center gap-1 text-[#565d6d]">
+      <iconify-icon icon="lucide:printer" width="20"></iconify-icon>
+      <span class="text-[10px]">Cetak</span>
+    </button>
+  </nav>
+
+</body>
+</html>

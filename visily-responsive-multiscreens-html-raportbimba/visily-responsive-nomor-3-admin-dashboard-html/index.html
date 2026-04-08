@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Rapor BiMBA AIUEO - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" type="text/css" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: #1e293b;
+      background-color: #ffffff;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+      color: #171a1f;
+      letter-spacing: -0.025em;
+    }
+
+    * {
+      transition: all 0.2s ease;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .font-roboto {
+      font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(222, 225, 230, 0.5);
+    }
+
+    .sidebar-active {
+      background-color: rgba(61, 138, 245, 0.1);
+      color: #3d8af5;
+    }
+
+    .table-row-hover:hover {
+      background-color: #f9fafb;
+    }
+
+    .status-pill {
+      padding: 2px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-active {
+      background-color: rgba(99, 233, 143, 0.1);
+      color: #63e98f;
+    }
+
+    .status-cuti {
+      background-color: #f3f4f6;
+      color: #565d6d;
+    }
+
+    .help-card-gradient {
+      background: #3d8af5;
+      box-shadow: 0px 4px 7px 0px rgba(61, 138, 245, 0.2);
+    }
+
+    .text-balance {
+      text-wrap: balance;
+    }
+
+    .main-shadow {
+      box-shadow: 0px 1px 2.5px 0px rgba(23, 26, 31, 0.07), 0px 0px 2px 0px rgba(23, 26, 31, 0.08);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+        <img src="./assets/IMG_3.svg" class="w-5.5 h-5.5 text-white" alt="Logo">
+      </div>
+      <span class="text-[#3d8af5] font-bold text-lg leading-tight">E-Rapor BiMBA AIUEO</span>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-2 mt-4">
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg sidebar-active font-medium text-sm font-roboto">
+        <img src="./assets/IMG_4.svg" class="w-5 h-5" alt="Dashboard">
+        Dashboard
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#565d6d] hover:bg-gray-100 font-medium text-sm font-roboto">
+        <img src="./assets/IMG_5.svg" class="w-5 h-5" alt="Data Murid">
+        Data Murid
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#565d6d] hover:bg-gray-100 font-medium text-sm font-roboto">
+        <img src="./assets/IMG_6.svg" class="w-5 h-5" alt="Data Guru">
+        Data Guru
+      </a>
+      <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#565d6d] hover:bg-gray-100 font-medium text-sm font-roboto">
+        <img src="./assets/IMG_7.svg" class="w-5 h-5" alt="Pengaturan">
+        Pengaturan
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-[#dee1e6]">
+      <button class="flex items-center gap-3 px-4 py-2.5 w-full text-[#D92626] hover:bg-red-50 rounded-lg font-medium text-sm font-roboto">
+        <img src="./assets/IMG_8.svg" class="w-5 h-5" alt="Logout">
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile Overlay -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 flex flex-col lg:ml-64 min-w-0">
+    
+    <!-- Header -->
+    <header class="sticky top-0 z-30 h-16 bg-white/60 backdrop-blur-md border-b border-[#dee1e6] flex items-center justify-between px-4 lg:px-12">
+      <div class="flex items-center gap-4">
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-[#565d6d]">
+          <iconify-icon icon="lucide:menu" width="24"></iconify-icon>
+        </button>
+        <!-- Design shows the logo in header too for desktop -->
+        <div class="hidden lg:flex items-center gap-3">
+          <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+            <img src="./assets/IMG_3.svg" class="w-5.5 h-5.5 text-white" alt="Logo">
+          </div>
+          <span class="text-[#3d8af5] font-bold text-xl">E-Rapor BiMBA AIUEO</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <button class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-full relative">
+          <img src="./assets/IMG_1.svg" class="w-5 h-5" alt="Notifications">
+        </button>
+        <div class="flex items-center gap-3 pl-6 border-l border-[#dee1e6]">
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-medium text-[#171a1f] font-roboto leading-none">Admin BiMBA</p>
+            <p class="text-xs text-[#565d6d] font-roboto mt-1">admin</p>
+          </div>
+          <div class="w-9 h-9 rounded-full overflow-hidden border border-gray-200">
+            <img src="./assets/IMG_2.webp" class="w-full h-full object-cover" alt="Admin Avatar">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 lg:p-12 max-w-[1200px] mx-auto w-full">
+      
+      <!-- Welcome Section -->
+      <section class="mb-8">
+        <h1 class="text-3xl font-bold text-[#171a1f] tracking-tight">Ringkasan Dashboard</h1>
+        <p class="text-[#565d6d] mt-2 font-roboto">Selamat datang kembali, Admin Pusat. Pantau statistik institusi Anda hari ini.</p>
+      </section>
+
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <!-- Total Murid -->
+        <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
+          <div class="flex justify-between items-start mb-6">
+            <div class="w-10 h-10 bg-[#3d8af5]/10 rounded-lg flex items-center justify-center">
+              <img src="./assets/IMG_5.svg" class="w-6 h-6 text-[#3d8af5]" alt="Murid">
+            </div>
+            <div class="flex items-center gap-1 text-[#63e98f] text-xs font-medium font-roboto">
+              <img src="./assets/IMG_9.svg" class="w-3 h-3" alt="Up">
+              +12%
+            </div>
+          </div>
+          <p class="text-sm font-medium text-[#565d6d] mb-1">Total Murid</p>
+          <h3 class="text-3xl font-bold text-[#171a1f] mb-2">1,248</h3>
+          <p class="text-xs text-[#565d6d] font-roboto">+48 murid baru bulan ini</p>
+        </div>
+
+        <!-- Total Guru -->
+        <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
+          <div class="flex justify-between items-start mb-6">
+            <div class="w-10 h-10 bg-[#63e98f]/10 rounded-lg flex items-center justify-center">
+              <img src="./assets/IMG_6.svg" class="w-6 h-6 text-[#63e98f]" alt="Guru">
+            </div>
+          </div>
+          <p class="text-sm font-medium text-[#565d6d] mb-1">Total Guru</p>
+          <h3 class="text-3xl font-bold text-[#171a1f] mb-2">56</h3>
+          <p class="text-xs text-[#565d6d] font-roboto">8 guru sedang bertugas</p>
+        </div>
+
+        <!-- Total Kelas -->
+        <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
+          <div class="flex justify-between items-start mb-6">
+            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <img src="./assets/IMG_10.svg" class="w-6 h-6 text-[#171a1f]" alt="Kelas">
+            </div>
+          </div>
+          <p class="text-sm font-medium text-[#565d6d] mb-1">Total Kelas</p>
+          <h3 class="text-3xl font-bold text-[#171a1f] mb-2">24</h3>
+          <p class="text-xs text-[#565d6d] font-roboto">Aktif di 3 cabang utama</p>
+        </div>
+
+        <!-- Pencapaian Level -->
+        <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
+          <div class="flex justify-between items-start mb-6">
+            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+              <img src="./assets/IMG_3.svg" class="w-6 h-6 text-[#171a1f]" alt="Level">
+            </div>
+            <div class="flex items-center gap-1 text-[#63e98f] text-xs font-medium font-roboto">
+              <img src="./assets/IMG_9.svg" class="w-3 h-3" alt="Up">
+              +5%
+            </div>
+          </div>
+          <p class="text-sm font-medium text-[#565d6d] mb-1">Pencapaian Level</p>
+          <h3 class="text-3xl font-bold text-[#171a1f] mb-2">88%</h3>
+          <p class="text-xs text-[#565d6d] font-roboto">Kenaikan level rata-rata</p>
+        </div>
+      </section>
+
+      <!-- Manajemen Data Murid Table -->
+      <section class="bg-white rounded-2xl main-shadow border border-gray-50 overflow-hidden mb-10">
+        <div class="p-6 bg-[#f3f4f6]/5 border-b border-[#dee1e6] flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-[#171a1f]">Manajemen Data Murid</h2>
+            <p class="text-sm text-[#565d6d] font-roboto mt-1">Daftar seluruh murid yang terdaftar di sistem pusat.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="relative flex-1 md:w-64">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#565d6d]">
+                <img src="./assets/IMG_11.svg" class="w-4 h-4" alt="Search">
+              </span>
+              <input type="text" placeholder="Cari nama atau ID..." class="w-full pl-10 pr-4 py-2 bg-white border border-[#dee1e6] rounded-lg text-sm font-roboto focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+            </div>
+            <button class="p-2 border border-[#dee1e6] rounded-lg hover:bg-gray-50">
+              <img src="./assets/IMG_12.svg" class="w-4 h-4" alt="Filter">
+            </button>
+            <button class="bg-[#3d8af5] text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-[#3479d9]">
+              <img src="./assets/IMG_13.svg" class="w-4 h-4" alt="Add">
+              Tambah Murid
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-[#f3f4f6]/30 border-b border-[#dee1e6]">
+              <tr>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">ID</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Nama Murid</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Kelas</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Wali Murid</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Tgl. Bergabung</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Status</th>
+                <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#dee1e6]">
+              <!-- Row 1 -->
+              <tr class="table-row-hover">
+                <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M001</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="./assets/IMG_14.webp" class="w-8 h-8 rounded-full object-cover" alt="Aisyah">
+                    <span class="text-sm font-semibold text-[#171a1f] font-roboto">Aisyah Putri</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 1 - A</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Budi</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">12 Jan 2024</td>
+                <td class="px-6 py-4">
+                  <span class="status-pill status-active">Aktif</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_15.svg" class="w-4 h-4" alt="Edit"></button>
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_16.svg" class="w-4 h-4" alt="Delete"></button>
+                    <button class="p-1.5 text-[#171a1f] hover:bg-gray-100 rounded"><img src="./assets/IMG_17.svg" class="w-4 h-4" alt="More"></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="table-row-hover">
+                <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M002</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="./assets/IMG_18.webp" class="w-8 h-8 rounded-full object-cover" alt="Bima">
+                    <span class="text-sm font-semibold text-[#171a1f] font-roboto">Bima Satria</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 2 - B</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Ibu Siti</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">05 Feb 2024</td>
+                <td class="px-6 py-4">
+                  <span class="status-pill status-active">Aktif</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_15.svg" class="w-4 h-4" alt="Edit"></button>
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_16.svg" class="w-4 h-4" alt="Delete"></button>
+                    <button class="p-1.5 text-[#171a1f] hover:bg-gray-100 rounded"><img src="./assets/IMG_17.svg" class="w-4 h-4" alt="More"></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="table-row-hover">
+                <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M003</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="./assets/IMG_19.webp" class="w-8 h-8 rounded-full object-cover" alt="Citra">
+                    <span class="text-sm font-semibold text-[#171a1f] font-roboto">Citra Kirana</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 1 - C</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Agus</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">20 Des 2023</td>
+                <td class="px-6 py-4">
+                  <span class="status-pill status-cuti">Cuti</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_15.svg" class="w-4 h-4" alt="Edit"></button>
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_16.svg" class="w-4 h-4" alt="Delete"></button>
+                    <button class="p-1.5 text-[#171a1f] hover:bg-gray-100 rounded"><img src="./assets/IMG_17.svg" class="w-4 h-4" alt="More"></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 4 -->
+              <tr class="table-row-hover">
+                <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M004</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="./assets/IMG_20.webp" class="w-8 h-8 rounded-full object-cover" alt="Dedi">
+                    <span class="text-sm font-semibold text-[#171a1f] font-roboto">Dedi Kurniawan</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 3 - A</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Ibu Lani</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">15 Feb 2024</td>
+                <td class="px-6 py-4">
+                  <span class="status-pill status-active">Aktif</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_15.svg" class="w-4 h-4" alt="Edit"></button>
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_16.svg" class="w-4 h-4" alt="Delete"></button>
+                    <button class="p-1.5 text-[#171a1f] hover:bg-gray-100 rounded"><img src="./assets/IMG_17.svg" class="w-4 h-4" alt="More"></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 5 -->
+              <tr class="table-row-hover">
+                <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M005</td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-3">
+                    <img src="./assets/IMG_21.webp" class="w-8 h-8 rounded-full object-cover" alt="Eka">
+                    <span class="text-sm font-semibold text-[#171a1f] font-roboto">Eka Prasetya</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 4 - B</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Toto</td>
+                <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">01 Mar 2024</td>
+                <td class="px-6 py-4">
+                  <span class="status-pill status-active">Aktif</span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_15.svg" class="w-4 h-4" alt="Edit"></button>
+                    <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded"><img src="./assets/IMG_16.svg" class="w-4 h-4" alt="Delete"></button>
+                    <button class="p-1.5 text-[#171a1f] hover:bg-gray-100 rounded"><img src="./assets/IMG_17.svg" class="w-4 h-4" alt="More"></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-6 bg-[#f3f4f6]/5 border-t border-[#dee1e6] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p class="text-sm text-[#565d6d] font-roboto">Menampilkan 5 dari 1,248 data murid</p>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-1.5 border border-[#dee1e6] rounded-lg text-sm font-medium text-[#565d6d] hover:bg-gray-50">Sebelumnya</button>
+            <button class="w-8 h-8 bg-[#3d8af5] text-white rounded-lg text-sm font-medium">1</button>
+            <button class="w-8 h-8 border border-[#dee1e6] rounded-lg text-sm font-medium text-[#565d6d] hover:bg-gray-50">2</button>
+            <button class="px-3 py-1.5 border border-[#dee1e6] rounded-lg text-sm font-medium text-[#565d6d] hover:bg-gray-50">Selanjutnya</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Grid: Guru & Aktivitas -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        
+        <!-- Data Tenaga Pengajar -->
+        <div class="lg:col-span-2 bg-white rounded-2xl main-shadow border border-gray-50 overflow-hidden">
+          <div class="p-6 bg-[#f3f4f6]/5 border-b border-[#dee1e6] flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-bold text-[#171a1f]">Data Tenaga Pengajar</h2>
+              <p class="text-sm text-[#565d6d] font-roboto mt-1">Overview singkat status guru pengajar saat ini.</p>
+            </div>
+            <button class="px-4 py-2 border border-[#3d8af5]/20 text-[#3d8af5] rounded-lg text-sm font-medium hover:bg-[#3d8af5]/5">Lihat Semua Guru</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead class="bg-[#f3f4f6]/30">
+                <tr>
+                  <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Nama Guru</th>
+                  <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Spesialisasi</th>
+                  <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">Beban Kelas</th>
+                  <th class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#dee1e6]">
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <p class="text-sm font-medium text-[#171a1f] font-roboto">Ibu Ratna Sari</p>
+                    <p class="text-xs text-[#565d6d] font-roboto">ratna@bimba.com</p>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 bg-[#3d8af5]/5 border border-[#3d8af5]/20 text-[#3d8af5] rounded-full text-[11px] font-roboto">Bahasa & Baca</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm font-medium text-[#171a1f] font-roboto">3 Kelas</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-sm font-medium text-[#171a1f] flex items-center justify-end gap-1 ml-auto hover:underline">
+                      Profil <img src="./assets/IMG_22.svg" class="w-3 h-3" alt="Link">
+                    </button>
+                  </td>
+                </tr>
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <p class="text-sm font-medium text-[#171a1f] font-roboto">Bpk. Andi Wijaya</p>
+                    <p class="text-xs text-[#565d6d] font-roboto">andi@bimba.com</p>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 bg-[#3d8af5]/5 border border-[#3d8af5]/20 text-[#3d8af5] rounded-full text-[11px] font-roboto">Matematika Dasar</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm font-medium text-[#171a1f] font-roboto">2 Kelas</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-sm font-medium text-[#171a1f] flex items-center justify-end gap-1 ml-auto hover:underline">
+                      Profil <img src="./assets/IMG_22.svg" class="w-3 h-3" alt="Link">
+                    </button>
+                  </td>
+                </tr>
+                <tr class="table-row-hover">
+                  <td class="px-6 py-4">
+                    <p class="text-sm font-medium text-[#171a1f] font-roboto">Ibu Maya Indah</p>
+                    <p class="text-xs text-[#565d6d] font-roboto">maya@bimba.com</p>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span class="px-3 py-1 bg-[#3d8af5]/5 border border-[#3d8af5]/20 text-[#3d8af5] rounded-full text-[11px] font-roboto">Menulis & Seni</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm font-medium text-[#171a1f] font-roboto">4 Kelas</td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-sm font-medium text-[#171a1f] flex items-center justify-end gap-1 ml-auto hover:underline">
+                      Profil <img src="./assets/IMG_22.svg" class="w-3 h-3" alt="Link">
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right Column: Aktivitas & Help -->
+        <div class="space-y-8">
+          <!-- Aktivitas Terkini -->
+          <div class="bg-white p-6 rounded-2xl main-shadow border border-gray-50">
+            <h2 class="text-lg font-bold text-[#171a1f] mb-1">Aktivitas Terkini</h2>
+            <p class="text-sm text-[#565d6d] font-roboto mb-6">Log aktivitas admin dalam 24 jam terakhir.</p>
+            
+            <div class="space-y-6 relative">
+              <!-- Timeline Line -->
+              <div class="absolute left-[5px] top-2 bottom-2 w-[1px] bg-[#dee1e6]"></div>
+              
+              <!-- Item 1 -->
+              <div class="relative pl-8">
+                <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#3d8af5] rounded-full z-10"></div>
+                <p class="text-sm font-medium text-[#171a1f] font-roboto">Input Nilai Level 2 - B</p>
+                <p class="text-xs text-[#565d6d] font-roboto mt-1">Admin: Ibu Ratna • 2 menit lalu</p>
+              </div>
+              
+              <!-- Item 2 -->
+              <div class="relative pl-8">
+                <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#63e98f] rounded-full z-10"></div>
+                <p class="text-sm font-medium text-[#171a1f] font-roboto">Tambah Murid Baru (M005)</p>
+                <p class="text-xs text-[#565d6d] font-roboto mt-1">Admin: Bpk. Andi • 45 menit lalu</p>
+              </div>
+              
+              <!-- Item 3 -->
+              <div class="relative pl-8">
+                <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#dee1e6] rounded-full z-10"></div>
+                <p class="text-sm font-medium text-[#171a1f] font-roboto">Update Pengaturan Jadwal</p>
+                <p class="text-xs text-[#565d6d] font-roboto mt-1">Sistem • 3 jam lalu</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pusat Bantuan -->
+          <div class="help-card-gradient p-6 rounded-2xl text-white relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 opacity-10 rotate-12">
+              <img src="./assets/IMG_3.svg" class="w-28 h-28" alt="Decoration">
+            </div>
+            <h2 class="text-lg font-bold mb-2 relative z-10">Pusat Bantuan BiMBA</h2>
+            <p class="text-sm text-white/80 font-roboto mb-6 relative z-10 leading-relaxed">Butuh bantuan dalam mengelola data atau sistem rapor? Tim teknis kami siap membantu 24/7.</p>
+            <button class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10">Hubungi Support</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="pt-8 pb-12 border-t border-[#dee1e6] text-center">
+        <p class="text-sm text-[#565d6d] font-roboto">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    }
+
+    mobileMenuBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+  </script>
+</body>
+</html>

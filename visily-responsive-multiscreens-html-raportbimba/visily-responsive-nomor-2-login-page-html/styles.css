@@ -1,0 +1,66 @@
+/* Custom styles - extend as needed */
+* {
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+label {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+input::placeholder {
+  color: #94a3b8;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.soft-shadow {
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+.input-focus-ring:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: -1px;
+}
+
+.bg-gradient-subtle {
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
