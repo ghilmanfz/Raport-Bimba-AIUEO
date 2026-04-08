@@ -21,7 +21,7 @@ Aplikasi **E-Rapor Digital** untuk lembaga pendidikan anak **BiMBA AIUEO** — s
 
 | Teknologi | Keterangan |
 |-----------|-----------|
-| **Laravel 11** | PHP Framework (Backend) |
+| **Laravel 13** | PHP Framework (Backend) |
 | **Blade** | Template engine Laravel |
 | **TailwindCSS** | CSS Framework via CDN |
 | **Iconify (Lucide)** | Icon library |
