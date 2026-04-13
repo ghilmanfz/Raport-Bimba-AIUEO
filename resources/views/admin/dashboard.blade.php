@@ -7,7 +7,7 @@
 <!-- Welcome Section -->
 <section class="mb-8">
   <h1 class="text-2xl lg:text-3xl font-bold text-[#171a1f] tracking-tight">Ringkasan Dashboard</h1>
-  <p class="text-[#565d6d] mt-2 font-roboto">Selamat datang kembali, Admin Pusat. Pantau statistik institusi Anda hari ini.</p>
+  <p class="text-[#565d6d] mt-2 font-roboto">Selamat datang kembali, {{ auth()->user()->name }}. Pantau statistik institusi Anda hari ini.</p>
 </section>
 
 <!-- Stats Grid -->
@@ -23,8 +23,8 @@
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Total Murid</p>
-    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">1,248</h3>
-    <p class="text-xs text-[#565d6d] font-roboto">+48 murid baru bulan ini</p>
+    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ number_format($stats['total_murid']) }}</h3>
+    <p class="text-xs text-[#565d6d] font-roboto">+{{ $stats['murid_baru'] }} murid baru bulan ini</p>
   </div>
 
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
@@ -34,8 +34,8 @@
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Total Guru</p>
-    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">56</h3>
-    <p class="text-xs text-[#565d6d] font-roboto">8 guru sedang bertugas</p>
+    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ $stats['total_guru'] }}</h3>
+    <p class="text-xs text-[#565d6d] font-roboto">Guru terdaftar di sistem</p>
   </div>
 
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
@@ -45,8 +45,8 @@
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Total Kelas</p>
-    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">24</h3>
-    <p class="text-xs text-[#565d6d] font-roboto">Aktif di 3 cabang utama</p>
+    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ $stats['total_kelas'] }}</h3>
+    <p class="text-xs text-[#565d6d] font-roboto">Kelas aktif dalam sistem</p>
   </div>
 
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
@@ -60,8 +60,8 @@
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Pencapaian Level</p>
-    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">88%</h3>
-    <p class="text-xs text-[#565d6d] font-roboto">Kenaikan level rata-rata</p>
+    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ $stats['pencapaian'] }}%</h3>
+    <p class="text-xs text-[#565d6d] font-roboto">Murid mencapai level Terampil</p>
   </div>
 </section>
 
@@ -100,107 +100,36 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-[#dee1e6]">
+        @forelse($students as $student)
         <tr class="table-row-hover">
-          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M001</td>
+          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">{{ $student->nis }}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
-              <img src="{{ asset('assets/IMG_14.webp') }}" class="w-8 h-8 rounded-full object-cover" alt="Aisyah">
-              <span class="text-sm font-semibold text-[#171a1f] font-roboto">Aisyah Putri</span>
+              <div class="w-8 h-8 rounded-full bg-[#3d8af5] flex items-center justify-center text-white font-bold text-xs">{{ strtoupper(substr($student->name, 0, 1)) }}</div>
+              <span class="text-sm font-semibold text-[#171a1f] font-roboto">{{ $student->name }}</span>
             </div>
           </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 1 - A</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Budi</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">12 Jan 2024</td>
-          <td class="px-6 py-4"><span class="status-pill status-active">Aktif</span></td>
+          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $student->classroom?->name ?? '-' }}</td>
+          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $student->parent?->name ?? '-' }}</td>
+          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $student->join_date->translatedFormat('d M Y') }}</td>
+          <td class="px-6 py-4"><span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : 'status-cuti' }}">{{ ucfirst($student->status) }}</span></td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-2">
-              <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
-              <button class="p-1.5 text-red-400 hover:bg-red-50 rounded" title="Hapus"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
+              <a href="{{ route('admin.murid') }}" class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></a>
             </div>
           </td>
         </tr>
-        <tr class="table-row-hover">
-          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M002</td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <img src="{{ asset('assets/IMG_18.webp') }}" class="w-8 h-8 rounded-full object-cover" alt="Bima">
-              <span class="text-sm font-semibold text-[#171a1f] font-roboto">Bima Satria</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 2 - B</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Ibu Siti</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">05 Feb 2024</td>
-          <td class="px-6 py-4"><span class="status-pill status-active">Aktif</span></td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
-              <button class="p-1.5 text-red-400 hover:bg-red-50 rounded" title="Hapus"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
-            </div>
-          </td>
+        @empty
+        <tr>
+          <td colspan="7" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data murid.</td>
         </tr>
-        <tr class="table-row-hover">
-          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M003</td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <img src="{{ asset('assets/IMG_19.webp') }}" class="w-8 h-8 rounded-full object-cover" alt="Citra">
-              <span class="text-sm font-semibold text-[#171a1f] font-roboto">Citra Kirana</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 1 - C</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Agus</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">20 Des 2023</td>
-          <td class="px-6 py-4"><span class="status-pill status-cuti">Cuti</span></td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
-              <button class="p-1.5 text-red-400 hover:bg-red-50 rounded" title="Hapus"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
-            </div>
-          </td>
-        </tr>
-        <tr class="table-row-hover">
-          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M004</td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <img src="{{ asset('assets/IMG_20.webp') }}" class="w-8 h-8 rounded-full object-cover" alt="Dedi">
-              <span class="text-sm font-semibold text-[#171a1f] font-roboto">Dedi Kurniawan</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 3 - A</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Ibu Lani</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">15 Feb 2024</td>
-          <td class="px-6 py-4"><span class="status-pill status-active">Aktif</span></td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
-              <button class="p-1.5 text-red-400 hover:bg-red-50 rounded" title="Hapus"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
-            </div>
-          </td>
-        </tr>
-        <tr class="table-row-hover">
-          <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">M005</td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-3">
-              <img src="{{ asset('assets/IMG_21.webp') }}" class="w-8 h-8 rounded-full object-cover" alt="Eka">
-              <span class="text-sm font-semibold text-[#171a1f] font-roboto">Eka Prasetya</span>
-            </div>
-          </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Level 4 - B</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">Bpk. Toto</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">01 Mar 2024</td>
-          <td class="px-6 py-4"><span class="status-pill status-active">Aktif</span></td>
-          <td class="px-6 py-4 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <button class="p-1.5 text-[#565d6d] hover:bg-gray-100 rounded" title="Edit"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
-              <button class="p-1.5 text-red-400 hover:bg-red-50 rounded" title="Hapus"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
-            </div>
-          </td>
-        </tr>
+        @endforelse
       </tbody>
     </table>
   </div>
 
   <div class="p-6 bg-[#f3f4f6]/5 border-t border-[#dee1e6] flex flex-col sm:flex-row items-center justify-between gap-4">
-    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan 5 dari 1,248 data murid</p>
+    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan {{ $students->count() }} dari {{ $stats['total_murid'] }} data murid</p>
     <div class="flex items-center gap-2">
       <button class="px-3 py-1.5 border border-[#dee1e6] rounded-lg text-sm font-medium text-[#565d6d] hover:bg-gray-50">Sebelumnya</button>
       <button class="w-8 h-8 bg-[#3d8af5] text-white rounded-lg text-sm font-medium">1</button>
