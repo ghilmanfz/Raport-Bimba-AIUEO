@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'E-Rapor BiMBA AIUEO - Admin')</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -65,6 +67,11 @@
         <iconify-icon icon="lucide:user-check" width="18"></iconify-icon>
         Data Guru
       </a>
+      <a href="{{ route('admin.user') }}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.user*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
+        <iconify-icon icon="lucide:shield" width="18"></iconify-icon>
+        Manajemen User
+      </a>
       <a href="{{ route('admin.pengaturan') }}"
          class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.pengaturan') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
         <iconify-icon icon="lucide:settings" width="18"></iconify-icon>
@@ -101,21 +108,13 @@
       </div>
 
       <div class="flex items-center gap-4">
-        <button class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-full relative">
-          <iconify-icon icon="lucide:bell" width="20"></iconify-icon>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#3d8af5] rounded-full"></span>
-        </button>
-        <div class="flex items-center gap-3 pl-4 border-l border-[#dee1e6]">
-          <div class="text-right hidden sm:block">
-            <p class="text-sm font-semibold text-[#171a1f] font-roboto leading-none">{{ auth()->user()->name ?? 'Admin BiMBA' }}</p>
-            <p class="text-xs text-[#565d6d] font-roboto mt-0.5">Admin</p>
-          </div>
-          <div class="w-9 h-9 rounded-full bg-[#3d8af5] flex items-center justify-center text-white font-bold text-sm">
-            {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
-          </div>
-        </div>
+        @include('partials.notification-bell')
+        @include('partials.profile-dropdown')
       </div>
     </header>
+
+    <!-- Profile Modal -->
+    @include('partials.profile-modal')
 
     <!-- Page Content -->
     <main class="flex-1 p-4 lg:p-8">

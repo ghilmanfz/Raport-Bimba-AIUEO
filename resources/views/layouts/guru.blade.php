@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('title', 'E-Rapor BiMBA AIUEO - Guru')</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -19,6 +21,11 @@
     .sidebar-active-gradient { background: rgba(61, 138, 245, 0.1); border-radius: 10px; color: #3d8af5; }
     .main-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .table-row-hover:hover { background-color: #f8fafc; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; }
+      main { margin-left: 0 !important; padding: 0 !important; }
+    }
     @yield('styles')
   </style>
   @stack('head')
@@ -26,7 +33,7 @@
 <body class="min-h-screen">
 
   <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-8">
+  <header class="no-print fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-8">
     <div class="flex items-center gap-4">
       <button id="mobile-menu-btn" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
         <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
@@ -39,25 +46,17 @@
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <button class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-full relative">
-        <iconify-icon icon="lucide:bell" width="20"></iconify-icon>
-        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-[#3d8af5] rounded-full"></span>
-      </button>
-      <div class="flex items-center gap-3 pl-4 border-l border-[#dee1e6]">
-        <div class="text-right hidden sm:block">
-          <p class="text-sm font-semibold text-[#171a1f] font-roboto leading-none">{{ auth()->user()->name ?? 'Ibu Guru Maya' }}</p>
-          <p class="text-xs text-[#565d6d] font-roboto mt-0.5">Motivator</p>
-        </div>
-        <div class="w-9 h-9 rounded-full bg-[#63e98f] flex items-center justify-center text-white font-bold text-sm">
-          {{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}
-        </div>
-      </div>
+      @include('partials.notification-bell')
+      @include('partials.profile-dropdown')
     </div>
   </header>
 
-  <div class="flex pt-16 min-h-screen">
+  <!-- Profile Modal -->
+  @include('partials.profile-modal')
+
+  <div class="flex pt-16 min-h-screen print:pt-0">
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out pt-16 flex flex-col">
+    <aside id="sidebar" class="no-print fixed inset-y-0 left-0 z-40 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out pt-16 flex flex-col">
       <nav class="flex-1 px-4 py-6 space-y-1">
         <a href="{{ route('guru.dashboard') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.dashboard') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
