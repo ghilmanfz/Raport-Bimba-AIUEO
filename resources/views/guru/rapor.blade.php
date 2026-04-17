@@ -118,22 +118,30 @@
         <td>NIS</td>
         <td>:</td>
         <td><strong>{{ $student->nis }}</strong></td>
-        <td>Kelas</td>
+        <td>Unit</td>
         <td>:</td>
-        <td>{{ $student->classroom?->name ?? '-' }}</td>
+        <td>{{ $unitName ?: '-' }}</td>
       </tr>
       <tr>
         <td>Tanggal Lahir</td>
         <td>:</td>
         <td>{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</td>
-        <td>Level</td>
+        <td>Kelas</td>
         <td>:</td>
-        <td>{{ $student->classroom?->level ?? '-' }}</td>
+        <td>{{ $student->classroom?->name ?? '-' }}</td>
       </tr>
       <tr>
         <td>Jenis Kelamin</td>
         <td>:</td>
         <td>{{ $student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+        <td>Level</td>
+        <td>:</td>
+        <td>{{ $student->classroom?->level ?? '-' }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>Periode</td>
         <td>:</td>
         <td>{{ now()->translatedFormat('F Y') }}</td>
@@ -155,9 +163,9 @@
     <tbody>
       @php $globalNo = 0; @endphp
 
-      {{-- KELOMPOK A: MEMBACA --}}
+      {{-- MEMBACA --}}
       <tr class="group-header">
-        <td colspan="4"><strong>Kelompok A — Membaca</strong></td>
+        <td colspan="4"><strong>Membaca</strong></td>
         <td class="text-center"><strong>{{ round($bacaPct) }}%</strong></td>
       </tr>
       @foreach($reportData['baca']['by_level']->sortKeys() as $level => $progresses)
@@ -173,10 +181,10 @@
         @endforeach
       @endforeach
 
-      {{-- KELOMPOK B: MENULIS --}}
+      {{-- MENULIS --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Kelompok B — Menulis</strong></td>
+        <td colspan="4"><strong>Menulis</strong></td>
         <td class="text-center"><strong>{{ round($tulisPct) }}%</strong></td>
       </tr>
       @foreach($reportData['tulis']['by_level']->sortKeys() as $level => $progresses)
@@ -192,10 +200,10 @@
         @endforeach
       @endforeach
 
-      {{-- KELOMPOK C: BERHITUNG --}}
+      {{-- BERHITUNG --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Kelompok C — Berhitung</strong></td>
+        <td colspan="4"><strong>Berhitung</strong></td>
         <td class="text-center"><strong>{{ round($hitungPct) }}%</strong></td>
       </tr>
       @foreach($reportData['hitung']['by_level']->sortKeys() as $level => $progresses)
@@ -232,12 +240,29 @@
   <div class="border border-[#1e293b] rounded p-4 mb-6" style="font-size: 13px;">
     <strong>Catatan Perkembangan:</strong>
     <p class="mt-1" style="line-height: 1.6;">
-      Ananda <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
+      <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
       @if($avgPct >= 70) sangat positif @elseif($avgPct >= 40) cukup baik @else perlu ditingkatkan @endif
       dengan rata-rata penguasaan <strong>{{ $avgPct }}%</strong>.
       Aspek terkuat pada bidang <strong>{{ $highest }}</strong> ({{ $skills[$highest] }}%)
       dan fokus pengembangan pada bidang <strong>{{ $focus }}</strong> ({{ $skills[$focus] }}%).
     </p>
+    @if($student->development_notes)
+    <p class="mt-2" style="line-height: 1.6;"><strong>Catatan Guru:</strong> {{ $student->development_notes }}</p>
+    @endif
+  </div>
+
+  <!-- Manual Notes Form (no-print) -->
+  <div class="no-print border border-[#dee1e6] rounded-lg p-4 mb-6">
+    <form method="POST" action="{{ route('guru.rapor.notes') }}">
+      @csrf
+      <input type="hidden" name="student_id" value="{{ $student->id }}">
+      <label class="block text-sm font-bold text-[#171a1f] mb-2">Catatan Perkembangan Manual</label>
+      <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none" placeholder="Tulis catatan perkembangan murid di sini...">{{ $student->development_notes }}</textarea>
+      <button type="submit" class="mt-2 px-4 py-2 bg-[#3d8af5] text-white rounded-lg text-sm font-medium hover:bg-blue-600">
+        <iconify-icon icon="lucide:save" width="14" class="inline mr-1"></iconify-icon>
+        Simpan Catatan
+      </button>
+    </form>
   </div>
 
   <!-- Radar Chart -->
@@ -287,6 +312,58 @@
   @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
+
+<!-- Perbandingan Rapor Sebelumnya (no-print) -->
+@if($prevReportData)
+<div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm mb-4">
+  <div class="flex items-center gap-2 mb-5">
+    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#3d8af5]"></iconify-icon>
+    <h3 class="text-base font-bold text-[#171a1f]">Perbandingan dengan Periode Sebelumnya</h3>
+  </div>
+  <p class="text-xs text-[#565d6d] mb-4">Perbandingan pencapaian bulan ini vs bulan {{ now()->subMonth()->translatedFormat('F Y') }}</p>
+
+  <div class="space-y-4">
+    @foreach(['baca' => ['Membaca', '#22C55E'], 'tulis' => ['Menulis', '#3d8af5'], 'hitung' => ['Berhitung', '#f59e0b']] as $skillKey => [$label, $color])
+    @php
+      $current = round($reportData[$skillKey]['percentage']);
+      $prev = round($prevReportData[$skillKey]['percentage']);
+      $diff = $current - $prev;
+    @endphp
+    <div>
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm font-semibold text-[#171a1f]">{{ $label }}</span>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="text-[#9095a0]">{{ $prev }}%</span>
+          <iconify-icon icon="lucide:arrow-right" width="14" class="text-[#9095a0]"></iconify-icon>
+          <span class="font-bold text-[#171a1f]">{{ $current }}%</span>
+          @if($diff > 0)
+            <span class="flex items-center gap-0.5 text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+              <iconify-icon icon="lucide:trending-up" width="12"></iconify-icon> +{{ $diff }}%
+            </span>
+          @elseif($diff < 0)
+            <span class="flex items-center gap-0.5 text-red-500 text-xs font-bold bg-red-50 px-2 py-0.5 rounded-full">
+              <iconify-icon icon="lucide:trending-down" width="12"></iconify-icon> {{ $diff }}%
+            </span>
+          @else
+            <span class="flex items-center gap-0.5 text-[#9095a0] text-xs font-bold bg-gray-50 px-2 py-0.5 rounded-full">
+              <iconify-icon icon="lucide:minus" width="12"></iconify-icon> 0%
+            </span>
+          @endif
+        </div>
+      </div>
+      <div class="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div class="absolute h-full rounded-full opacity-30" style="width: {{ $prev }}%; background: {{ $color }};"></div>
+        <div class="absolute h-full rounded-full" style="width: {{ $current }}%; background: {{ $color }};"></div>
+      </div>
+      <div class="flex justify-between mt-1">
+        <span class="text-[10px] text-[#9095a0]">{{ now()->subMonth()->translatedFormat('F') }}: {{ $prev }}%</span>
+        <span class="text-[10px] font-semibold" style="color: {{ $color }};">{{ now()->translatedFormat('F') }}: {{ $current }}%</span>
+      </div>
+    </div>
+    @endforeach
+  </div>
+</div>
+@endif
 
 <!-- Quick Action Cards (no-print) -->
 <div class="no-print grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[850px] mx-auto">

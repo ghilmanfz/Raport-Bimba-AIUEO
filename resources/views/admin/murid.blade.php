@@ -11,10 +11,10 @@
     <p class="text-[#565d6d] mt-1 font-roboto">Kelola informasi murid, kelas, dan status pembelajaran.</p>
   </div>
   <div class="flex flex-wrap items-center gap-3">
-    <button class="flex items-center gap-2 px-4 py-2 bg-white border border-[#3d8af5]/30 rounded-xl text-[#3d8af5] font-medium text-sm hover:bg-blue-50">
+    <a href="{{ route('admin.murid.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#3d8af5]/30 rounded-xl text-[#3d8af5] font-medium text-sm hover:bg-blue-50">
       <iconify-icon icon="lucide:download" width="16"></iconify-icon>
       Export CSV
-    </button>
+    </a>
     <button onclick="document.getElementById('modal-tambah-murid').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-[#3d8af5] text-white rounded-xl font-medium text-sm hover:bg-blue-600">
       <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
       Tambah Murid
@@ -82,7 +82,7 @@
         <tr class="bg-[#f3f4f6]/30 text-[#565d6d] text-sm font-semibold border-b border-[#dee1e6]">
           <th class="px-6 py-4">ID</th>
           <th class="px-6 py-4">Nama Murid</th>
-          <th class="px-6 py-4">Kelas</th>
+          <th class="px-6 py-4">Tahapan</th>
           <th class="px-6 py-4">Wali Murid</th>
           <th class="px-6 py-4">Tgl. Bergabung</th>
           <th class="px-6 py-4">Status</th>
@@ -105,7 +105,7 @@
           <td class="px-6 py-4"><span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : 'status-cuti' }}">{{ ucfirst($student->status) }}</span></td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
-              <button class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
+              <button onclick="openEditMurid({{ $student->id }}, '{{ addslashes($student->name) }}', '{{ $student->nis }}', '{{ $student->classroom_id }}', '{{ $student->join_date->format('Y-m-d') }}', '{{ $student->status }}')" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
               <form method="POST" action="{{ route('admin.murid.destroy', $student) }}" onsubmit="return confirm('Yakin hapus data murid ini?')">
                 @csrf @method('DELETE')
                 <button type="submit" class="p-2 text-[#D92626] hover:bg-red-50 rounded-lg"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
@@ -159,7 +159,7 @@
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Kelas</label>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
           <select name="classroom_id" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
               <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
@@ -197,4 +197,66 @@
     </form>
   </div>
 </div>
+
+<!-- Modal Edit Murid -->
+<div id="modal-edit-murid" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-lg mx-4 shadow-xl">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold text-[#171a1f]">Edit Data Murid</h3>
+      <button onclick="document.getElementById('modal-edit-murid').classList.add('hidden')" class="text-[#565d6d] hover:text-[#171a1f]">
+        <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+      </button>
+    </div>
+    <form id="form-edit-murid" method="POST" class="space-y-4">
+      @csrf @method('PUT')
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">NIS</label>
+          <input type="text" name="nis" id="edit-murid-nis" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
+          <input type="text" name="name" id="edit-murid-name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
+          <select name="classroom_id" id="edit-murid-classroom" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+            @foreach($classrooms as $classroom)
+              <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tgl. Bergabung</label>
+          <input type="date" name="join_date" id="edit-murid-joindate" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
+        <select name="status" id="edit-murid-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <option value="aktif">Aktif</option>
+          <option value="cuti">Cuti</option>
+        </select>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="document.getElementById('modal-edit-murid').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEditMurid(id, name, nis, classroomId, joinDate, status) {
+  document.getElementById('form-edit-murid').action = '/admin/murid/' + id;
+  document.getElementById('edit-murid-name').value = name;
+  document.getElementById('edit-murid-nis').value = nis;
+  document.getElementById('edit-murid-classroom').value = classroomId;
+  document.getElementById('edit-murid-joindate').value = joinDate;
+  document.getElementById('edit-murid-status').value = status;
+  document.getElementById('modal-edit-murid').classList.remove('hidden');
+}
+</script>
 @endsection

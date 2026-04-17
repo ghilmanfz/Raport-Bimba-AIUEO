@@ -19,7 +19,7 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     .sidebar-active-item { background: #3d8af51a; color: #3d8af5; }
     .custom-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
-    .hero-gradient { background: linear-gradient(135deg, #F1F6FE 0%, #ffffff 100%); }
+    .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }

@@ -15,8 +15,8 @@
     h1, h2, h3, h4, h5, h6 { font-family: "Poppins", ui-sans-serif, system-ui, sans-serif; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
     p { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #565d6d; }
     .glass-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.5); }
-    .hero-gradient { background: #F1F6FE; }
-    .cta-gradient { background: #3d8af5; }
+    .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
+    .cta-gradient { background: linear-gradient(135deg, #D92626 0%, #EAB308 50%, #3d8af5 100%); }
     .soft-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .nav-blur { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.6); }
     * { transition: all 0.2s ease; }
@@ -246,9 +246,9 @@
         <div>
           <h4 class="text-base font-bold mb-6">Hubungi Kami</h4>
           <ul class="space-y-3 text-sm text-[#565d6d]">
-            <li>info@bimba-aiueo.com</li>
-            <li>Support Center</li>
-            <li>Pusat Bantuan</li>
+            <li><a href="mailto:info@bimba-aiueo.com" class="hover:text-[#3d8af5]">info@bimba-aiueo.com</a></li>
+            <li><a href="https://wa.me/6281234567890?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya." target="_blank" class="hover:text-[#3d8af5]">Support Center (WhatsApp)</a></li>
+            <li><a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan." target="_blank" class="hover:text-[#3d8af5]">Pusat Bantuan</a></li>
           </ul>
         </div>
       </div>

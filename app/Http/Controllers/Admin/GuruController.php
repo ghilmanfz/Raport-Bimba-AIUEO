@@ -23,18 +23,12 @@ class GuruController extends Controller
             })->orWhere('nip', 'like', "%{$search}%");
         }
 
-        if ($spec = $request->input('specialization')) {
-            $query->where('specialization', $spec);
-        }
-
         $teachers     = $query->latest()->paginate(10);
         $classrooms   = Classroom::orderBy('name')->get();
         $totalGuru    = Teacher::count();
         $guruAktif    = Teacher::where('status', 'aktif')->count();
-        $specBaca     = Teacher::where('specialization', 'like', '%Baca%')->count();
-        $avgBeban     = round(Teacher::withCount('classrooms')->get()->avg('classrooms_count'), 1);
 
-        return view('admin.guru', compact('teachers', 'classrooms', 'totalGuru', 'guruAktif', 'specBaca', 'avgBeban'));
+        return view('admin.guru', compact('teachers', 'classrooms', 'totalGuru', 'guruAktif'));
     }
 
     public function store(Request $request)
@@ -43,22 +37,25 @@ class GuruController extends Controller
             'name'           => 'required|string|max:255',
             'email'          => 'required|email|unique:users,email',
             'nip'            => 'nullable|string|unique:teachers,nip',
-            'specialization' => 'nullable|string|max:100',
+            'password'       => 'nullable|string|min:6',
             'status'         => 'required|in:aktif,cuti,nonaktif',
             'classroom_ids'  => 'nullable|array',
             'classroom_ids.*' => 'exists:classrooms,id',
         ]);
 
+        $plainPw = $request->input('password', 'password123');
+
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'role'     => 'guru',
-            'password' => Hash::make('password123'),
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'role'           => 'guru',
+            'password'       => Hash::make($plainPw),
+            'plain_password' => $plainPw,
         ]);
 
         $teacher = Teacher::create([
             'user_id'        => $user->id,
-            'nip'            => $request->nip,
+            'nip'            => $request->nip ?: Teacher::generateNip(),
             'specialization' => $request->specialization,
             'status'         => $request->status,
         ]);
@@ -130,24 +127,27 @@ class GuruController extends Controller
 
         $callback = function () use ($teachers) {
             $file = fopen('php://output', 'w');
-            fputcsv($file, ['NIP', 'Nama', 'Email', 'Spesialisasi', 'Status', 'Jumlah Kelas']);
+            // UTF-8 BOM for Excel compatibility
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['NIP', 'Nama', 'Email', 'Password', 'Status', 'Jumlah Kelas', 'Nama Kelas'], ';');
 
             foreach ($teachers as $teacher) {
                 fputcsv($file, [
                     $teacher->nip,
                     $teacher->user->name,
                     $teacher->user->email,
-                    $teacher->specialization,
-                    $teacher->status,
+                    $teacher->user->plain_password ?? '-',
+                    ucfirst($teacher->status),
                     $teacher->classrooms->count(),
-                ]);
+                    $teacher->classrooms->pluck('name')->join(', '),
+                ], ';');
             }
 
             fclose($file);
         };
 
         return response()->stream($callback, 200, [
-            'Content-Type'        => 'text/csv',
+            'Content-Type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="data-guru-' . date('Y-m-d') . '.csv"',
         ]);
     }

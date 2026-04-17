@@ -8,13 +8,9 @@
 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
   <div>
     <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Manajemen Data Guru/Motivator</h1>
-    <p class="text-[#565d6d] mt-1 font-roboto">Kelola informasi motivator, beban kelas, dan spesialisasi pengajaran.</p>
+    <p class="text-[#565d6d] mt-1 font-roboto">Kelola informasi motivator dan data akun pengguna.</p>
   </div>
   <div class="flex flex-wrap items-center gap-3">
-    <button onclick="document.getElementById('modal-import-guru').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-      <iconify-icon icon="lucide:upload" width="16"></iconify-icon>
-      Impor
-    </button>
     <a href="{{ route('admin.guru.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
       <iconify-icon icon="lucide:download" width="16"></iconify-icon>
       Ekspor
@@ -27,7 +23,7 @@
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
     <div>
       <p class="text-sm font-medium text-[#565d6d]">Total Guru</p>
@@ -46,24 +42,6 @@
       <iconify-icon icon="lucide:user-check" width="24" class="text-[#16a34a]"></iconify-icon>
     </div>
   </div>
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
-    <div>
-      <p class="text-sm font-medium text-[#565d6d]">Spesialisasi Baca</p>
-      <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $specBaca }}</h3>
-    </div>
-    <div class="w-14 h-14 bg-[#FCF0E3] rounded-2xl flex items-center justify-center">
-      <iconify-icon icon="lucide:book-open" width="24" class="text-orange-500"></iconify-icon>
-    </div>
-  </div>
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
-    <div>
-      <p class="text-sm font-medium text-[#565d6d]">Beban Rata-rata</p>
-      <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $avgBeban }}</h3>
-    </div>
-    <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center">
-      <iconify-icon icon="lucide:calculator" width="24" class="text-[#565d6d]"></iconify-icon>
-    </div>
-  </div>
 </div>
 
 <!-- Table Section -->
@@ -74,20 +52,8 @@
         <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
           <iconify-icon icon="lucide:search" width="16"></iconify-icon>
         </div>
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau ID..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau NIP..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
       </form>
-      <div class="relative" x-data="{ open: false }">
-        <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-          <iconify-icon icon="lucide:filter" width="16"></iconify-icon>
-          Spesialisasi
-        </button>
-        <div x-show="open" @click.away="open = false" class="absolute top-full mt-1 left-0 bg-white border border-[#dee1e6] rounded-xl shadow-lg z-10 py-1 w-48">
-          <a href="{{ route('admin.guru') }}" class="block px-4 py-2 text-sm hover:bg-gray-50">Semua</a>
-          <a href="{{ route('admin.guru', ['specialization' => 'Baca-Tulis']) }}" class="block px-4 py-2 text-sm hover:bg-gray-50">Baca-Tulis</a>
-          <a href="{{ route('admin.guru', ['specialization' => 'Matematika']) }}" class="block px-4 py-2 text-sm hover:bg-gray-50">Matematika</a>
-          <a href="{{ route('admin.guru', ['specialization' => 'Bahasa Inggris']) }}" class="block px-4 py-2 text-sm hover:bg-gray-50">Bahasa Inggris</a>
-        </div>
-      </div>
     </div>
     <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-bold">{{ $teachers->count() }}</span> dari <span class="font-bold">{{ $totalGuru }}</span> guru</p>
   </div>
@@ -98,9 +64,8 @@
         <tr class="text-[#565d6d] text-sm font-semibold">
           <th class="px-6 py-4">NIP</th>
           <th class="px-6 py-4">Nama Guru</th>
-          <th class="px-6 py-4">Spesialisasi</th>
           <th class="px-6 py-4">Email</th>
-          <th class="px-6 py-4 text-center">Beban Kelas</th>
+          <th class="px-6 py-4">Kelas</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Aksi</th>
         </tr>
@@ -115,22 +80,21 @@
               <span class="text-sm font-semibold text-[#171a1f]">{{ $teacher->user->name }}</span>
             </div>
           </td>
-          <td class="px-6 py-4">
-            <div class="flex items-center gap-2 text-sm text-[#565d6d]">
-              <iconify-icon icon="lucide:book-open" width="14" class="text-[#3d8af5]"></iconify-icon>
-              {{ $teacher->specialization ?? '-' }}
-            </div>
+          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
+          <td class="px-6 py-4 text-sm text-[#565d6d]">
+            @if($teacher->classrooms->count())
+              {{ $teacher->classrooms->pluck('name')->join(', ') }}
+            @else
+              <span class="text-[#9095a0]">-</span>
+            @endif
           </td>
           <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
-          <td class="px-6 py-4 text-center">
-            <span class="px-2 py-1 bg-[#3d8af5]/10 text-[#3d8af5] text-xs font-bold rounded-md">{{ $teacher->classrooms->count() }} Kelas</span>
-          </td>
           <td class="px-6 py-4">
             <span class="status-pill {{ $teacher->status === 'aktif' ? 'status-active' : ($teacher->status === 'cuti' ? 'status-cuti' : 'status-nonaktif') }}">{{ ucfirst($teacher->status) }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
-              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ addslashes($teacher->specialization) }}', '{{ $teacher->status }}', {{ json_encode($teacher->classrooms->pluck('id')) }})" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
+              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}', {{ json_encode($teacher->classrooms->pluck('id')) }})" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
               <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" onsubmit="return confirm('Yakin hapus data guru ini?')">
@@ -144,7 +108,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="7" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
+          <td colspan="6" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
         </tr>
         @endforelse
       </tbody>
@@ -167,7 +131,7 @@
     <div>
       <h4 class="text-lg font-bold text-white mb-2">Tips Manajemen Motivator</h4>
       <p class="text-white/80 text-sm leading-relaxed">
-        Pastikan beban kelas setiap guru tidak melebihi 5 kelas per minggu untuk menjaga kualitas pengajaran BiMBA AIUEO yang optimal bagi anak-anak. Gunakan filter spesialisasi untuk mencari guru pengganti yang tepat.
+        Pastikan beban kelas setiap guru tidak melebihi 5 kelas per minggu untuk menjaga kualitas pengajaran BiMBA AIUEO yang optimal bagi anak-anak.
       </p>
     </div>
   </div>
@@ -177,7 +141,8 @@
     </div>
     <h4 class="text-base font-bold text-[#171a1f] mb-1">Butuh Bantuan?</h4>
     <p class="text-xs text-[#565d6d] mb-6">Hubungi tim IT Pusat untuk bantuan teknis.</p>
-    <a href="mailto:support@bimba-aiueo.com" class="w-full py-2 border border-[#63e98f] text-[#16a34a] text-sm font-medium rounded-xl hover:bg-[#63e98f]/5 block text-center">
+    <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor." target="_blank" class="w-full py-2 border border-[#63e98f] text-[#16a34a] text-sm font-medium rounded-xl hover:bg-[#63e98f]/5 block text-center">
+      <iconify-icon icon="lucide:message-circle" width="14" class="inline mr-1"></iconify-icon>
       Pusat Bantuan
     </a>
   </div>
@@ -225,8 +190,8 @@
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Spesialisasi</label>
-          <input type="text" name="specialization" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Baca-Tulis">
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Password</label>
+          <input type="text" name="password" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Default: password123">
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
@@ -281,19 +246,13 @@
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Email</label>
         <input type="email" name="email" id="edit-email" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
       </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Spesialisasi</label>
-          <input type="text" name="specialization" id="edit-specialization" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
-          <select name="status" id="edit-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
-            <option value="aktif">Aktif</option>
-            <option value="cuti">Cuti</option>
-            <option value="nonaktif">Nonaktif</option>
-          </select>
-        </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
+        <select name="status" id="edit-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <option value="aktif">Aktif</option>
+          <option value="cuti">Cuti</option>
+          <option value="nonaktif">Nonaktif</option>
+        </select>
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Kelas</label>
@@ -314,37 +273,12 @@
   </div>
 </div>
 
-<!-- Modal Import Guru -->
-<div id="modal-import-guru" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-  <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-xl">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-xl font-bold text-[#171a1f]">Impor Data Guru</h3>
-      <button onclick="document.getElementById('modal-import-guru').classList.add('hidden')" class="text-[#565d6d] hover:text-[#171a1f]">
-        <iconify-icon icon="lucide:x" width="20"></iconify-icon>
-      </button>
-    </div>
-    <form method="POST" action="{{ route('admin.guru.import') }}" enctype="multipart/form-data" class="space-y-4">
-      @csrf
-      <div>
-        <label class="block text-sm font-medium text-[#565d6d] mb-2">File CSV</label>
-        <input type="file" name="file" accept=".csv,.txt" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
-        <p class="text-xs text-[#565d6d] mt-2">Format: nama, email, nip, spesialisasi, status</p>
-      </div>
-      <div class="flex gap-3 pt-2">
-        <button type="button" onclick="document.getElementById('modal-import-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Impor</button>
-      </div>
-    </form>
-  </div>
-</div>
-
 <script>
-function openEditGuru(id, name, email, nip, specialization, status, classroomIds) {
+function openEditGuru(id, name, email, nip, status, classroomIds) {
   document.getElementById('form-edit-guru').action = '/admin/guru/' + id;
   document.getElementById('edit-name').value = name;
   document.getElementById('edit-email').value = email;
   document.getElementById('edit-nip').value = nip;
-  document.getElementById('edit-specialization').value = specialization;
   document.getElementById('edit-status').value = status;
   document.querySelectorAll('.edit-classroom-cb').forEach(cb => {
     cb.checked = classroomIds.includes(parseInt(cb.value));

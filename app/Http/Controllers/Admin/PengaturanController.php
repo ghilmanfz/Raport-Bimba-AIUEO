@@ -19,6 +19,7 @@ class PengaturanController extends Controller
         $settings   = [
             'institution_name'    => Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre'),
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
+            'unit_name'           => Setting::get('unit_name', ''),
             'institution_logo'    => Setting::get('institution_logo'),
         ];
 
@@ -30,11 +31,13 @@ class PengaturanController extends Controller
         $request->validate([
             'institution_name'    => 'required|string|max:255',
             'institution_address' => 'required|string|max:500',
+            'unit_name'           => 'nullable|string|max:255',
             'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
         Setting::set('institution_name', $request->institution_name);
         Setting::set('institution_address', $request->institution_address);
+        Setting::set('unit_name', $request->unit_name ?? '');
 
         if ($request->hasFile('institution_logo')) {
             $oldLogo = Setting::get('institution_logo');

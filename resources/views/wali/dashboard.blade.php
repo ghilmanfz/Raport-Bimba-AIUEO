@@ -4,40 +4,33 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
+@php
+  $child = $childrenData->first();
+  $studentName = $child ? $child['student']->name : 'Anak';
+  $studentInitials = $child ? collect(explode(' ', $child['student']->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('') : '?';
+  $classroomName = $child ? ($child['student']->classroom->name ?? '-') : '-';
+  $bacaPct = $child ? round($child['baca']) : 0;
+  $tulisPct = $child ? round($child['tulis']) : 0;
+  $hitungPct = $child ? round($child['hitung']) : 0;
+@endphp
+
 <!-- Hero Section -->
 <section class="hero-gradient rounded-3xl p-6 lg:p-8 custom-shadow border border-[#3d8af51a] flex flex-col lg:flex-row items-center lg:justify-between gap-6 mb-8">
   <div class="flex flex-col lg:flex-row items-center gap-6">
     <div class="w-20 h-20 rounded-full overflow-hidden custom-shadow border-2 border-white flex-shrink-0">
-      <div class="w-full h-full bg-[#f2bf8c] flex items-center justify-center text-white text-2xl font-black">AS</div>
+      <div class="w-full h-full bg-[#f2bf8c] flex items-center justify-center text-white text-2xl font-black">{{ $studentInitials }}</div>
     </div>
     <div class="text-center lg:text-left">
-      <h1 class="text-2xl lg:text-3xl font-bold text-[#3d8af5] mb-3">Semangat Belajar, Ananda Salsabila! 👋</h1>
+      <h1 class="text-2xl lg:text-3xl font-bold text-[#3d8af5] mb-3">Semangat Belajar, {{ $studentName }}! 👋</h1>
       <div class="flex flex-wrap justify-center lg:justify-start gap-3">
         <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#3d8af533] rounded-full text-xs font-semibold">
           <iconify-icon icon="lucide:calendar" width="12" class="text-[#3d8af5]"></iconify-icon>
-          Tahun Ajaran 2023/2024
+          Tahun Ajaran {{ date('Y') }}/{{ date('Y') + 1 }}
         </div>
         <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#3d8af533] rounded-full text-xs font-semibold">
           <iconify-icon icon="lucide:layers" width="12" class="text-[#3d8af5]"></iconify-icon>
-          Level 2 - Unit Pondok Aren
+          {{ $classroomName }}
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="flex items-center gap-0 bg-white/50 rounded-2xl border border-[#3d8af50d] p-4">
-    <div class="px-6 text-center border-r border-[#dee1e6]">
-      <p class="text-[10px] uppercase tracking-wider font-bold text-[#565d6d] mb-1">Total Bintang</p>
-      <div class="flex items-center justify-center gap-2">
-        <iconify-icon icon="lucide:star" width="22" class="text-[#EAB308]"></iconify-icon>
-        <span class="text-2xl font-black text-[#EAB308]">248</span>
-      </div>
-    </div>
-    <div class="px-6 text-center">
-      <p class="text-[10px] uppercase tracking-wider font-bold text-[#565d6d] mb-1">Peringkat</p>
-      <div class="flex items-center justify-center gap-2">
-        <iconify-icon icon="lucide:award" width="22" class="text-[#3d8af5]"></iconify-icon>
-        <span class="text-2xl font-black text-[#3d8af5]">Top 5</span>
       </div>
     </div>
   </div>
@@ -64,10 +57,10 @@
     <div class="space-y-2 mb-6">
       <div class="flex justify-between text-xs font-semibold">
         <span>Progres Belajar</span>
-        <span>95%</span>
+        <span>{{ $bacaPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#3d8af5]" style="width: 95%"></div>
+        <div class="h-full bg-[#3d8af5]" style="width: {{ $bacaPct }}%"></div>
       </div>
     </div>
     <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#3d8af5] text-sm font-medium hover:underline">
@@ -89,10 +82,10 @@
     <div class="space-y-2 mb-6">
       <div class="flex justify-between text-xs font-semibold">
         <span>Progres Belajar</span>
-        <span>80%</span>
+        <span>{{ $tulisPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#3d8af5]" style="width: 80%"></div>
+        <div class="h-full bg-[#3d8af5]" style="width: {{ $tulisPct }}%"></div>
       </div>
     </div>
     <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#3d8af5] text-sm font-medium hover:underline">
@@ -114,10 +107,10 @@
     <div class="space-y-2 mb-6">
       <div class="flex justify-between text-xs font-semibold">
         <span>Progres Belajar</span>
-        <span>65%</span>
+        <span>{{ $hitungPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#3d8af5]" style="width: 65%"></div>
+        <div class="h-full bg-[#3d8af5]" style="width: {{ $hitungPct }}%"></div>
       </div>
     </div>
     <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#3d8af5] text-sm font-medium hover:underline">
@@ -132,7 +125,7 @@
   <!-- Chart Section (xl: 2/3) -->
   <div class="xl:col-span-2 bg-white rounded-xl p-6 custom-shadow">
     <h3 class="text-lg font-bold text-[#171a1f] mb-1">Grafik Perkembangan Kemampuan</h3>
-    <p class="text-sm text-[#565d6d] mb-6">Visualisasi pertumbuhan belajar Ananda selama 5 bulan terakhir</p>
+    <p class="text-sm text-[#565d6d] mb-6">Visualisasi pertumbuhan belajar selama 5 bulan terakhir</p>
     <div class="h-[300px]">
       <canvas id="waliDashboardChart"></canvas>
     </div>

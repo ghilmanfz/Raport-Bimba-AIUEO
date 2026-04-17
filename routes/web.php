@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\GuruController as AdminGuruController;
 use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
 use App\Http\Controllers\Guru\NilaiController;
 use App\Http\Controllers\Guru\GrafikController;
@@ -56,6 +57,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/murid', [MuridController::class, 'index'])->name('murid');
+    Route::get('/murid/export', [MuridController::class, 'export'])->name('murid.export');
     Route::post('/murid', [MuridController::class, 'store'])->name('murid.store');
     Route::put('/murid/{student}', [MuridController::class, 'update'])->name('murid.update');
     Route::delete('/murid/{student}', [MuridController::class, 'destroy'])->name('murid.destroy');
@@ -66,6 +68,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/guru', [AdminGuruController::class, 'store'])->name('guru.store');
     Route::put('/guru/{teacher}', [AdminGuruController::class, 'update'])->name('guru.update');
     Route::delete('/guru/{teacher}', [AdminGuruController::class, 'destroy'])->name('guru.destroy');
+
+    Route::get('/user', [AdminUserController::class, 'index'])->name('user');
+    Route::put('/user/{user}', [AdminUserController::class, 'update'])->name('user.update');
+    Route::post('/user/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('user.resetPassword');
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
     Route::put('/pengaturan', [PengaturanController::class, 'updateSettings'])->name('pengaturan.update');
@@ -87,6 +93,7 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
     Route::get('/grafik', [GrafikController::class, 'index'])->name('grafik');
 
     Route::get('/rapor', [GuruRaporController::class, 'index'])->name('rapor');
+    Route::post('/rapor/notes', [GuruRaporController::class, 'saveNotes'])->name('rapor.notes');
 });
 
 /*

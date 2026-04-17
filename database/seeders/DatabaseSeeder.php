@@ -18,19 +18,20 @@ class DatabaseSeeder extends Seeder
     {
         // ─── Admin User ─────────────────────────────────────
         User::create([
-            'name'     => 'Admin BiMBA',
-            'role'     => 'admin',
-            'email'    => 'admin@bimba.id',
-            'password' => Hash::make('password'),
+            'name'           => 'Admin BiMBA',
+            'role'           => 'admin',
+            'email'          => 'admin@bimba.id',
+            'password'       => Hash::make('password'),
+            'plain_password' => 'password',
         ]);
 
-        // ─── Classrooms ────────────────────────────────────
+        // ─── Classrooms (Tahapan) ──────────────────────────
         $classrooms = [];
         $levels = [
-            'Level 1' => ['Level 1 - Persiapan A', 'Level 1 - Persiapan B', 'Level 1 - Persiapan C'],
-            'Level 2' => ['Level 2 - Dasar A', 'Level 2 - Dasar B'],
-            'Level 3' => ['Level 3 - Lanjutan A'],
-            'Level 4' => ['Level 4 - Mahir A', 'Level 4 - Mahir B'],
+            'Level 1' => ['Level 1'],
+            'Level 2' => ['Level 2'],
+            'Level 3' => ['Level 3'],
+            'Level 4' => ['Level 4'],
         ];
         foreach ($levels as $level => $names) {
             foreach ($names as $name) {
@@ -54,10 +55,11 @@ class DatabaseSeeder extends Seeder
         $teachers = [];
         foreach ($teacherData as $i => $td) {
             $user = User::create([
-                'name'     => $td[0],
-                'role'     => 'guru',
-                'email'    => $td[1],
-                'password' => Hash::make('password'),
+                'name'           => $td[0],
+                'role'           => 'guru',
+                'email'          => $td[1],
+                'password'       => Hash::make('password'),
+                'plain_password' => 'password',
             ]);
             $teacher = Teacher::create([
                 'user_id'        => $user->id,
@@ -93,10 +95,11 @@ class DatabaseSeeder extends Seeder
         $students = [];
         foreach ($studentData as $sd) {
             $parent = User::create([
-                'name'     => $sd[2],
-                'role'     => 'wali',
-                'email'    => $sd[3],
-                'password' => Hash::make('password'),
+                'name'           => $sd[2],
+                'role'           => 'wali',
+                'email'          => $sd[3],
+                'password'       => Hash::make('password'),
+                'plain_password' => 'password',
             ]);
 
             $classIdx = $sd[4] % count($classrooms);
@@ -113,35 +116,98 @@ class DatabaseSeeder extends Seeder
 
         // ─── Materials (Baca, Tulis, Hitung) ───────────────
         $materialsData = [
-            // Baca - Level 1
-            ['Pengenalan Huruf Vokal (A-I-U-E-O)',     'baca',   'Level 1', 1],
-            ['Pengenalan Huruf Konsonan B-D-G-K',      'baca',   'Level 1', 2],
-            ['Membaca Suku Kata Terbuka (Ba, Bi, Bu)',  'baca',   'Level 1', 3],
-            ['Pengenalan Kata Bermakna 4 Huruf',        'baca',   'Level 1', 4],
-            ['Kalimat Sederhana (3 Kata)',              'baca',   'Level 1', 5],
-            // Baca - Level 2
-            ['Membaca Kata dengan Huruf Mati',          'baca',   'Level 2', 1],
-            ['Membaca Kalimat Pendek',                  'baca',   'Level 2', 2],
-            ['Membaca Paragraf Sederhana',              'baca',   'Level 2', 3],
-            // Tulis - Level 1
-            ['Menelusur Garis Dasar',                   'tulis',  'Level 1', 1],
-            ['Menulis Huruf Vokal',                     'tulis',  'Level 1', 2],
-            ['Menulis Huruf Konsonan',                  'tulis',  'Level 1', 3],
-            ['Merangkai Suku Kata',                     'tulis',  'Level 1', 4],
-            ['Menulis Kata Sederhana',                  'tulis',  'Level 1', 5],
-            // Tulis - Level 2
-            ['Menulis Kalimat Pendek',                  'tulis',  'Level 2', 1],
-            ['Menulis Nama Sendiri',                    'tulis',  'Level 2', 2],
-            // Hitung - Level 1
-            ['Pengenalan Angka 1-10',                   'hitung', 'Level 1', 1],
-            ['Menghitung Benda 1-10',                   'hitung', 'Level 1', 2],
-            ['Pengenalan Angka 11-20',                  'hitung', 'Level 1', 3],
-            ['Penjumlahan Sederhana 1-5',               'hitung', 'Level 1', 4],
-            ['Pengurangan Sederhana 1-5',               'hitung', 'Level 1', 5],
-            // Hitung - Level 2
-            ['Penjumlahan 1-20',                        'hitung', 'Level 2', 1],
-            ['Pengurangan 1-20',                        'hitung', 'Level 2', 2],
-            ['Pengenalan Bentuk Geometri',              'hitung', 'Level 2', 3],
+            // ── BACA Level 1 ──
+            ['HV AIUEO',                'baca', 'Level 1', 1],
+            ['4 HVK',                   'baca', 'Level 1', 2],
+            ['HV BDG KMPSY',            'baca', 'Level 1', 3],
+            ['SIMBOL AIUEO',            'baca', 'Level 1', 4],
+            ['BACA 1A (BDG KMPSY)',     'baca', 'Level 1', 5],
+            ['4 HVS',                   'baca', 'Level 1', 6],
+            ['HV ABC',                  'baca', 'Level 1', 7],
+            ['BACA 1B (JLN TRC)',       'baca', 'Level 1', 8],
+            ['BACA 1C',                 'baca', 'Level 1', 9],
+            ['5HVS+VERBAL -NG',         'baca', 'Level 1', 10],
+            ['BACA 1D',                 'baca', 'Level 1', 11],
+            ['BACA 2',                  'baca', 'Level 1', 12],
+            // ── BACA Level 2 ──
+            ['BACA 1E',                 'baca', 'Level 2', 1],
+            ['BACA 1F',                 'baca', 'Level 2', 2],
+            ['BACA 3',                  'baca', 'Level 2', 3],
+            ['BACA 4',                  'baca', 'Level 2', 4],
+            ['BACA 5',                  'baca', 'Level 2', 5],
+            ['BACA 1G',                 'baca', 'Level 2', 6],
+            ['BACA 1H',                 'baca', 'Level 2', 7],
+            ['BACA 6',                  'baca', 'Level 2', 8],
+            ['BACA 7',                  'baca', 'Level 2', 9],
+            ['BACA 8',                  'baca', 'Level 2', 10],
+            ['BACA 9',                  'baca', 'Level 2', 11],
+            ['BACA 10',                 'baca', 'Level 2', 12],
+            ['BACA 11',                 'baca', 'Level 2', 13],
+            // ── BACA Level 3 ──
+            ['BACA 12',                 'baca', 'Level 3', 1],
+            ['HABBC',                   'baca', 'Level 3', 2],
+            ['HABBK',                   'baca', 'Level 3', 3],
+            // ── BACA Level 4 ──
+            ['SB',                      'baca', 'Level 4', 1],
+            ['SC',                      'baca', 'Level 4', 2],
+            ['PG',                      'baca', 'Level 4', 3],
+            // ── TULIS Level 1 ──
+            ['MENCORET BEBAS',          'tulis', 'Level 1', 1],
+            ['MEWARNAI HURUF',          'tulis', 'Level 1', 2],
+            ['TULIS 1A',                'tulis', 'Level 1', 3],
+            ['TULIS 1B (HV AIUEO)',     'tulis', 'Level 1', 4],
+            ['TULIS 2',                 'tulis', 'Level 1', 5],
+            ['TULIS 4',                 'tulis', 'Level 1', 6],
+            ['TULIS 6',                 'tulis', 'Level 1', 7],
+            ['DIKTE 1',                 'tulis', 'Level 1', 8],
+            // ── TULIS Level 2 ──
+            ['TULIS 3',                 'tulis', 'Level 2', 1],
+            ['TULIS 5',                 'tulis', 'Level 2', 2],
+            ['DIKTE 2',                 'tulis', 'Level 2', 3],
+            ['TULIS 7',                 'tulis', 'Level 2', 4],
+            ['DIKTE 3',                 'tulis', 'Level 2', 5],
+            ['TULIS 8',                 'tulis', 'Level 2', 6],
+            ['TULIS 9',                 'tulis', 'Level 2', 7],
+            ['DIKTE 4',                 'tulis', 'Level 2', 8],
+            ['TULIS 10',                'tulis', 'Level 2', 9],
+            ['TULIS 11',                'tulis', 'Level 2', 10],
+            ['DIKTE 5',                 'tulis', 'Level 2', 11],
+            ['TULIS 12A',               'tulis', 'Level 2', 12],
+            ['TULIS 12B',               'tulis', 'Level 2', 13],
+            ['DIKTE 6',                 'tulis', 'Level 2', 14],
+            // ── TULIS Level 3 ──
+            ['TULIS SAMBUNG 1',         'tulis', 'Level 3', 1],
+            ['TULIS SAMBUNG 2',         'tulis', 'Level 3', 2],
+            ['TULIS SAMBUNG 3',         'tulis', 'Level 3', 3],
+            ['TULIS SAMBUNG 4',         'tulis', 'Level 3', 4],
+            // ── TULIS Level 4 ──
+            ['LB',                      'tulis', 'Level 4', 1],
+            ['NB',                      'tulis', 'Level 4', 2],
+            ['NT',                      'tulis', 'Level 4', 3],
+            ['MBAP',                    'tulis', 'Level 4', 4],
+            // ── MATEMATIKA Level 1 ──
+            ['MTK 1A',                  'hitung', 'Level 1', 1],
+            ['MTK 1B',                  'hitung', 'Level 1', 2],
+            ['MTK 2A',                  'hitung', 'Level 1', 3],
+            ['MTK 2B',                  'hitung', 'Level 1', 4],
+            ['MTK 3A',                  'hitung', 'Level 1', 5],
+            ['MTK 3B',                  'hitung', 'Level 1', 6],
+            // ── MATEMATIKA Level 2 ──
+            ['MTK 4A',                  'hitung', 'Level 2', 1],
+            ['MTK 4B',                  'hitung', 'Level 2', 2],
+            ['MTK 6A',                  'hitung', 'Level 2', 3],
+            ['MTK 6B',                  'hitung', 'Level 2', 4],
+            ['MTK 5A',                  'hitung', 'Level 2', 5],
+            ['MTK 5B',                  'hitung', 'Level 2', 6],
+            // ── MATEMATIKA Level 3 ──
+            ['MTK 7A',                  'hitung', 'Level 3', 1],
+            ['MTK 7B',                  'hitung', 'Level 3', 2],
+            // ── MATEMATIKA Level 4 ──
+            ['PJTM',                    'hitung', 'Level 4', 1],
+            ['PBDM',                    'hitung', 'Level 4', 2],
+            ['PJDM',                    'hitung', 'Level 4', 3],
+            ['PGTM',                    'hitung', 'Level 4', 4],
+            ['PGDM',                    'hitung', 'Level 4', 5],
         ];
 
         $materials = [];

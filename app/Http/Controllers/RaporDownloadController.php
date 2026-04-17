@@ -28,6 +28,7 @@ class RaporDownloadController extends Controller
 
         $institutionName    = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
+        $unitName           = Setting::get('unit_name', '');
 
         // Generate QR code as base64 SVG
         $downloadUrl = route('rapor.download', $token);
@@ -41,7 +42,7 @@ class RaporDownloadController extends Controller
             ->first()?->user?->name ?? '';
 
         $pdf = Pdf::loadView('rapor.pdf', compact(
-            'student', 'reportData', 'institutionName', 'institutionAddress',
+            'student', 'reportData', 'institutionName', 'institutionAddress', 'unitName',
             'qrCodeBase64', 'teacherName'
         ))->setPaper('a4', 'portrait');
 

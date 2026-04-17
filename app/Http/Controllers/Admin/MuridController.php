@@ -118,4 +118,35 @@ class MuridController extends Controller
 
         return redirect()->route('admin.murid')->with('success', 'Data murid berhasil dihapus.');
     }
+
+    public function export()
+    {
+        $students = Student::with(['classroom', 'parent'])->get();
+
+        $callback = function () use ($students) {
+            $file = fopen('php://output', 'w');
+            // UTF-8 BOM for Excel compatibility
+            fwrite($file, "\xEF\xBB\xBF");
+            fputcsv($file, ['NIS', 'Nama Murid', 'Tahapan', 'Wali Murid', 'Email Wali', 'Tgl. Bergabung', 'Status'], ';');
+
+            foreach ($students as $student) {
+                fputcsv($file, [
+                    $student->nis,
+                    $student->name,
+                    $student->classroom?->name ?? '-',
+                    $student->parent?->name ?? '-',
+                    $student->parent?->email ?? '-',
+                    $student->join_date->format('d/m/Y'),
+                    ucfirst($student->status),
+                ], ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="data-murid-' . date('Y-m-d') . '.csv"',
+        ]);
+    }
 }

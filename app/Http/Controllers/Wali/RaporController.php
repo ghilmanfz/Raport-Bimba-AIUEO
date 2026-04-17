@@ -43,7 +43,25 @@ class RaporController extends Controller
 
         $institutionName = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
+        $unitName = Setting::get('unit_name', '');
 
-        return view('wali.rapor', compact('children', 'student', 'reportData', 'institutionName', 'institutionAddress', 'qrCodeBase64'));
+        // Previous period report data (last month snapshot)
+        $prevReportData = null;
+        if ($student) {
+            $lastMonthEnd = now()->subMonth()->endOfMonth();
+            foreach (['baca', 'tulis', 'hitung'] as $skill) {
+                $progress = $student->progress()
+                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill));
+                $total = $progress->count();
+                $skilled = $total > 0
+                    ? (clone $progress)->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
+                    : 0;
+                $prevReportData[$skill] = [
+                    'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
+                ];
+            }
+        }
+
+        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64'));
     }
 }

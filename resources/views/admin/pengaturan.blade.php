@@ -32,6 +32,10 @@
             <input type="text" name="institution_name" value="{{ $settings['institution_name'] }}" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
           </div>
           <div>
+            <label class="block text-sm font-bold text-[#171a1f] mb-2">Nama Unit</label>
+            <input type="text" name="unit_name" value="{{ $settings['unit_name'] }}" placeholder="Contoh: Unit Ciputat" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+          </div>
+          <div>
             <label class="block text-sm font-bold text-[#171a1f] mb-2">Alamat Lengkap</label>
             <textarea name="institution_address" rows="4" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 resize-none">{{ $settings['institution_address'] }}</textarea>
           </div>

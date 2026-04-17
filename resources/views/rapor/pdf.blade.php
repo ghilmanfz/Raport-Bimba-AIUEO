@@ -78,22 +78,30 @@
             <td>NIS</td>
             <td>:</td>
             <td><strong>{{ $student->nis }}</strong></td>
-            <td>Kelas</td>
+            <td>Unit</td>
             <td>:</td>
-            <td>{{ $student->classroom?->name ?? '-' }}</td>
+            <td>{{ $unitName ?: '-' }}</td>
         </tr>
         <tr>
             <td>Tanggal Lahir</td>
             <td>:</td>
             <td>{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</td>
-            <td>Level</td>
+            <td>Kelas</td>
             <td>:</td>
-            <td>{{ $student->classroom?->level ?? '-' }}</td>
+            <td>{{ $student->classroom?->name ?? '-' }}</td>
         </tr>
         <tr>
             <td>Jenis Kelamin</td>
             <td>:</td>
             <td>{{ ($student->gender ?? '') == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+            <td>Level</td>
+            <td>:</td>
+            <td>{{ $student->classroom?->level ?? '-' }}</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>Periode</td>
             <td>:</td>
             <td>{{ now()->translatedFormat('F Y') }}</td>
@@ -127,7 +135,7 @@
             {{-- MEMBACA --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Kelompok A — Membaca</strong></td>
+                <td colspan="4"><strong>Membaca</strong></td>
                 <td class="text-center"><strong>{{ round($bacaPct) }}%</strong></td>
             </tr>
             @foreach($reportData['baca']['by_level']->sortKeys() as $level => $progresses)
@@ -146,7 +154,7 @@
             {{-- MENULIS --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Kelompok B — Menulis</strong></td>
+                <td colspan="4"><strong>Menulis</strong></td>
                 <td class="text-center"><strong>{{ round($tulisPct) }}%</strong></td>
             </tr>
             @foreach($reportData['tulis']['by_level']->sortKeys() as $level => $progresses)
@@ -165,7 +173,7 @@
             {{-- BERHITUNG --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Kelompok C — Berhitung</strong></td>
+                <td colspan="4"><strong>Berhitung</strong></td>
                 <td class="text-center"><strong>{{ round($hitungPct) }}%</strong></td>
             </tr>
             @foreach($reportData['hitung']['by_level']->sortKeys() as $level => $progresses)
@@ -197,11 +205,14 @@
     <!-- Notes -->
     <div class="notes">
         <strong>Catatan Perkembangan:</strong><br>
-        Ananda <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
+        <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
         @if($avgPct >= 70) sangat positif @elseif($avgPct >= 40) cukup baik @else perlu ditingkatkan @endif
         dengan rata-rata penguasaan <strong>{{ $avgPct }}%</strong>.
         Aspek terkuat pada bidang <strong>{{ $highest }}</strong> ({{ $skills[$highest] }}%)
         dan fokus pengembangan pada bidang <strong>{{ $focus }}</strong> ({{ $skills[$focus] }}%).
+        @if($student->development_notes)
+        <br><br><strong>Catatan Guru:</strong> {{ $student->development_notes }}
+        @endif
     </div>
 
     <!-- Signature Section with QR Codes -->

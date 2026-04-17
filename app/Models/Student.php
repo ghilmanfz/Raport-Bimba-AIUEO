@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Student extends Model
 {
-    protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'join_date', 'status', 'photo', 'report_token'];
+    protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
 
     protected static function booted(): void
     {
