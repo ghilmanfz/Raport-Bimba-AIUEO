@@ -82,7 +82,7 @@
         <tr class="bg-[#f3f4f6]/30 text-[#565d6d] text-sm font-semibold border-b border-[#dee1e6]">
           <th class="px-6 py-4">ID</th>
           <th class="px-6 py-4">Nama Murid</th>
-          <th class="px-6 py-4">Tahapan</th>
+          <th class="px-6 py-4">Level</th>
           <th class="px-6 py-4">Wali Murid</th>
           <th class="px-6 py-4">Tgl. Bergabung</th>
           <th class="px-6 py-4">Status</th>
@@ -147,19 +147,14 @@
     </div>
     <form method="POST" action="{{ route('admin.murid.store') }}" class="space-y-4">
       @csrf
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">NIS</label>
-          <input type="text" name="nis" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="BM006">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
-          <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Lengkap">
-        </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
+        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Lengkap">
+        <p class="text-xs text-[#565d6d] mt-1">NIS akan dibuat otomatis</p>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Level</label>
           <select name="classroom_id" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
               <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
@@ -212,7 +207,8 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">NIS</label>
-          <input type="text" name="nis" id="edit-murid-nis" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="text" id="edit-murid-nis" readonly class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm bg-gray-50 text-[#565d6d] cursor-not-allowed">
+          <p class="text-xs text-[#565d6d] mt-1">NIS tidak dapat diubah</p>
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
@@ -221,7 +217,7 @@
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Level</label>
           <select name="classroom_id" id="edit-murid-classroom" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
               <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>

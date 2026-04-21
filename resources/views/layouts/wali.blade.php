@@ -17,9 +17,10 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .sidebar-active-item { background: #3d8af51a; color: #3d8af5; }
+    .sidebar-active-item { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); color: white; }
     .custom-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
+    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }
@@ -33,10 +34,10 @@
   <!-- Header -->
   <header class="no-print fixed top-0 left-0 right-0 h-16 bg-white/60 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-12">
     <div class="flex items-center gap-3">
-      <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+      <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
         <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-5 h-5">
       </div>
-      <span class="text-[#3d8af5] font-bold text-lg lg:text-xl font-['Inter']">E-Rapor BiMBA AIUEO</span>
+      <span class="font-bold text-lg lg:text-xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
     </div>
     <div class="flex items-center gap-4 lg:gap-6">
       @include('partials.notification-bell')
@@ -64,6 +65,11 @@
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.rapor') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
           <iconify-icon icon="lucide:file-text" width="18"></iconify-icon>
           Laporan Rapor
+        </a>
+        <a href="{{ route('wali.riwayat') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.riwayat') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:history" width="18"></iconify-icon>
+          Riwayat Rapor
         </a>
       </nav>
       <div class="p-4 border-t border-[#dee1e6]">

@@ -17,7 +17,6 @@
   .group-header td { background: #e2e8f0; font-weight: 700; font-size: 13px; }
   .status-T { background: #dcfce7; color: #166534; font-weight: 700; }
   .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
-  .status-B { background: #fef9c3; color: #92400e; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
 
   @media print {
@@ -82,8 +81,8 @@
   $highest = array_keys($skills, max($skills))[0];
   $focus = array_keys($skills, min($skills))[0];
 
-  $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', 'B' => 'Belum', default => 'Kenal' };
-  $statusValue = fn($s) => match($s) { 'T' => 4, 'P' => 3, 'B' => 2, default => 1 };
+  $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => 'Kenal (Pengenalan)' };
+  $statusValue = fn($s) => match($s) { 'T' => 3, 'P' => 2, default => 1 };
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
@@ -136,7 +135,7 @@
         <td>{{ $student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
         <td>Level</td>
         <td>:</td>
-        <td>{{ $student->classroom?->level ?? '-' }}</td>
+        <td>{{ preg_replace('/ - .*$/', '', $student->classroom?->level ?? '-') }}</td>
       </tr>
       <tr>
         <td></td>
@@ -230,10 +229,9 @@
   <!-- Status Legend -->
   <div class="mt-4 mb-6" style="font-size: 12px; color: #475569;">
     <strong>Keterangan Status:</strong>
-    <span class="ml-2">K = Kenal</span> &nbsp;|&nbsp;
-    <span>B = Belum</span> &nbsp;|&nbsp;
-    <span>P = Paham</span> &nbsp;|&nbsp;
-    <span>T = Terampil</span>
+    <span class="ml-2">K = Kenal (Pengenalan)</span> &nbsp;|&nbsp;
+    <span>P = Paham (Pemahaman)</span> &nbsp;|&nbsp;
+    <span>T = Terampil (Pembiasaan)</span>
   </div>
 
   <!-- Analysis Section -->

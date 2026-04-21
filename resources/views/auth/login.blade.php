@@ -15,14 +15,18 @@
     input::placeholder { color: #94a3b8; }
     .soft-shadow { box-shadow: 0 20px 50px -12px rgba(0,0,0,0.08); }
     .bg-gradient-subtle { background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); }
+    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .btn-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .bg-bimba-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
     * { transition: all 0.2s ease; }
   </style>
 </head>
 <body class="bg-[#fafafb] min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
 
   <!-- Decorative Background -->
-  <div class="absolute top-[10%] left-[5%] w-64 h-64 bg-[#3d8af5]/5 rounded-full blur-[64px] -z-10"></div>
-  <div class="absolute bottom-[10%] right-[5%] w-96 h-96 bg-[#63e98f]/5 rounded-full blur-[64px] -z-10"></div>
+  <div class="absolute top-[10%] left-[5%] w-64 h-64 bg-[#2563EB]/5 rounded-full blur-[64px] -z-10"></div>
+  <div class="absolute bottom-[10%] right-[5%] w-96 h-96 bg-[#EAB308]/5 rounded-full blur-[64px] -z-10"></div>
+  <div class="absolute top-[50%] right-[20%] w-48 h-48 bg-[#DC2626]/5 rounded-full blur-[64px] -z-10"></div>
 
   <!-- Card Container -->
   <main class="w-full max-w-[1024px] bg-white rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] overflow-hidden flex flex-col lg:flex-row min-h-[680px]">
@@ -32,10 +36,17 @@
       <div>
         <!-- Logo -->
         <div class="flex items-center gap-3 mb-12">
-          <div class="w-10 h-10 bg-[#3d8af5] rounded-full flex items-center justify-center">
-            <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-6 h-6">
+          @php
+            $logo = \App\Models\Setting::get('institution_logo');
+          @endphp
+          <div class="w-10 h-10 {{ $logo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center {{ $logo ? '' : 'bg-white' }}">
+            @if($logo)
+              <img src="{{ asset('storage/' . $logo) }}" alt="Logo" class="w-10 h-10 rounded-full object-cover">
+            @else
+              <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-6 h-6">
+            @endif
           </div>
-          <span class="text-[#3d8af5] font-bold text-2xl tracking-tight">E-Rapor BiMBA</span>
+          <span class="font-bold text-2xl tracking-tight" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA</span>
         </div>
 
         <!-- Welcome Text -->
@@ -97,7 +108,7 @@
           <div class="space-y-2">
             <div class="flex justify-between items-center">
               <label for="password">Kata Sandi</label>
-              <a href="#" class="text-xs font-medium text-[#3d8af5] hover:underline">Lupa Sandi?</a>
+              <a href="#" class="text-xs font-medium hover:underline" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lupa Sandi?</a>
             </div>
             <div class="relative flex items-center">
               <div class="absolute left-4 text-[#565d6d]/60">
@@ -118,7 +129,7 @@
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" class="w-full h-12 bg-[#3d8af5] hover:bg-[#3479d9] text-white font-semibold rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+          <button type="submit" class="w-full h-12 btn-gradient hover:opacity-90 text-white font-semibold rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
             <span>Masuk Sekarang</span>
             <iconify-icon icon="lucide:arrow-right" width="18"></iconify-icon>
           </button>
@@ -130,34 +141,41 @@
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-[12px] text-[#565d6d]">
           <span>© {{ date('Y') }} BiMBA AIUEO Smart Education</span>
           <div class="flex gap-6">
-            <a href="#" class="hover:text-[#3d8af5] transition-colors">Bantuan</a>
-            <a href="#" class="hover:text-[#3d8af5] transition-colors">Kebijakan Privasi</a>
+            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Bantuan</a>
+            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Kebijakan Privasi</a>
           </div>
         </div>
       </footer>
     </section>
 
     <!-- Right: Illustration -->
-    <section class="hidden lg:flex w-[48%] bg-[#F1F6FE] relative flex-col items-center justify-center p-12 overflow-hidden">
-      <div class="absolute top-[-20px] left-[-20px] w-32 h-32 bg-[#f2bf8c]/20 rounded-full blur-[64px]"></div>
+    <section class="hidden lg:flex w-[48%] bg-bimba-gradient relative flex-col items-center justify-center p-12 overflow-hidden">
+      <div class="absolute top-[-20px] left-[-20px] w-32 h-32 bg-[#DC2626]/20 rounded-full blur-[64px]"></div>
       <div class="absolute top-8 right-8 opacity-30">
-        <iconify-icon icon="lucide:palette" width="32" class="text-[#f2bf8c]"></iconify-icon>
+        <iconify-icon icon="lucide:palette" width="32" class="text-[#EAB308]"></iconify-icon>
       </div>
       <div class="absolute top-[25%] left-8 opacity-30">
-        <iconify-icon icon="lucide:book-open" width="24" class="text-[#3d8af5]"></iconify-icon>
+        <iconify-icon icon="lucide:book-open" width="24" class="text-[#2563EB]"></iconify-icon>
       </div>
       <div class="absolute bottom-12 left-12 opacity-40">
-        <iconify-icon icon="lucide:calculator" width="40" class="text-[#63e98f]"></iconify-icon>
+        <iconify-icon icon="lucide:calculator" width="40" class="text-[#EAB308]"></iconify-icon>
       </div>
-      <div class="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-[#3d8af5]/10 rounded-full blur-[64px]"></div>
+      <div class="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-[#DC2626]/10 rounded-full blur-[64px]"></div>
 
       <!-- Illustration Card -->
       <div class="relative z-10 bg-white p-6 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] mb-10 w-full max-w-[304px]">
-        <img src="{{ asset('assets/IMG_8.webp') }}" alt="Learning Illustration" class="w-full h-auto rounded-lg">
+        @php
+          $logo = \App\Models\Setting::get('institution_logo');
+        @endphp
+        @if($logo)
+          <img src="{{ asset('storage/' . $logo) }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
+        @else
+          <img src="{{ asset('assets/IMG_21.webp') }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
+        @endif
       </div>
 
       <div class="text-center max-w-[320px] relative z-10">
-        <h2 class="text-[#3d8af5] text-2xl font-bold mb-4">Pintar & Menyenangkan</h2>
+        <h2 class="text-2xl font-bold mb-4" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Pintar & Menyenangkan</h2>
         <p class="text-[#565d6d] text-sm leading-relaxed">Membangun Minat Baca dan Belajar Anak (BiMBA) dengan metode yang unik dan digital.</p>
       </div>
     </section>

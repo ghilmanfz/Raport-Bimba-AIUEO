@@ -83,10 +83,10 @@
       <thead>
         <tr class="bg-[#f3f4f6]/50 border-b border-[#dee1e6] text-sm font-semibold text-[#171a1f]">
           <th class="px-6 py-4 min-w-[280px]">Nama Materi</th>
-          <th class="px-6 py-4 min-w-[160px]">Tanggal Mulai</th>
-          <th class="px-6 py-4 min-w-[160px]">Tanggal Paham</th>
-          <th class="px-6 py-4 min-w-[160px]">Tanggal Terampil</th>
-          <th class="px-6 py-4 text-center min-w-[140px]">Status (K/B/P/T)</th>
+          <th class="px-6 py-4 min-w-[160px]">Tanggal Mulai (K)</th>
+          <th class="px-6 py-4 min-w-[160px]">Tanggal Paham (P)</th>
+          <th class="px-6 py-4 min-w-[160px]">Tanggal Terampil (T)</th>
+          <th class="px-6 py-4 text-center min-w-[140px]">Status (K/P/T)</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-[#dee1e6]">
@@ -113,13 +113,11 @@
               $badge = match($p['status']) {
                 'T' => 'bg-[#A7F3D0] border border-[#6EE7B7] text-[#047857]',
                 'P' => 'bg-[#BAE6FD] border border-[#7DD3FC] text-[#0369A1]',
-                'B' => 'bg-[#FDE68A] border border-[#FCD34D] text-[#B45309]',
                 default => 'bg-[#E2E8F0] border border-[#CBD5E1] text-[#334155]',
               };
               $label = match($p['status']) {
                 'T' => 'T - Terampil',
                 'P' => 'P - Paham',
-                'B' => 'B - Belum',
                 default => 'K - Kenal',
               };
             @endphp
@@ -148,26 +146,21 @@
 @endif
 
 <!-- Status Legend Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
   <div class="bg-[#F1F6FE] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#3d8af5] mb-1">K</h3>
-    <p class="text-xs font-bold text-[#3d8af5]/70 tracking-widest uppercase mb-2">Kenal</p>
-    <p class="text-sm text-[#3d8af5]/60">Belum ada progres</p>
-  </div>
-  <div class="bg-[#FCF0E3] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
-    <h3 class="text-2xl font-bold text-[#171a1f] mb-1">B</h3>
-    <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Belum</p>
-    <p class="text-sm text-[#171a1f]/60">Baru mulai belajar</p>
+    <p class="text-xs font-bold text-[#3d8af5]/70 tracking-widest uppercase mb-2">Kenal (Pengenalan)</p>
+    <p class="text-sm text-[#3d8af5]/60">Murid baru mengenal materi</p>
   </div>
   <div class="bg-[#E1F4FE] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">P</h3>
-    <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Paham</p>
-    <p class="text-sm text-[#171a1f]/60">Materi dikuasai</p>
+    <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Paham (Pemahaman)</p>
+    <p class="text-sm text-[#171a1f]/60">Murid memahami materi</p>
   </div>
   <div class="bg-[#DCFAE6] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">T</h3>
     <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Terampil</p>
-    <p class="text-sm text-[#171a1f]/60">Dapat mengaplikasikan</p>
+    <p class="text-sm text-[#171a1f]/60">Murid terampil mengaplikasikan</p>
   </div>
 </div>
 @endsection

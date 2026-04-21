@@ -49,7 +49,6 @@
       <div class="flex flex-wrap items-center gap-4 mt-4">
         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#63e98f] inline-block"></span><span class="text-xs text-[#565d6d]">Terampil</span></div>
         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#86d2f9] inline-block"></span><span class="text-xs text-[#565d6d]">Paham</span></div>
-        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#F2930D] inline-block"></span><span class="text-xs text-[#565d6d]">Belajar</span></div>
         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E2E8F0] inline-block"></span><span class="text-xs text-[#565d6d]">Kenal</span></div>
       </div>
     </div>
@@ -68,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-3 gap-2">
         <div class="bg-[#B0EC93]/20 border border-[#B0EC93] rounded-xl p-2 text-center">
           <p class="text-lg font-black text-[#047857]">{{ $statusPercent['T'] }}%</p>
           <p class="text-[10px] font-semibold text-[#047857]">Terampil</p>
@@ -76,10 +75,6 @@
         <div class="bg-[#6EC9F7]/20 border border-[#6EC9F7] rounded-xl p-2 text-center">
           <p class="text-lg font-black text-[#0369A1]">{{ $statusPercent['P'] }}%</p>
           <p class="text-[10px] font-semibold text-[#0369A1]">Paham</p>
-        </div>
-        <div class="bg-[#F7C96E]/20 border border-[#F7C96E] rounded-xl p-2 text-center">
-          <p class="text-lg font-black text-[#B45309]">{{ $statusPercent['B'] }}%</p>
-          <p class="text-[10px] font-semibold text-[#B45309]">Belajar</p>
         </div>
         <div class="bg-[#C5CCD3]/20 border border-[#C5CCD3] rounded-xl p-2 text-center">
           <p class="text-lg font-black text-[#334155]">{{ $statusPercent['K'] }}%</p>
@@ -89,22 +84,10 @@
     </div>
 
     <!-- Mini Stat Cards -->
-    <div class="grid grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 gap-3">
       <div class="bg-white rounded-xl border border-[#dee1e6] p-4 text-center main-shadow">
         <p class="text-[10px] font-semibold text-[#565d6d] uppercase tracking-wider mb-1">Total Murid</p>
         <p class="text-2xl font-black text-[#171a1f]">{{ $students->count() }}</p>
-      </div>
-      <div class="bg-white rounded-xl border border-[#dee1e6] p-4 text-center main-shadow">
-        <p class="text-[10px] font-semibold text-[#565d6d] uppercase tracking-wider mb-1">Terampil</p>
-        <p class="text-2xl font-black text-[#047857]">{{ $statusCounts['T'] }}</p>
-      </div>
-      <div class="bg-white rounded-xl border border-[#dee1e6] p-4 text-center main-shadow">
-        <p class="text-[10px] font-semibold text-[#565d6d] uppercase tracking-wider mb-1">Paham</p>
-        <p class="text-2xl font-black text-[#0369A1]">{{ $statusCounts['P'] }}</p>
-      </div>
-      <div class="bg-[#D92626] rounded-xl p-4 text-center main-shadow">
-        <p class="text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-1">Perhatian</p>
-        <p class="text-2xl font-black text-white">{{ $statusCounts['K'] + $statusCounts['B'] }}</p>
       </div>
     </div>
   </div>
@@ -137,19 +120,18 @@
           $badge = match($latestStatus) {
             'T' => 'bg-[#A7F3D0] text-[#047857]',
             'P' => 'bg-[#BAE6FD] text-[#0369A1]',
-            'B' => 'bg-[#FDE68A] text-[#B45309]',
             default => 'bg-[#E2E8F0] text-[#334155]',
           };
           $initials = collect(explode(' ', $s->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('');
           $colors = ['#3d8af5','#63e98f','#f2bf8c','#bf93ec','#D92626','#F2930D'];
           $color = $colors[$s->id % count($colors)];
-          $barColor = match($latestStatus) { 'T' => '#63e98f', 'P' => '#86d2f9', 'B' => '#F2930D', default => '#E2E8F0' };
+          $barColor = match($latestStatus) { 'T' => '#63e98f', 'P' => '#86d2f9', default => '#E2E8F0' };
         @endphp
         <tr class="hover:bg-gray-50/50">
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background-color: {{ $color }}">{{ $initials }}</div>
-              <div><p class="text-sm font-semibold text-[#171a1f]">{{ $s->name }}</p><p class="text-xs text-[#565d6d] font-roboto">{{ $s->classroom?->name ?? '-' }}</p></div>
+              <div><p class="text-sm font-semibold text-[#171a1f]">{{ $s->name }}</p><p class="text-xs text-[#565d6d] font-roboto">{{ preg_replace('/ - .*$/', '', $s->classroom?->level ?? '-') }}</p></div>
             </div>
           </td>
           <td class="px-6 py-4"><span class="px-3 py-1 bg-[#f3f4f6] rounded-full text-xs font-bold">{{ $s->classroom?->level ?? '-' }}</span></td>
@@ -204,10 +186,10 @@ const ctx1 = document.getElementById('grafikTrenChart').getContext('2d');
 new Chart(ctx1, {
   type: 'bar',
   data: {
-    labels: ['Terampil (T)', 'Paham (P)', 'Belajar (B)', 'Kenal (K)'],
+    labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
     datasets: [{
-      data: [{{ $statusCounts['T'] }}, {{ $statusCounts['P'] }}, {{ $statusCounts['B'] }}, {{ $statusCounts['K'] }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#F2930D', '#E2E8F0'],
+      data: [{{ $statusCounts['T'] }}, {{ $statusCounts['P'] }}, {{ $statusCounts['K'] }}],
+      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
       borderRadius: 8,
       borderSkipped: false,
     }]
@@ -228,10 +210,10 @@ const ctx2 = document.getElementById('grafikDonutChart').getContext('2d');
 new Chart(ctx2, {
   type: 'doughnut',
   data: {
-    labels: ['Terampil', 'Paham', 'Belajar', 'Kenal'],
+    labels: ['Terampil', 'Paham', 'Kenal'],
     datasets: [{
-      data: [{{ $statusPercent['T'] }}, {{ $statusPercent['P'] }}, {{ $statusPercent['B'] }}, {{ $statusPercent['K'] }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#F2930D', '#E2E8F0'],
+      data: [{{ $statusPercent['T'] }}, {{ $statusPercent['P'] }}, {{ $statusPercent['K'] }}],
+      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
       borderWidth: 0,
       hoverOffset: 4
     }]

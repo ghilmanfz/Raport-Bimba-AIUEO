@@ -18,9 +18,10 @@
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     .font-roboto { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; }
-    .sidebar-active-gradient { background: rgba(61, 138, 245, 0.1); border-radius: 10px; color: #3d8af5; }
+    .sidebar-active-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); border-radius: 10px; color: white; }
     .main-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .table-row-hover:hover { background-color: #f8fafc; }
+    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }
@@ -39,10 +40,10 @@
         <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
       </button>
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
+        <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
           <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
         </div>
-        <span class="text-[#3d8af5] font-bold text-lg">E-Rapor BiMBA AIUEO</span>
+        <span class="font-bold text-lg" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
       </div>
     </div>
     <div class="flex items-center gap-4">

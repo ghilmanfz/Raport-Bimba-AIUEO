@@ -65,7 +65,6 @@
           <th class="px-6 py-4">NIP</th>
           <th class="px-6 py-4">Nama Guru</th>
           <th class="px-6 py-4">Email</th>
-          <th class="px-6 py-4">Kelas</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Aksi</th>
         </tr>
@@ -81,20 +80,12 @@
             </div>
           </td>
           <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d]">
-            @if($teacher->classrooms->count())
-              {{ $teacher->classrooms->pluck('name')->join(', ') }}
-            @else
-              <span class="text-[#9095a0]">-</span>
-            @endif
-          </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
           <td class="px-6 py-4">
             <span class="status-pill {{ $teacher->status === 'aktif' ? 'status-active' : ($teacher->status === 'cuti' ? 'status-cuti' : 'status-nonaktif') }}">{{ ucfirst($teacher->status) }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
-              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}', {{ json_encode($teacher->classrooms->pluck('id')) }})" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
+              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}')" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
               <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" onsubmit="return confirm('Yakin hapus data guru ini?')">
@@ -108,7 +99,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="6" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
+          <td colspan="5" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
         </tr>
         @endforelse
       </tbody>
@@ -174,15 +165,10 @@
     </div>
     <form method="POST" action="{{ route('admin.guru.store') }}" class="space-y-4">
       @csrf
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Lengkap</label>
-          <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Guru">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">NIP</label>
-          <input type="text" name="nip" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="T-006">
-        </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Lengkap</label>
+        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Guru">
+        <p class="text-xs text-[#565d6d] mt-1">NIP akan dibuat otomatis</p>
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Email</label>
@@ -200,17 +186,6 @@
             <option value="cuti">Cuti</option>
             <option value="nonaktif">Nonaktif</option>
           </select>
-        </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-[#565d6d] mb-1">Kelas (opsional)</label>
-        <div class="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border border-[#dee1e6] rounded-xl p-3">
-          @foreach($classrooms as $classroom)
-          <label class="flex items-center gap-2 text-sm text-[#565d6d]">
-            <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="rounded border-gray-300 text-[#3d8af5] focus:ring-[#3d8af5]">
-            {{ $classroom->name }}
-          </label>
-          @endforeach
         </div>
       </div>
       <div class="flex gap-3 pt-2">
@@ -239,7 +214,8 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">NIP</label>
-          <input type="text" name="nip" id="edit-nip" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="text" id="edit-nip" readonly class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm bg-gray-50 text-[#565d6d] cursor-not-allowed">
+          <p class="text-xs text-[#565d6d] mt-1">NIP tidak dapat diubah</p>
         </div>
       </div>
       <div>
@@ -254,17 +230,6 @@
           <option value="nonaktif">Nonaktif</option>
         </select>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-[#565d6d] mb-1">Kelas</label>
-        <div id="edit-classrooms" class="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border border-[#dee1e6] rounded-xl p-3">
-          @foreach($classrooms as $classroom)
-          <label class="flex items-center gap-2 text-sm text-[#565d6d]">
-            <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="edit-classroom-cb rounded border-gray-300 text-[#3d8af5] focus:ring-[#3d8af5]">
-            {{ $classroom->name }}
-          </label>
-          @endforeach
-        </div>
-      </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-edit-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
         <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
@@ -274,15 +239,12 @@
 </div>
 
 <script>
-function openEditGuru(id, name, email, nip, status, classroomIds) {
+function openEditGuru(id, name, email, nip, status) {
   document.getElementById('form-edit-guru').action = '/admin/guru/' + id;
   document.getElementById('edit-name').value = name;
   document.getElementById('edit-email').value = email;
   document.getElementById('edit-nip').value = nip;
   document.getElementById('edit-status').value = status;
-  document.querySelectorAll('.edit-classroom-cb').forEach(cb => {
-    cb.checked = classroomIds.includes(parseInt(cb.value));
-  });
   document.getElementById('modal-edit-guru').classList.remove('hidden');
 }
 </script>

@@ -40,7 +40,6 @@ class MuridController extends Controller
     {
         $request->validate([
             'name'         => 'required|string|max:255',
-            'nis'          => 'required|string|unique:students,nis',
             'classroom_id' => 'required|exists:classrooms,id',
             'join_date'    => 'required|date',
             'status'       => 'required|in:aktif,cuti,nonaktif',
@@ -60,9 +59,8 @@ class MuridController extends Controller
             $parentId = $parent->id;
         }
 
-        Student::create([
+        $student = Student::create([
             'name'         => $request->name,
-            'nis'          => $request->nis,
             'classroom_id' => $request->classroom_id,
             'parent_id'    => $parentId,
             'join_date'    => $request->join_date,
@@ -71,26 +69,25 @@ class MuridController extends Controller
 
         Notification::notifyAdmins(
             'Murid Baru Ditambahkan',
-            'Data murid ' . $request->name . ' berhasil ditambahkan ke sistem.',
+            'Data murid ' . $request->name . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.murid')
         );
 
-        return redirect()->route('admin.murid')->with('success', 'Murid berhasil ditambahkan.');
+        return redirect()->route('admin.murid')->with('success', 'Murid berhasil ditambahkan dengan NIS: ' . $student->nis);
     }
 
     public function update(Request $request, Student $student)
     {
         $request->validate([
             'name'         => 'required|string|max:255',
-            'nis'          => 'required|string|unique:students,nis,' . $student->id,
             'classroom_id' => 'required|exists:classrooms,id',
             'join_date'    => 'required|date',
             'status'       => 'required|in:aktif,cuti,nonaktif',
         ]);
 
-        $student->update($request->only('name', 'nis', 'classroom_id', 'join_date', 'status'));
+        $student->update($request->only('name', 'classroom_id', 'join_date', 'status'));
 
         Notification::notifyAdmins(
             'Data Murid Diperbarui',

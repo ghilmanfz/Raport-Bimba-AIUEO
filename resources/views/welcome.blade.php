@@ -16,9 +16,11 @@
     p { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #565d6d; }
     .glass-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.5); }
     .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
-    .cta-gradient { background: linear-gradient(135deg, #D92626 0%, #EAB308 50%, #3d8af5 100%); }
+    .cta-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
     .soft-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .nav-blur { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.6); }
+    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .btn-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
     * { transition: all 0.2s ease; }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -32,14 +34,21 @@
   <header class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-[#dee1e6] h-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center">
-          <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
+        @php
+          $logo = \App\Models\Setting::get('institution_logo');
+        @endphp
+        <div class="w-8 h-8 {{ $logo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center {{ $logo ? '' : 'bg-white' }}">
+          @if($logo)
+            <img src="{{ asset('storage/' . $logo) }}" class="w-8 h-8 rounded-full object-cover" alt="Logo">
+          @else
+            <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
+          @endif
         </div>
-        <span class="text-[#3d8af5] font-bold text-lg sm:text-xl font-['Inter']">E-Rapor BiMBA AIUEO</span>
+        <span class="font-bold text-lg sm:text-xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
         <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-[#171a1f] hover:bg-gray-100 rounded-md">Login</a>
-        <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-white bg-[#3d8af5] hover:bg-blue-600 rounded-md">Lihat Demo</a>
+        <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-white btn-gradient hover:opacity-90 rounded-md">Lihat Demo</a>
       </div>
     </div>
   </header>
@@ -47,40 +56,40 @@
   <main class="pt-16">
     <!-- Hero Section -->
     <section class="hero-gradient relative overflow-hidden min-h-[800px] lg:min-h-[900px] flex items-center">
-      <div class="absolute top-0 right-0 w-[480px] h-full bg-[#3d8af5]/5 rounded-l-[9999px] hidden lg:block"></div>
-      <div class="absolute bottom-10 left-10 w-24 h-24 bg-[#f2bf8c]/20 rounded-full blur-[40px]"></div>
+      <div class="absolute top-0 right-0 w-[480px] h-full bg-[#2563EB]/5 rounded-l-[9999px] hidden lg:block"></div>
+      <div class="absolute bottom-10 left-10 w-24 h-24 bg-[#EAB308]/20 rounded-full blur-[40px]"></div>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 lg:py-24 grid lg:grid-cols-2 gap-12 items-center relative z-10">
         <div class="flex flex-col items-start">
-          <div class="inline-flex items-center gap-2 px-4 py-1 bg-[#3d8af5]/10 border border-[#3d8af5]/20 rounded-full mb-8">
+          <div class="inline-flex items-center gap-2 px-4 py-1 bg-white/50 backdrop-blur-sm border border-[#2563EB]/20 rounded-full mb-8">
             <img src="{{ asset('assets/IMG_3.svg') }}" class="w-3.5 h-3.5" alt="Smile">
-            <span class="text-[12px] font-bold text-[#3d8af5] tracking-widest uppercase">Masa Depan Belajar Anak</span>
+            <span class="text-[12px] font-bold tracking-widest uppercase" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Masa Depan Belajar Anak</span>
           </div>
           <h1 class="text-5xl sm:text-6xl lg:text-[72px] leading-tight mb-6">
             <span class="text-[#171a1f]">E-Rapor </span>
-            <span class="text-[#3d8af5]">BiMBA AIUEO</span>
+            <span style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">BiMBA AIUEO</span>
           </h1>
           <p class="text-lg sm:text-xl lg:text-2xl mb-10 max-w-[540px]">
             Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.
           </p>
           <div class="flex flex-wrap gap-4 mb-12">
-            <a href="{{ route('login') }}" class="px-10 py-4 bg-[#3d8af5] text-white font-semibold rounded-full shadow-lg hover:bg-blue-600 text-lg">Mulai Sekarang</a>
+            <a href="{{ route('login') }}" class="px-10 py-4 btn-gradient text-white font-semibold rounded-full shadow-lg hover:opacity-90 text-lg">Mulai Sekarang</a>
             <a href="{{ route('login') }}" class="px-10 py-4 bg-white border-2 border-[#dee1e6] text-[#171a1f] font-semibold rounded-full hover:bg-gray-50 text-lg">Lihat Demo</a>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="glass-card soft-shadow px-5 py-4 rounded-full flex items-center gap-3">
-              <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center flex-shrink-0">
+              <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center flex-shrink-0">
                 <img src="{{ asset('assets/IMG_4.svg') }}" class="w-4 h-4" alt="Activity">
               </div>
               <span class="text-sm font-medium">Digital rapor berbasis progres</span>
             </div>
             <div class="glass-card soft-shadow px-5 py-4 rounded-full flex items-center gap-3">
-              <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center flex-shrink-0">
+              <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center flex-shrink-0">
                 <img src="{{ asset('assets/IMG_5.svg') }}" class="w-4 h-4" alt="Shield">
               </div>
               <span class="text-sm font-medium">Penilaian unik (K, B, P, T)</span>
             </div>
             <div class="glass-card soft-shadow px-5 py-4 rounded-full flex items-center gap-3">
-              <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center flex-shrink-0">
+              <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center flex-shrink-0">
                 <img src="{{ asset('assets/IMG_6.svg') }}" class="w-4 h-4" alt="Clock">
               </div>
               <span class="text-sm font-medium">Monitoring real-time</span>
@@ -90,12 +99,19 @@
         <div class="relative flex justify-center lg:justify-end">
           <div class="relative w-full max-w-[480px] aspect-[4/5] bg-white p-2 rounded-[32px] shadow-2xl overflow-hidden">
             <div class="relative w-full h-full rounded-[24px] overflow-hidden">
-              <img src="{{ asset('assets/IMG_2.webp') }}" class="w-full h-full object-cover" alt="Anak belajar">
-              <div class="absolute inset-0 bg-gradient-to-t from-[#3d8af5]/20 to-transparent"></div>
+              @php
+                $logo = \App\Models\Setting::get('institution_logo');
+              @endphp
+              @if($logo)
+                <img src="{{ asset('storage/' . $logo) }}" class="w-full h-full object-contain" alt="BiMBA AIUEO School">
+              @else
+                <img src="{{ asset('assets/IMG_21.webp') }}" class="w-full h-full object-cover" alt="BiMBA AIUEO School">
+              @endif
+              <div class="absolute inset-0 bg-gradient-to-t from-[#2563EB]/20 to-transparent"></div>
             </div>
           </div>
           <div class="absolute -top-4 -left-4 sm:-left-8 floating-badge bg-white rounded-2xl p-4 flex items-center gap-3 w-[184px]">
-            <div class="w-10 h-10 bg-[#63e98f]/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <div class="w-10 h-10 bg-[#EAB308]/20 rounded-full flex items-center justify-center flex-shrink-0">
               <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Graduation">
             </div>
             <div>
@@ -104,13 +120,13 @@
             </div>
           </div>
           <div class="absolute bottom-12 -right-4 sm:-right-8 floating-badge bg-white rounded-2xl p-4 flex items-center gap-3 w-[180px]">
-            <div class="w-10 h-10 bg-[#f2bf8c]/20 rounded-full flex items-center justify-center flex-shrink-0">
+            <div class="w-10 h-10 bg-[#DC2626]/20 rounded-full flex items-center justify-center flex-shrink-0">
               <img src="{{ asset('assets/IMG_7.svg') }}" class="w-5 h-5" alt="Heart">
             </div>
             <div class="flex-1">
               <p class="text-sm font-bold text-[#171a1f] mb-2">98% Paham</p>
               <div class="w-full h-1.5 bg-[#f3f4f6] rounded-full overflow-hidden">
-                <div class="h-full bg-[#f2bf8c] w-[95%] rounded-full"></div>
+                <div class="h-full logo-gradient w-[95%] rounded-full"></div>
               </div>
             </div>
           </div>
@@ -178,21 +194,21 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div class="bg-white p-6 rounded-2xl border border-[#dee1e6] text-center flex flex-col items-center">
-            <div class="w-16 h-16 bg-[#3d8af5]/10 rounded-2xl flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-[#2563EB]/10 rounded-2xl flex items-center justify-center mb-6">
               <img src="{{ asset('assets/IMG_3.svg') }}" class="w-8 h-8" alt="Easy">
             </div>
             <h4 class="text-lg font-semibold mb-2">Mudah</h4>
             <p class="text-sm">Antarmuka ramah pengguna untuk semua kalangan.</p>
           </div>
           <div class="bg-white p-6 rounded-2xl border border-[#dee1e6] text-center flex flex-col items-center">
-            <div class="w-16 h-16 bg-[#3d8af5]/10 rounded-2xl flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-[#EAB308]/10 rounded-2xl flex items-center justify-center mb-6">
               <img src="{{ asset('assets/IMG_5.svg') }}" class="w-8 h-8" alt="Safe">
             </div>
             <h4 class="text-lg font-semibold mb-2">Aman</h4>
             <p class="text-sm">Keamanan data terjamin dengan enkripsi modern.</p>
           </div>
           <div class="bg-white p-6 rounded-2xl border border-[#dee1e6] text-center flex flex-col items-center">
-            <div class="w-16 h-16 bg-[#3d8af5]/10 rounded-2xl flex items-center justify-center mb-6">
+            <div class="w-16 h-16 bg-[#DC2626]/10 rounded-2xl flex items-center justify-center mb-6">
               <img src="{{ asset('assets/IMG_9.svg') }}" class="w-8 h-8" alt="Efficient">
             </div>
             <h4 class="text-lg font-semibold mb-2">Efisien</h4>
@@ -227,10 +243,10 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
         <div class="lg:col-span-2">
           <div class="flex items-center gap-3 mb-6">
-            <div class="w-9 h-9 bg-[#3d8af5] rounded-full flex items-center justify-center">
+            <div class="w-9 h-9 logo-gradient rounded-full flex items-center justify-center">
               <img src="{{ asset('assets/IMG_1.svg') }}" class="w-6 h-6" alt="Logo">
             </div>
-            <span class="text-[#3d8af5] font-bold text-2xl font-['Inter']">E-Rapor BiMBA AIUEO</span>
+            <span class="font-bold text-2xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
           </div>
           <p class="max-w-sm text-sm">Platform digital pemantauan perkembangan belajar anak dengan metode penilaian modern dan pelaporan komprehensif.</p>
         </div>

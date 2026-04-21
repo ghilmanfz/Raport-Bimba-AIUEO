@@ -13,10 +13,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $totalGuru = Teacher::count();
+        
         $stats = [
             'total_murid'   => Student::count(),
-            'total_guru'    => Teacher::count(),
-            'total_kelas'   => Classroom::count(),
+            'total_guru'    => $totalGuru,
+            'total_kelas'   => $totalGuru, // Total kelas sama dengan jumlah guru
             'murid_aktif'   => Student::where('status', 'aktif')->count(),
             'murid_baru'    => Student::where('join_date', '>=', now()->startOfMonth())->count(),
             'pencapaian'    => $this->calculateAchievement(),

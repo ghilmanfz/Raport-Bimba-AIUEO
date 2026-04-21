@@ -103,7 +103,7 @@
           </td>
           <td class="px-6 py-4" x-data="{ show: false }">
             <div class="flex items-center gap-2">
-              <code class="text-sm font-mono bg-[#f3f4f6] px-2 py-1 rounded" x-text="show ? '{{ $u->plain_password ?? '***' }}' : '••••••••'"></code>
+              <code class="text-sm font-mono bg-[#f3f4f6] px-2 py-1 rounded" x-text="show ? '{{ $u->plain_password ?? 'password123' }}' : '••••••••'"></code>
               <button @click="show = !show" class="p-1 text-[#565d6d] hover:text-[#3d8af5] rounded" :title="show ? 'Sembunyikan' : 'Lihat Password'">
                 <iconify-icon :icon="show ? 'lucide:eye-off' : 'lucide:eye'" width="14"></iconify-icon>
               </button>
@@ -120,7 +120,6 @@
                   <iconify-icon icon="lucide:refresh-cw" width="14"></iconify-icon>
                 </button>
               </form>
-
             </div>
           </td>
         </tr>

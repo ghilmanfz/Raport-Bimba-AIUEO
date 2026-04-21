@@ -9,11 +9,28 @@ class Student extends Model
 {
     protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
 
+    /**
+     * Generate the next sequential NIS (BM001, BM002, ...).
+     */
+    public static function generateNis(): string
+    {
+        $lastNis = static::whereNotNull('nis')
+            ->orderByRaw("CAST(SUBSTR(nis, 3) AS INTEGER) DESC")
+            ->value('nis');
+
+        $nextNum = $lastNis ? ((int) substr($lastNis, 3)) + 1 : 1;
+
+        return 'BM' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Student $student) {
             if (empty($student->report_token)) {
                 $student->report_token = Str::random(40);
+            }
+            if (empty($student->nis)) {
+                $student->nis = static::generateNis();
             }
         });
     }

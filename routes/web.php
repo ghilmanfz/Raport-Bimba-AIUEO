@@ -104,4 +104,6 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
 Route::prefix('wali')->name('wali.')->middleware(['auth', 'role:wali'])->group(function () {
     Route::get('/dashboard', [WaliDashboardController::class, 'index'])->name('dashboard');
     Route::get('/rapor', [WaliRaporController::class, 'index'])->name('rapor');
+    Route::get('/riwayat', [WaliRaporController::class, 'riwayat'])->name('riwayat');
+    Route::get('/rapor-periode', [WaliRaporController::class, 'cetakPeriode'])->name('rapor.periode');
 });

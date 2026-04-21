@@ -38,7 +38,7 @@ class DashboardController extends Controller
             if ($total > 0 && ($tCount / $total) >= 0.7) {
                 $terampil++;
             }
-            $bkCount = $progress->whereIn('status', ['K', 'B'])->count();
+            $bkCount = $progress->where('status', 'K')->count();
             if ($total > 0 && ($bkCount / $total) >= 0.5) {
                 $perluPerhatian++;
             }
@@ -49,14 +49,12 @@ class DashboardController extends Controller
         $statusCounts = [
             'T' => $allProgress->where('status', 'T')->count(),
             'P' => $allProgress->where('status', 'P')->count(),
-            'B' => $allProgress->where('status', 'B')->count(),
             'K' => $allProgress->where('status', 'K')->count(),
         ];
         $totalProgress = array_sum($statusCounts);
         $statusPercent = [
             'T' => $totalProgress > 0 ? round($statusCounts['T'] / $totalProgress * 100) : 0,
             'P' => $totalProgress > 0 ? round($statusCounts['P'] / $totalProgress * 100) : 0,
-            'B' => $totalProgress > 0 ? round($statusCounts['B'] / $totalProgress * 100) : 0,
             'K' => $totalProgress > 0 ? round($statusCounts['K'] / $totalProgress * 100) : 0,
         ];
 

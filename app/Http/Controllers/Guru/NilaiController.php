@@ -74,7 +74,6 @@ class NilaiController extends Controller
             $status = 'K';
             if (!empty($item['skilled_date'])) $status = 'T';
             elseif (!empty($item['understand_date'])) $status = 'P';
-            elseif (!empty($item['start_date'])) $status = 'B';
 
             StudentProgress::updateOrCreate(
                 [

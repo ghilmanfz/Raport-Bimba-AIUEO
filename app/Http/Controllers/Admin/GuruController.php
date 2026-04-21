@@ -36,7 +36,6 @@ class GuruController extends Controller
         $request->validate([
             'name'           => 'required|string|max:255',
             'email'          => 'required|email|unique:users,email',
-            'nip'            => 'nullable|string|unique:teachers,nip',
             'password'       => 'nullable|string|min:6',
             'status'         => 'required|in:aktif,cuti,nonaktif',
             'classroom_ids'  => 'nullable|array',
@@ -55,7 +54,7 @@ class GuruController extends Controller
 
         $teacher = Teacher::create([
             'user_id'        => $user->id,
-            'nip'            => $request->nip ?: Teacher::generateNip(),
+            'nip'            => Teacher::generateNip(),
             'specialization' => $request->specialization,
             'status'         => $request->status,
         ]);
@@ -66,13 +65,13 @@ class GuruController extends Controller
 
         Notification::notifyAdmins(
             'Guru Baru Ditambahkan',
-            'Guru ' . $request->name . ' berhasil ditambahkan ke sistem.',
+            'Guru ' . $request->name . ' ('. $teacher->nip .') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.guru')
         );
 
-        return redirect()->route('admin.guru')->with('success', 'Guru berhasil ditambahkan.');
+        return redirect()->route('admin.guru')->with('success', 'Guru berhasil ditambahkan dengan NIP: ' . $teacher->nip);
     }
 
     public function update(Request $request, Teacher $teacher)
@@ -80,7 +79,6 @@ class GuruController extends Controller
         $request->validate([
             'name'           => 'required|string|max:255',
             'email'          => 'required|email|unique:users,email,' . $teacher->user_id,
-            'nip'            => 'nullable|string|unique:teachers,nip,' . $teacher->id,
             'specialization' => 'nullable|string|max:100',
             'status'         => 'required|in:aktif,cuti,nonaktif',
             'classroom_ids'  => 'nullable|array',
@@ -88,7 +86,7 @@ class GuruController extends Controller
         ]);
 
         $teacher->user->update($request->only('name', 'email'));
-        $teacher->update($request->only('nip', 'specialization', 'status'));
+        $teacher->update($request->only('specialization', 'status'));
 
         if ($request->has('classroom_ids')) {
             $teacher->classrooms()->sync($request->classroom_ids);

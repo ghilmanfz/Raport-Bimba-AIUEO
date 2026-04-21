@@ -19,7 +19,7 @@
 </div>
 
 <!-- Stats Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-1 gap-6 mb-8">
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
     <div class="flex justify-between items-start mb-4">
       <div class="w-10 h-10 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
@@ -29,42 +29,6 @@
     <h3 class="text-3xl font-bold text-[#171a1f]">{{ $stats['total_murid'] }}</h3>
     <p class="text-sm font-medium text-[#171a1f] mt-1">Total Murid</p>
     <p class="text-xs text-[#565d6d] mt-1">Siswa aktif di kelas Anda</p>
-  </div>
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
-    <div class="flex justify-between items-start mb-4">
-      <div class="w-10 h-10 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:trending-up" width="18" class="text-[#3d8af5]"></iconify-icon>
-      </div>
-    </div>
-    <h3 class="text-3xl font-bold text-[#171a1f]">Lv {{ $stats['avg_level'] }}</h3>
-    <p class="text-sm font-medium text-[#171a1f] mt-1">Rata-rata Level</p>
-    <p class="text-xs text-[#565d6d] mt-1">Kemajuan rata-rata kelas</p>
-  </div>
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
-    <div class="flex justify-between items-start mb-4">
-      <div class="w-10 h-10 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:check-circle-2" width="18" class="text-[#3d8af5]"></iconify-icon>
-      </div>
-      @if($stats['total_murid'] > 0)
-      <span class="px-2 py-1 bg-[#f3f4f6] rounded-full text-xs font-semibold text-[#3d8af5]">{{ round($stats['terampil'] / max($stats['total_murid'],1) * 100) }}% efektivitas</span>
-      @endif
-    </div>
-    <h3 class="text-3xl font-bold text-[#171a1f]">{{ $stats['terampil'] }}</h3>
-    <p class="text-sm font-medium text-[#171a1f] mt-1">Siswa Terampil</p>
-    <p class="text-xs text-[#565d6d] mt-1">Mencapai target (T)</p>
-  </div>
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
-    <div class="flex justify-between items-start mb-4">
-      <div class="w-10 h-10 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:alert-circle" width="18" class="text-[#3d8af5]"></iconify-icon>
-      </div>
-      @if($stats['perlu_perhatian'] > 0)
-      <span class="px-2 py-1 bg-[#f3f4f6] rounded-full text-xs font-semibold text-[#D92626]">Tindak lanjut</span>
-      @endif
-    </div>
-    <h3 class="text-3xl font-bold text-[#171a1f]">{{ $stats['perlu_perhatian'] }}</h3>
-    <p class="text-sm font-medium text-[#171a1f] mt-1">Butuh Perhatian</p>
-    <p class="text-xs text-[#565d6d] mt-1">Masih di tahap (K/B)</p>
   </div>
 </div>
 
@@ -108,11 +72,6 @@
         <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['P'] ?? 0 }}%</span>
       </div>
       <div class="flex items-center gap-2">
-        <div class="w-3 h-3 bg-[#F2930D] rounded-full flex-shrink-0"></div>
-        <span class="text-xs text-[#565d6d]">Belajar (B)</span>
-        <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['B'] ?? 0 }}%</span>
-      </div>
-      <div class="flex items-center gap-2">
         <div class="w-3 h-3 bg-[#E2E8F0] rounded-full flex-shrink-0"></div>
         <span class="text-xs text-[#565d6d]">Kenal (K)</span>
         <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['K'] ?? 0 }}%</span>
@@ -132,10 +91,10 @@ const ctxBar = document.getElementById('dashboardBarChart').getContext('2d');
 new Chart(ctxBar, {
   type: 'bar',
   data: {
-    labels: ['Terampil (T)', 'Paham (P)', 'Belajar (B)', 'Kenal (K)'],
+    labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
     datasets: [{
-      data: [{{ $stats['status_counts']['T'] ?? 0 }}, {{ $stats['status_counts']['P'] ?? 0 }}, {{ $stats['status_counts']['B'] ?? 0 }}, {{ $stats['status_counts']['K'] ?? 0 }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#F2930D', '#E2E8F0'],
+      data: [{{ $stats['status_counts']['T'] ?? 0 }}, {{ $stats['status_counts']['P'] ?? 0 }}, {{ $stats['status_counts']['K'] ?? 0 }}],
+      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
       borderRadius: 8,
       borderSkipped: false,
     }]
@@ -155,10 +114,10 @@ const ctxDonut = document.getElementById('dashboardDonutChart').getContext('2d')
 new Chart(ctxDonut, {
   type: 'doughnut',
   data: {
-    labels: ['Terampil (T)', 'Paham (P)', 'Belajar (B)', 'Kenal (K)'],
+    labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
     datasets: [{
-      data: [{{ $stats['status_percent']['T'] ?? 0 }}, {{ $stats['status_percent']['P'] ?? 0 }}, {{ $stats['status_percent']['B'] ?? 0 }}, {{ $stats['status_percent']['K'] ?? 0 }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#F2930D', '#E2E8F0'],
+      data: [{{ $stats['status_percent']['T'] ?? 0 }}, {{ $stats['status_percent']['P'] ?? 0 }}, {{ $stats['status_percent']['K'] ?? 0 }}],
+      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
       borderWidth: 0,
       hoverOffset: 6
     }]

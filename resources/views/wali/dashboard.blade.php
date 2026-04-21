@@ -139,27 +139,20 @@
         <iconify-icon icon="lucide:info" width="16" class="text-[#3d8af5]"></iconify-icon>
         <h3 class="text-sm font-bold text-[#171a1f]">Panduan Penilaian BiMBA</h3>
       </div>
-      <div class="grid grid-cols-4 gap-2">
+      <div class="grid grid-cols-3 gap-2">
         <div class="bg-white p-2 rounded-xl custom-shadow text-center">
           <div class="w-8 h-8 bg-[#f3f4f6] rounded-full flex items-center justify-center mx-auto mb-2">
             <span class="text-xs font-bold text-[#565d6d]">K</span>
           </div>
-          <p class="text-[10px] font-bold mb-0.5">Kurang</p>
-          <p class="text-[8px] text-[#565d6d] leading-tight">Butuh bimbingan</p>
-        </div>
-        <div class="bg-white p-2 rounded-xl custom-shadow text-center">
-          <div class="w-8 h-8 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <span class="text-xs font-bold text-[#171a1f]">B</span>
-          </div>
-          <p class="text-[10px] font-bold mb-0.5">Belum</p>
-          <p class="text-[8px] text-[#565d6d] leading-tight">Pengenalan</p>
+          <p class="text-[10px] font-bold mb-0.5">Kenal</p>
+          <p class="text-[8px] text-[#565d6d] leading-tight">Tahap pengenalan</p>
         </div>
         <div class="bg-white p-2 rounded-xl custom-shadow text-center">
           <div class="w-8 h-8 bg-[#3d8af5] rounded-full flex items-center justify-center mx-auto mb-2">
             <span class="text-xs font-bold text-white">P</span>
           </div>
           <p class="text-[10px] font-bold mb-0.5">Paham</p>
-          <p class="text-[8px] text-[#565d6d] leading-tight">Konsep dasar</p>
+          <p class="text-[8px] text-[#565d6d] leading-tight">Memahami konsep</p>
         </div>
         <div class="bg-white p-2 rounded-xl custom-shadow text-center">
           <div class="w-8 h-8 bg-white border border-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">

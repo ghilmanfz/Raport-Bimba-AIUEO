@@ -378,20 +378,13 @@
     <iconify-icon icon="lucide:info" width="18" class="text-[#3d8af5]"></iconify-icon>
     <h3 class="text-sm font-bold text-[#171a1f]">Panduan Penilaian BiMBA AIUEO</h3>
   </div>
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+  <div class="grid grid-cols-3 gap-3">
     <div class="bg-[#f1f5f9] border border-[#e2e8f0] rounded-xl p-3 text-center">
       <div class="w-8 h-8 bg-[#475569]/10 rounded-full flex items-center justify-center mx-auto mb-2">
         <span class="text-[#475569] font-bold text-sm">K</span>
       </div>
       <p class="text-xs font-bold text-[#171a1f]">Kenal</p>
       <p class="text-[10px] text-[#565d6d]">Tahap pengenalan awal</p>
-    </div>
-    <div class="bg-[#fef9c3] border border-[#fde68a] rounded-xl p-3 text-center">
-      <div class="w-8 h-8 bg-[#92400e]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-        <span class="text-[#92400e] font-bold text-sm">B</span>
-      </div>
-      <p class="text-xs font-bold text-[#171a1f]">Belum</p>
-      <p class="text-[10px] text-[#565d6d]">Belum menguasai konsep</p>
     </div>
     <div class="bg-[#dbeafe] border border-[#93c5fd] rounded-xl p-3 text-center">
       <div class="w-8 h-8 bg-[#1e40af]/10 rounded-full flex items-center justify-center mx-auto mb-2">
