@@ -15,7 +15,7 @@
       <iconify-icon icon="lucide:download" width="16"></iconify-icon>
       Ekspor
     </a>
-    <button onclick="document.getElementById('modal-tambah-guru').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">
+    <button onclick="document.getElementById('modal-tambah-guru').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">
       <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
       Tambah Guru
     </button>
@@ -30,7 +30,7 @@
       <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $totalGuru }}</h3>
     </div>
     <div class="w-14 h-14 bg-[#F1F6FE] rounded-2xl flex items-center justify-center">
-      <iconify-icon icon="lucide:users" width="24" class="text-[#3d8af5]"></iconify-icon>
+      <iconify-icon icon="lucide:users" width="24" class="text-[#2563EB]"></iconify-icon>
     </div>
   </div>
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
@@ -38,8 +38,8 @@
       <p class="text-sm font-medium text-[#565d6d]">Guru Aktif</p>
       <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $guruAktif }}</h3>
     </div>
-    <div class="w-14 h-14 bg-[#DCFAE6] rounded-2xl flex items-center justify-center">
-      <iconify-icon icon="lucide:user-check" width="24" class="text-[#16a34a]"></iconify-icon>
+    <div class="w-14 h-14 bg-[#FEE2E2] rounded-2xl flex items-center justify-center">
+      <iconify-icon icon="lucide:user-check" width="24" class="text-[#991B1B]"></iconify-icon>
     </div>
   </div>
 </div>
@@ -52,7 +52,7 @@
         <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
           <iconify-icon icon="lucide:search" width="16"></iconify-icon>
         </div>
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau NIP..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau NIP..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
       </form>
     </div>
     <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-bold">{{ $teachers->count() }}</span> dari <span class="font-bold">{{ $totalGuru }}</span> guru</p>
@@ -75,7 +75,7 @@
           <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">{{ $teacher->nip ?? '-' }}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-[#3d8af5] flex items-center justify-center text-white font-bold text-sm">{{ strtoupper(substr($teacher->user->name, 0, 1)) }}</div>
+              <div class="w-10 h-10 rounded-full bg-[#2563EB] flex items-center justify-center text-white font-bold text-sm">{{ strtoupper(substr($teacher->user->name, 0, 1)) }}</div>
               <span class="text-sm font-semibold text-[#171a1f]">{{ $teacher->user->name }}</span>
             </div>
           </td>
@@ -85,7 +85,7 @@
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
-              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}')" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
+              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}')" class="p-2 text-[#2563EB] hover:bg-blue-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
               <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" onsubmit="return confirm('Yakin hapus data guru ini?')">
@@ -117,7 +117,7 @@
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
   <div class="xl:col-span-2 bg-[#0D7FF2] p-6 lg:p-8 rounded-2xl main-shadow flex flex-col sm:flex-row gap-6">
     <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex-shrink-0 flex items-center justify-center">
-      <iconify-icon icon="lucide:lightbulb" width="22" class="text-[#3d8af5]"></iconify-icon>
+      <iconify-icon icon="lucide:lightbulb" width="22" class="text-[#2563EB]"></iconify-icon>
     </div>
     <div>
       <h4 class="text-lg font-bold text-white mb-2">Tips Manajemen Motivator</h4>
@@ -127,12 +127,12 @@
     </div>
   </div>
   <div class="bg-white p-6 rounded-2xl border border-[#dee1e6] main-shadow flex flex-col items-center text-center">
-    <div class="w-12 h-12 bg-[#63e98f]/10 rounded-full flex items-center justify-center mb-4">
-      <iconify-icon icon="lucide:help-circle" width="22" class="text-[#16a34a]"></iconify-icon>
+    <div class="w-12 h-12 bg-[#DC2626]/10 rounded-full flex items-center justify-center mb-4">
+      <iconify-icon icon="lucide:help-circle" width="22" class="text-[#991B1B]"></iconify-icon>
     </div>
     <h4 class="text-base font-bold text-[#171a1f] mb-1">Butuh Bantuan?</h4>
     <p class="text-xs text-[#565d6d] mb-6">Hubungi tim IT Pusat untuk bantuan teknis.</p>
-    <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor." target="_blank" class="w-full py-2 border border-[#63e98f] text-[#16a34a] text-sm font-medium rounded-xl hover:bg-[#63e98f]/5 block text-center">
+    <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor." target="_blank" class="w-full py-2 border border-[#DC2626] text-[#991B1B] text-sm font-medium rounded-xl hover:bg-[#DC2626]/5 block text-center">
       <iconify-icon icon="lucide:message-circle" width="14" class="inline mr-1"></iconify-icon>
       Pusat Bantuan
     </a>
@@ -167,21 +167,21 @@
       @csrf
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Lengkap</label>
-        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Guru">
+        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="Nama Guru">
         <p class="text-xs text-[#565d6d] mt-1">NIP akan dibuat otomatis</p>
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Email</label>
-        <input type="email" name="email" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="guru@bimba.id">
+        <input type="email" name="email" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="guru@bimba.id">
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Password</label>
-          <input type="text" name="password" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Default: password123">
+          <input type="text" name="password" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="Default: password123">
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
-          <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
             <option value="aktif">Aktif</option>
             <option value="cuti">Cuti</option>
             <option value="nonaktif">Nonaktif</option>
@@ -190,7 +190,7 @@
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-tambah-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Simpan</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Simpan</button>
       </div>
     </form>
   </div>
@@ -210,7 +210,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Lengkap</label>
-          <input type="text" name="name" id="edit-name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="text" name="name" id="edit-name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">NIP</label>
@@ -220,11 +220,11 @@
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Email</label>
-        <input type="email" name="email" id="edit-email" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        <input type="email" name="email" id="edit-email" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
-        <select name="status" id="edit-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        <select name="status" id="edit-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
           <option value="aktif">Aktif</option>
           <option value="cuti">Cuti</option>
           <option value="nonaktif">Nonaktif</option>
@@ -232,7 +232,7 @@
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-edit-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
       </div>
     </form>
   </div>

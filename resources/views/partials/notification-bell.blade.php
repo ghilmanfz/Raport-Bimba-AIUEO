@@ -13,7 +13,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between px-5 py-4 border-b border-[#dee1e6]">
       <h3 class="text-base font-bold text-[#171a1f]">Notifikasi</h3>
-      <button x-show="unreadCount > 0" @click="markAllRead()" class="text-xs font-medium text-[#3d8af5] hover:underline">
+      <button x-show="unreadCount > 0" @click="markAllRead()" class="text-xs font-medium text-[#2563EB] hover:underline">
         Tandai semua dibaca
       </button>
     </div>
@@ -33,8 +33,8 @@
           <div class="flex-shrink-0 mt-0.5">
             <div :class="{
               'bg-green-100 text-green-600': n.type === 'success',
-              'bg-blue-100 text-[#3d8af5]': n.type === 'info',
-              'bg-amber-100 text-amber-600': n.type === 'warning',
+              'bg-blue-100 text-[#2563EB]': n.type === 'info',
+              'bg-[#FEF9C3] text-[#A16207]': n.type === 'warning',
               'bg-red-100 text-[#D92626]': n.type === 'error'
             }" class="w-9 h-9 rounded-full flex items-center justify-center">
               <iconify-icon :icon="n.icon" width="16"></iconify-icon>
@@ -43,7 +43,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between gap-2">
               <p class="text-sm font-semibold text-[#171a1f] truncate" x-text="n.title"></p>
-              <span x-show="!n.read" class="flex-shrink-0 w-2 h-2 bg-[#3d8af5] rounded-full mt-1.5"></span>
+              <span x-show="!n.read" class="flex-shrink-0 w-2 h-2 bg-[#2563EB] rounded-full mt-1.5"></span>
             </div>
             <p class="text-xs text-[#565d6d] mt-0.5 line-clamp-2" x-text="n.message"></p>
             <p class="text-[10px] text-[#9095a0] mt-1 font-roboto" x-text="n.time"></p>

@@ -26,9 +26,9 @@
         .rapor-table th, .rapor-table td { border: 1.5px solid #1e293b; padding: 6px 10px; font-size: 12px; }
         .rapor-table th { background: #f1f5f9; font-weight: 700; text-align: center; }
         .group-header td { background: #e2e8f0; font-weight: 700; font-size: 12px; }
-        .status-T { background: #dcfce7; color: #166534; font-weight: 700; }
+        .status-T { background: #FEE2E2; color: #991B1B; font-weight: 700; }
         .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
-        .status-B { background: #fef9c3; color: #92400e; font-weight: 700; }
+        .status-B { background: #f1f5f9; color: #475569; font-weight: 700; }
         .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
         .avg-row td { background: #e2e8f0; }
 
@@ -110,7 +110,8 @@
 
     <!-- Main Grades Table -->
     @php
-        $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', 'B' => 'Belum', default => 'Kenal' };
+        $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
+        $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => 'Kenal' };
         $bacaPct   = $reportData['baca']['percentage'];
         $tulisPct  = $reportData['tulis']['percentage'];
         $hitungPct = $reportData['hitung']['percentage'];
@@ -145,7 +146,7 @@
                         <td class="text-center">{{ $no }}</td>
                         <td>{{ $prog->material->name }}</td>
                         <td class="text-center">{{ $prog->material->level }}</td>
-                        <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+                        <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
                         <td>{{ $statusLabel($prog->status) }}</td>
                     </tr>
                 @endforeach
@@ -164,7 +165,7 @@
                         <td class="text-center">{{ $no }}</td>
                         <td>{{ $prog->material->name }}</td>
                         <td class="text-center">{{ $prog->material->level }}</td>
-                        <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+                        <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
                         <td>{{ $statusLabel($prog->status) }}</td>
                     </tr>
                 @endforeach
@@ -183,7 +184,7 @@
                         <td class="text-center">{{ $no }}</td>
                         <td>{{ $prog->material->name }}</td>
                         <td class="text-center">{{ $prog->material->level }}</td>
-                        <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+                        <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
                         <td>{{ $statusLabel($prog->status) }}</td>
                     </tr>
                 @endforeach
@@ -199,7 +200,7 @@
     <!-- Legend -->
     <div class="legend">
         <strong>Keterangan Status:</strong>
-        K = Kenal &nbsp;|&nbsp; B = Belum &nbsp;|&nbsp; P = Paham &nbsp;|&nbsp; T = Terampil
+        K = Kenal &nbsp;|&nbsp; P = Paham &nbsp;|&nbsp; T = Terampil
     </div>
 
     <!-- Notes -->

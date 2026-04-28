@@ -16,11 +16,11 @@
     p { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; line-height: 1.6; color: #565d6d; }
     .glass-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.5); }
     .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
-    .cta-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .cta-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
     .soft-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .nav-blur { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.6); }
-    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
-    .btn-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .logo-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
+    .btn-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
     * { transition: all 0.2s ease; }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -44,7 +44,7 @@
             <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
           @endif
         </div>
-        <span class="font-bold text-lg sm:text-xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
+        <span class="font-bold text-lg sm:text-xl font-['Inter']" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
         <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-[#171a1f] hover:bg-gray-100 rounded-md">Login</a>
@@ -62,11 +62,11 @@
         <div class="flex flex-col items-start">
           <div class="inline-flex items-center gap-2 px-4 py-1 bg-white/50 backdrop-blur-sm border border-[#2563EB]/20 rounded-full mb-8">
             <img src="{{ asset('assets/IMG_3.svg') }}" class="w-3.5 h-3.5" alt="Smile">
-            <span class="text-[12px] font-bold tracking-widest uppercase" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Masa Depan Belajar Anak</span>
+            <span class="text-[12px] font-bold tracking-widest uppercase" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Masa Depan Belajar Anak</span>
           </div>
           <h1 class="text-5xl sm:text-6xl lg:text-[72px] leading-tight mb-6">
             <span class="text-[#171a1f]">E-Rapor </span>
-            <span style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">BiMBA AIUEO</span>
+            <span style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">BiMBA AIUEO</span>
           </h1>
           <p class="text-lg sm:text-xl lg:text-2xl mb-10 max-w-[540px]">
             Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.
@@ -246,7 +246,7 @@
             <div class="w-9 h-9 logo-gradient rounded-full flex items-center justify-center">
               <img src="{{ asset('assets/IMG_1.svg') }}" class="w-6 h-6" alt="Logo">
             </div>
-            <span class="font-bold text-2xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
+            <span class="font-bold text-2xl font-['Inter']" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
           </div>
           <p class="max-w-sm text-sm">Platform digital pemantauan perkembangan belajar anak dengan metode penilaian modern dan pelaporan komprehensif.</p>
         </div>
@@ -262,9 +262,9 @@
         <div>
           <h4 class="text-base font-bold mb-6">Hubungi Kami</h4>
           <ul class="space-y-3 text-sm text-[#565d6d]">
-            <li><a href="mailto:info@bimba-aiueo.com" class="hover:text-[#3d8af5]">info@bimba-aiueo.com</a></li>
-            <li><a href="https://wa.me/6281234567890?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya." target="_blank" class="hover:text-[#3d8af5]">Support Center (WhatsApp)</a></li>
-            <li><a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan." target="_blank" class="hover:text-[#3d8af5]">Pusat Bantuan</a></li>
+            <li><a href="mailto:info@bimba-aiueo.com" class="hover:text-[#2563EB]">info@bimba-aiueo.com</a></li>
+            <li><a href="https://wa.me/6281234567890?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya." target="_blank" class="hover:text-[#2563EB]">Support Center (WhatsApp)</a></li>
+            <li><a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan." target="_blank" class="hover:text-[#2563EB]">Pusat Bantuan</a></li>
           </ul>
         </div>
       </div>

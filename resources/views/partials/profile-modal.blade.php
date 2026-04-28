@@ -20,10 +20,10 @@
       </div>
       <!-- Tabs -->
       <div class="flex gap-4 mt-4 border-b border-[#dee1e6] -mb-4">
-        <button @click="activeTab = 'info'" :class="activeTab === 'info' ? 'border-[#3d8af5] text-[#3d8af5]' : 'border-transparent text-[#565d6d]'" class="pb-3 border-b-2 text-sm font-semibold">
+        <button @click="activeTab = 'info'" :class="activeTab === 'info' ? 'border-[#2563EB] text-[#2563EB]' : 'border-transparent text-[#565d6d]'" class="pb-3 border-b-2 text-sm font-semibold">
           Informasi Akun
         </button>
-        <button @click="activeTab = 'password'" :class="activeTab === 'password' ? 'border-[#3d8af5] text-[#3d8af5]' : 'border-transparent text-[#565d6d]'" class="pb-3 border-b-2 text-sm font-semibold">
+        <button @click="activeTab = 'password'" :class="activeTab === 'password' ? 'border-[#2563EB] text-[#2563EB]' : 'border-transparent text-[#565d6d]'" class="pb-3 border-b-2 text-sm font-semibold">
           Ganti Password
         </button>
       </div>
@@ -38,22 +38,22 @@
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">Nama Lengkap</label>
             <input type="text" name="name" value="{{ auth()->user()->name }}" required
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">Email</label>
             <input type="email" name="email" value="{{ auth()->user()->email }}" required
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">No. Telepon</label>
             <input type="text" name="phone" value="{{ auth()->user()->phone }}"
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
           <button type="button" @click="showProfileModal = false" class="px-5 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-          <button type="submit" class="px-5 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600">Simpan Perubahan</button>
+          <button type="submit" class="px-5 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600">Simpan Perubahan</button>
         </div>
       </form>
     </div>
@@ -67,22 +67,22 @@
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">Password Saat Ini</label>
             <input type="password" name="current_password" required
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">Password Baru</label>
             <input type="password" name="password" required minlength="8"
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
           <div>
             <label class="block text-sm font-semibold text-[#171a1f] mb-1.5">Konfirmasi Password Baru</label>
             <input type="password" name="password_confirmation" required minlength="8"
-              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+              class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
           <button type="button" @click="showProfileModal = false" class="px-5 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-          <button type="submit" class="px-5 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600">Ganti Password</button>
+          <button type="submit" class="px-5 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600">Ganti Password</button>
         </div>
       </form>
     </div>

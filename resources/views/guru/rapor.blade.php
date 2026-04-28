@@ -15,7 +15,7 @@
   .rapor-header-table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
   .rapor-header-table td { padding: 3px 8px; font-size: 13px; border: none; vertical-align: top; }
   .group-header td { background: #e2e8f0; font-weight: 700; font-size: 13px; }
-  .status-T { background: #dcfce7; color: #166534; font-weight: 700; }
+  .status-T { background: #FEE2E2; color: #991B1B; font-weight: 700; }
   .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
 
@@ -38,7 +38,7 @@
   </div>
   <div class="flex flex-wrap gap-2">
     <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-      <iconify-icon icon="lucide:printer" width="16" class="text-[#3d8af5]"></iconify-icon>
+      <iconify-icon icon="lucide:printer" width="16" class="text-[#2563EB]"></iconify-icon>
       Cetak
     </button>
   </div>
@@ -52,7 +52,7 @@
       <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
         <iconify-icon icon="lucide:user" width="16"></iconify-icon>
       </div>
-      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 bg-white">
+      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 bg-white">
         @foreach($students as $s)
           <option value="{{ $s->id }}" {{ $student?->id == $s->id ? 'selected' : '' }}>{{ $s->name }} ({{ $s->classroom?->name ?? '-' }})</option>
         @endforeach
@@ -63,7 +63,7 @@
     </div>
   </div>
   <div class="md:col-span-4">
-    <button type="submit" class="w-full py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
+    <button type="submit" class="w-full py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
       <iconify-icon icon="lucide:search" width="16"></iconify-icon>
       Tampilkan
     </button>
@@ -255,8 +255,8 @@
       @csrf
       <input type="hidden" name="student_id" value="{{ $student->id }}">
       <label class="block text-sm font-bold text-[#171a1f] mb-2">Catatan Perkembangan Manual</label>
-      <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none" placeholder="Tulis catatan perkembangan murid di sini...">{{ $student->development_notes }}</textarea>
-      <button type="submit" class="mt-2 px-4 py-2 bg-[#3d8af5] text-white rounded-lg text-sm font-medium hover:bg-blue-600">
+      <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#2563EB] outline-none" placeholder="Tulis catatan perkembangan murid di sini...">{{ $student->development_notes }}</textarea>
+      <button type="submit" class="mt-2 px-4 py-2 bg-[#2563EB] text-white rounded-lg text-sm font-medium hover:bg-blue-600">
         <iconify-icon icon="lucide:save" width="14" class="inline mr-1"></iconify-icon>
         Simpan Catatan
       </button>
@@ -315,13 +315,13 @@
 @if($prevReportData)
 <div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm mb-4">
   <div class="flex items-center gap-2 mb-5">
-    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#3d8af5]"></iconify-icon>
+    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#2563EB]"></iconify-icon>
     <h3 class="text-base font-bold text-[#171a1f]">Perbandingan dengan Periode Sebelumnya</h3>
   </div>
   <p class="text-xs text-[#565d6d] mb-4">Perbandingan pencapaian bulan ini vs bulan {{ now()->subMonth()->translatedFormat('F Y') }}</p>
 
   <div class="space-y-4">
-    @foreach(['baca' => ['Membaca', '#22C55E'], 'tulis' => ['Menulis', '#3d8af5'], 'hitung' => ['Berhitung', '#f59e0b']] as $skillKey => [$label, $color])
+    @foreach(['baca' => ['Membaca', '#DC2626'], 'tulis' => ['Menulis', '#2563EB'], 'hitung' => ['Berhitung', '#EAB308']] as $skillKey => [$label, $color])
     @php
       $current = round($reportData[$skillKey]['percentage']);
       $prev = round($prevReportData[$skillKey]['percentage']);
@@ -365,25 +365,25 @@
 
 <!-- Quick Action Cards (no-print) -->
 <div class="no-print grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[850px] mx-auto">
-  <a href="{{ route('guru.grafik') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#3d8af5] hover:bg-[#F1F6FE]/30 group">
-    <div class="w-10 h-10 bg-[#3d8af5]/10 rounded-xl flex items-center justify-center group-hover:bg-[#3d8af5]/20">
-      <iconify-icon icon="lucide:bar-chart-2" width="20" class="text-[#3d8af5]"></iconify-icon>
+  <a href="{{ route('guru.grafik') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#2563EB] hover:bg-[#F1F6FE]/30 group">
+    <div class="w-10 h-10 bg-[#2563EB]/10 rounded-xl flex items-center justify-center group-hover:bg-[#2563EB]/20">
+      <iconify-icon icon="lucide:bar-chart-2" width="20" class="text-[#2563EB]"></iconify-icon>
     </div>
     <div>
       <p class="text-sm font-semibold text-[#171a1f]">Lihat Grafik Lengkap</p>
       <p class="text-xs text-[#565d6d]">Visualisasi perkembangan semua murid</p>
     </div>
-    <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#3d8af5]"></iconify-icon>
+    <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#2563EB]"></iconify-icon>
   </a>
-  <a href="{{ route('guru.nilai') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#63e98f] hover:bg-[#DCFAE6]/30 group">
-    <div class="w-10 h-10 bg-[#63e98f]/10 rounded-xl flex items-center justify-center group-hover:bg-[#63e98f]/20">
-      <iconify-icon icon="lucide:file-edit" width="20" class="text-[#047857]"></iconify-icon>
+  <a href="{{ route('guru.nilai') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#DC2626] hover:bg-[#FEE2E2]/30 group">
+    <div class="w-10 h-10 bg-[#DC2626]/10 rounded-xl flex items-center justify-center group-hover:bg-[#DC2626]/20">
+      <iconify-icon icon="lucide:file-edit" width="20" class="text-[#991B1B]"></iconify-icon>
     </div>
     <div>
       <p class="text-sm font-semibold text-[#171a1f]">Update Nilai Baru</p>
       <p class="text-xs text-[#565d6d]">Input progres materi terbaru murid</p>
     </div>
-    <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#047857]"></iconify-icon>
+    <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#991B1B]"></iconify-icon>
   </a>
 </div>
 @else

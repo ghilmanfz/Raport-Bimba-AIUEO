@@ -7,8 +7,8 @@
 <!-- Page Header Card -->
 <div class="bg-white rounded-2xl p-6 border border-[#dee1e6] main-shadow flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
   <div class="flex items-start gap-4">
-    <div class="w-12 h-12 bg-[#3d8af5]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-      <iconify-icon icon="lucide:file-text" width="22" class="text-[#3d8af5]"></iconify-icon>
+    <div class="w-12 h-12 bg-[#2563EB]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+      <iconify-icon icon="lucide:file-text" width="22" class="text-[#2563EB]"></iconify-icon>
     </div>
     <div>
       <h1 class="text-2xl font-bold text-[#171a1f]">Pengolahan Nilai Progres</h1>
@@ -23,7 +23,7 @@
       <form method="GET" action="{{ route('guru.nilai') }}" id="form-filter">
         <input type="hidden" name="skill" value="{{ $selectedSkill }}">
         <input type="hidden" name="level" value="{{ $selectedLevel }}">
-        <select name="student_id" onchange="document.getElementById('form-filter').submit()" class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+        <select name="student_id" onchange="document.getElementById('form-filter').submit()" class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
           @foreach($students as $s)
             <option value="{{ $s->id }}" {{ $selectedStudent?->id == $s->id ? 'selected' : '' }}>{{ $s->name }} ({{ $s->classroom?->level ?? '-' }})</option>
           @endforeach
@@ -41,11 +41,11 @@
   <div class="bg-[#f3f4f6] p-1 rounded-full flex w-fit">
     @foreach(['Level 1','Level 2','Level 3','Level 4'] as $lvl)
     <button type="button" onclick="document.querySelector('#form-filter input[name=level]').value='{{ $lvl }}'; document.getElementById('form-filter').submit();"
-      class="px-6 py-1.5 rounded-full text-sm font-medium {{ $selectedLevel === $lvl ? 'bg-[#3d8af5] text-white shadow-sm' : 'text-[#565d6d] hover:text-[#171a1f]' }}">{{ $lvl }}</button>
+      class="px-6 py-1.5 rounded-full text-sm font-medium {{ $selectedLevel === $lvl ? 'bg-[#2563EB] text-white shadow-sm' : 'text-[#565d6d] hover:text-[#171a1f]' }}">{{ $lvl }}</button>
     @endforeach
   </div>
   <div class="flex items-center gap-2 px-4 py-2 border border-[#dee1e6] rounded-xl bg-white/50 text-xs font-medium text-[#171a1f]">
-    <iconify-icon icon="lucide:info" width="16" class="text-[#3d8af5]"></iconify-icon>
+    <iconify-icon icon="lucide:info" width="16" class="text-[#2563EB]"></iconify-icon>
     Status penilaian dihitung otomatis berdasarkan kelengkapan tanggal progres.
   </div>
 </div>
@@ -55,7 +55,7 @@
   @php $skillIcons = ['baca' => 'lucide:book-open', 'tulis' => 'lucide:pencil', 'hitung' => 'lucide:calculator']; @endphp
   @foreach(['baca' => 'Baca', 'tulis' => 'Tulis', 'hitung' => 'Hitung'] as $key => $label)
   <button type="button" onclick="document.querySelector('#form-filter input[name=skill]').value='{{ $key }}'; document.getElementById('form-filter').submit();"
-    class="flex items-center gap-2 px-2 py-3 border-b-2 font-semibold text-base {{ $selectedSkill === $key ? 'border-[#3d8af5] text-[#3d8af5]' : 'border-transparent text-[#565d6d] hover:text-[#171a1f]' }}">
+    class="flex items-center gap-2 px-2 py-3 border-b-2 font-semibold text-base {{ $selectedSkill === $key ? 'border-[#2563EB] text-[#2563EB]' : 'border-transparent text-[#565d6d] hover:text-[#171a1f]' }}">
     <iconify-icon icon="{{ $skillIcons[$key] }}" width="18"></iconify-icon>
     {{ $label }}
   </button>
@@ -72,7 +72,7 @@
       <h2 class="text-lg font-semibold text-[#171a1f]">Modul Pembelajaran: {{ ucfirst($selectedSkill) }} - {{ $selectedLevel }}</h2>
       <p class="text-sm text-[#565d6d]">Detail progres materi untuk {{ $selectedStudent?->name ?? '-' }}</p>
     </div>
-    <button type="submit" class="px-6 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center gap-2">
+    <button type="submit" class="px-6 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center gap-2">
       <iconify-icon icon="lucide:save" width="16"></iconify-icon>
       Simpan Semua
     </button>
@@ -95,24 +95,24 @@
           <td class="px-6 py-4">
             <input type="hidden" name="progress[{{ $i }}][material_id]" value="{{ $p['material']->id }}">
             <div class="flex items-center gap-3">
-              <div class="w-2 h-2 rounded-full bg-[#3d8af5] flex-shrink-0"></div>
+              <div class="w-2 h-2 rounded-full bg-[#2563EB] flex-shrink-0"></div>
               <span class="text-sm font-medium text-[#171a1f]">{{ $p['material']->name }}</span>
             </div>
           </td>
           <td class="px-6 py-4">
-            <input type="date" name="progress[{{ $i }}][start_date]" value="{{ $p['start_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+            <input type="date" name="progress[{{ $i }}][start_date]" value="{{ $p['start_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#2563EB] outline-none">
           </td>
           <td class="px-6 py-4">
-            <input type="date" name="progress[{{ $i }}][understand_date]" value="{{ $p['understand_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+            <input type="date" name="progress[{{ $i }}][understand_date]" value="{{ $p['understand_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#2563EB] outline-none">
           </td>
           <td class="px-6 py-4">
-            <input type="date" name="progress[{{ $i }}][skilled_date]" value="{{ $p['skilled_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#3d8af5] outline-none">
+            <input type="date" name="progress[{{ $i }}][skilled_date]" value="{{ $p['skilled_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#2563EB] outline-none">
           </td>
           <td class="px-6 py-4 text-center">
             @php
               $badge = match($p['status']) {
-                'T' => 'bg-[#A7F3D0] border border-[#6EE7B7] text-[#047857]',
-                'P' => 'bg-[#BAE6FD] border border-[#7DD3FC] text-[#0369A1]',
+                'T' => 'bg-[#FEE2E2] border border-[#FCA5A5] text-[#991B1B]',
+                'P' => 'bg-[#FEF9C3] border border-[#FDE047] text-[#A16207]',
                 default => 'bg-[#E2E8F0] border border-[#CBD5E1] text-[#334155]',
               };
               $label = match($p['status']) {
@@ -148,16 +148,16 @@
 <!-- Status Legend Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
   <div class="bg-[#F1F6FE] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
-    <h3 class="text-2xl font-bold text-[#3d8af5] mb-1">K</h3>
-    <p class="text-xs font-bold text-[#3d8af5]/70 tracking-widest uppercase mb-2">Kenal (Pengenalan)</p>
-    <p class="text-sm text-[#3d8af5]/60">Murid baru mengenal materi</p>
+    <h3 class="text-2xl font-bold text-[#2563EB] mb-1">K</h3>
+    <p class="text-xs font-bold text-[#2563EB]/70 tracking-widest uppercase mb-2">Kenal (Pengenalan)</p>
+    <p class="text-sm text-[#2563EB]/60">Murid baru mengenal materi</p>
   </div>
   <div class="bg-[#E1F4FE] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">P</h3>
     <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Paham (Pemahaman)</p>
     <p class="text-sm text-[#171a1f]/60">Murid memahami materi</p>
   </div>
-  <div class="bg-[#DCFAE6] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
+  <div class="bg-[#FEE2E2] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">T</h3>
     <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Terampil</p>
     <p class="text-sm text-[#171a1f]/60">Murid terampil mengaplikasikan</p>

@@ -17,10 +17,10 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #f1f1f1; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .sidebar-active-item { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); color: white; }
+    .sidebar-active-item { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); color: white; }
     .custom-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .hero-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
-    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .logo-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }
@@ -37,7 +37,7 @@
       <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
         <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-5 h-5">
       </div>
-      <span class="font-bold text-lg lg:text-xl font-['Inter']" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
+      <span class="font-bold text-lg lg:text-xl font-['Inter']" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
     </div>
     <div class="flex items-center gap-4 lg:gap-6">
       @include('partials.notification-bell')

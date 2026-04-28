@@ -20,7 +20,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   .rapor-header-table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
   .rapor-header-table td { padding: 3px 8px; font-size: 13px; border: none; vertical-align: top; }
   .group-header td { background: #e2e8f0; font-weight: 700; font-size: 13px; }
-  .status-T { background: #dcfce7; color: #166534; font-weight: 700; }
+  .status-T { background: #FEE2E2; color: #991B1B; font-weight: 700; }
   .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
 
@@ -50,10 +50,10 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   </div>
   <div class="flex flex-wrap gap-2">
     <a href="{{ route('wali.riwayat', ['student_id' => $student->id]) }}" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-      <iconify-icon icon="lucide:arrow-left" width="16" class="text-[#3d8af5]"></iconify-icon>
+      <iconify-icon icon="lucide:arrow-left" width="16" class="text-[#2563EB]"></iconify-icon>
       Kembali ke Riwayat
     </a>
-    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">
+    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">
       <iconify-icon icon="lucide:printer" width="16"></iconify-icon>
       Cetak Rapor
     </button>
@@ -70,6 +70,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   $highest = array_keys($skills, max($skills))[0] ?? 'Membaca';
   $focus = array_keys($skills, min($skills))[0] ?? 'Membaca';
 
+  $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
   $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => 'Kenal' };
 @endphp
 
@@ -164,7 +165,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
             <td class="text-center">{{ $globalNo }}</td>
             <td>{{ $prog->material->name }}</td>
             <td class="text-center">{{ preg_replace('/ - .*$/', '', $prog->material->level) }}</td>
-            <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+            <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
             <td>{{ $statusLabel($prog->status) }}</td>
           </tr>
           @endforeach
@@ -189,7 +190,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
             <td class="text-center">{{ $globalNo }}</td>
             <td>{{ $prog->material->name }}</td>
             <td class="text-center">{{ preg_replace('/ - .*$/', '', $prog->material->level) }}</td>
-            <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+            <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
             <td>{{ $statusLabel($prog->status) }}</td>
           </tr>
           @endforeach
@@ -214,7 +215,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
             <td class="text-center">{{ $globalNo }}</td>
             <td>{{ $prog->material->name }}</td>
             <td class="text-center">{{ preg_replace('/ - .*$/', '', $prog->material->level) }}</td>
-            <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
+            <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
             <td>{{ $statusLabel($prog->status) }}</td>
           </tr>
           @endforeach
@@ -303,7 +304,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 
 <!-- Summary Cards (no-print) -->
 <div class="no-print max-w-[850px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#22C55E'], 'tulis' => ['Menulis', 'lucide:pencil', '#3d8af5'], 'hitung' => ['Berhitung', 'lucide:calculator', '#f59e0b']] as $skillKey => [$label, $icon, $color])
+  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#DC2626'], 'tulis' => ['Menulis', 'lucide:pencil', '#2563EB'], 'hitung' => ['Berhitung', 'lucide:calculator', '#EAB308']] as $skillKey => [$label, $icon, $color])
   <div class="bg-white rounded-2xl border border-[#dee1e6] p-5 shadow-sm">
     <div class="flex items-center gap-3 mb-3">
       <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $color }}15;">

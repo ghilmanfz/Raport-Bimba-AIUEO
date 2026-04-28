@@ -6,8 +6,8 @@
       <p class="text-xs text-[#565d6d] font-roboto mt-0.5">{{ ucfirst(auth()->user()->role) }}</p>
     </div>
     @php
-      $avatarColors = ['admin' => '#3d8af5', 'guru' => '#63e98f', 'wali' => '#f2bf8c'];
-      $avatarColor = $avatarColors[auth()->user()->role] ?? '#3d8af5';
+      $avatarColors = ['admin' => '#2563EB', 'guru' => '#DC2626', 'wali' => '#EAB308'];
+      $avatarColor = $avatarColors[auth()->user()->role] ?? '#2563EB';
     @endphp
     <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background-color: {{ $avatarColor }}">
       {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}

@@ -15,9 +15,10 @@
     input::placeholder { color: #94a3b8; }
     .soft-shadow { box-shadow: 0 20px 50px -12px rgba(0,0,0,0.08); }
     .bg-gradient-subtle { background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); }
-    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
-    .btn-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
-    .bg-bimba-gradient { background: linear-gradient(135deg, #FEE2E2 0%, #FEF9C3 50%, #DBEAFE 100%); }
+    .logo-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
+    .btn-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
+    .bg-bimba-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
+    .bg-bimba-soft { background: linear-gradient(135deg, rgba(37,99,235,0.14) 0 33.33%, rgba(250,204,21,0.14) 33.33% 66.66%, rgba(220,38,38,0.14) 66.66% 100%); }
     * { transition: all 0.2s ease; }
   </style>
 </head>
@@ -46,7 +47,7 @@
               <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-6 h-6">
             @endif
           </div>
-          <span class="font-bold text-2xl tracking-tight" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA</span>
+          <span class="font-bold text-2xl tracking-tight" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA</span>
         </div>
 
         <!-- Welcome Text -->
@@ -80,7 +81,7 @@
           <div class="space-y-2">
             <label for="role">Login Sebagai</label>
             <div class="relative">
-              <select id="role" name="role" class="w-full h-12 px-4 bg-white border border-[#dee1e6] rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 focus:border-[#3d8af5] transition-all cursor-pointer text-sm">
+              <select id="role" name="role" class="w-full h-12 px-4 bg-white border border-[#dee1e6] rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all cursor-pointer text-sm">
                 <option value="" disabled selected>Pilih Peran Anda</option>
                 <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
@@ -100,7 +101,7 @@
                 <iconify-icon icon="lucide:user" width="18"></iconify-icon>
               </div>
               <input type="text" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan username atau email"
-                class="w-full h-12 pl-12 pr-4 bg-white border border-[#dee1e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 focus:border-[#3d8af5] transition-all text-sm">
+                class="w-full h-12 pl-12 pr-4 bg-white border border-[#dee1e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all text-sm">
             </div>
           </div>
 
@@ -108,14 +109,14 @@
           <div class="space-y-2">
             <div class="flex justify-between items-center">
               <label for="password">Kata Sandi</label>
-              <a href="#" class="text-xs font-medium hover:underline" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lupa Sandi?</a>
+              <a href="#" class="text-xs font-medium hover:underline" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Lupa Sandi?</a>
             </div>
             <div class="relative flex items-center">
               <div class="absolute left-4 text-[#565d6d]/60">
                 <iconify-icon icon="lucide:lock" width="18"></iconify-icon>
               </div>
               <input type="password" id="password" name="password" placeholder="Masukkan kata sandi"
-                class="w-full h-12 pl-12 pr-12 bg-white border border-[#dee1e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 focus:border-[#3d8af5] transition-all text-sm">
+                class="w-full h-12 pl-12 pr-12 bg-white border border-[#dee1e6] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB] transition-all text-sm">
               <button type="button" id="togglePassword" class="absolute right-4 hover:opacity-70 text-[#565d6d]/60">
                 <iconify-icon icon="lucide:eye" width="18"></iconify-icon>
               </button>
@@ -124,7 +125,7 @@
 
           <!-- Remember Me -->
           <div class="flex items-center gap-2">
-            <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded border-[#565d6d] text-[#3d8af5] focus:ring-[#3d8af5] cursor-pointer">
+            <input type="checkbox" id="remember" name="remember" class="w-4 h-4 rounded border-[#565d6d] text-[#2563EB] focus:ring-[#2563EB] cursor-pointer">
             <label for="remember" class="text-sm font-normal text-[#565d6d] cursor-pointer">Ingat saya di perangkat ini</label>
           </div>
 
@@ -141,16 +142,16 @@
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-[12px] text-[#565d6d]">
           <span>© {{ date('Y') }} BiMBA AIUEO Smart Education</span>
           <div class="flex gap-6">
-            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Bantuan</a>
-            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Kebijakan Privasi</a>
+            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Bantuan</a>
+            <a href="#" class="hover:opacity-70 transition-colors" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Kebijakan Privasi</a>
           </div>
         </div>
       </footer>
     </section>
 
     <!-- Right: Illustration -->
-    <section class="hidden lg:flex w-[48%] bg-bimba-gradient relative flex-col items-center justify-center p-12 overflow-hidden">
-      <div class="absolute top-[-20px] left-[-20px] w-32 h-32 bg-[#DC2626]/20 rounded-full blur-[64px]"></div>
+    <section class="hidden lg:flex w-[48%] bg-bimba-soft relative flex-col items-center justify-center p-12 overflow-hidden">
+      <div class="absolute top-[-20px] left-[-20px] w-32 h-32 bg-[#2563EB]/20 rounded-full blur-[64px]"></div>
       <div class="absolute top-8 right-8 opacity-30">
         <iconify-icon icon="lucide:palette" width="32" class="text-[#EAB308]"></iconify-icon>
       </div>
@@ -160,7 +161,7 @@
       <div class="absolute bottom-12 left-12 opacity-40">
         <iconify-icon icon="lucide:calculator" width="40" class="text-[#EAB308]"></iconify-icon>
       </div>
-      <div class="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-[#DC2626]/10 rounded-full blur-[64px]"></div>
+      <div class="absolute bottom-[-50px] right-[-50px] w-48 h-48 bg-[#DC2626]/12 rounded-full blur-[64px]"></div>
 
       <!-- Illustration Card -->
       <div class="relative z-10 bg-white p-6 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] mb-10 w-full max-w-[304px]">
@@ -175,7 +176,7 @@
       </div>
 
       <div class="text-center max-w-[320px] relative z-10">
-        <h2 class="text-2xl font-bold mb-4" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Pintar & Menyenangkan</h2>
+        <h2 class="text-2xl font-bold mb-4" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Pintar & Menyenangkan</h2>
         <p class="text-[#565d6d] text-sm leading-relaxed">Membangun Minat Baca dan Belajar Anak (BiMBA) dengan metode yang unik dan digital.</p>
       </div>
     </section>

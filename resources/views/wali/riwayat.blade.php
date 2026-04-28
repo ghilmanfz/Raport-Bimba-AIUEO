@@ -28,7 +28,7 @@
       <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
         <iconify-icon icon="lucide:user" width="16"></iconify-icon>
       </div>
-      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 bg-white">
+      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 bg-white">
         @foreach($children as $c)
           <option value="{{ $c->id }}" {{ $student?->id == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->classroom?->name ?? '-' }})</option>
         @endforeach
@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="md:col-span-4">
-    <button type="submit" class="w-full py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
+    <button type="submit" class="w-full py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
       <iconify-icon icon="lucide:search" width="16"></iconify-icon>
       Tampilkan
     </button>
@@ -57,15 +57,15 @@
       <h2 class="text-xl font-bold text-[#171a1f]">{{ $student->name }}</h2>
       <div class="flex flex-wrap gap-3 mt-2">
         <div class="flex items-center gap-2 text-xs text-[#565d6d]">
-          <iconify-icon icon="lucide:layers" width="14" class="text-[#3d8af5]"></iconify-icon>
+          <iconify-icon icon="lucide:layers" width="14" class="text-[#2563EB]"></iconify-icon>
           {{ $student->classroom?->name ?? '-' }}
         </div>
         <div class="flex items-center gap-2 text-xs text-[#565d6d]">
-          <iconify-icon icon="lucide:calendar" width="14" class="text-[#3d8af5]"></iconify-icon>
+          <iconify-icon icon="lucide:calendar" width="14" class="text-[#2563EB]"></iconify-icon>
           Bergabung: {{ \Carbon\Carbon::parse($student->join_date)->format('d M Y') }}
         </div>
         <div class="flex items-center gap-2 text-xs text-[#565d6d]">
-          <iconify-icon icon="lucide:file-text" width="14" class="text-[#3d8af5]"></iconify-icon>
+          <iconify-icon icon="lucide:file-text" width="14" class="text-[#2563EB]"></iconify-icon>
           {{ count($riwayatData) }} Periode Rapor
         </div>
       </div>
@@ -76,7 +76,7 @@
 <!-- Progress Chart Overview -->
 <div class="bg-white rounded-2xl border border-[#dee1e6] p-6 mb-6 shadow-sm">
   <div class="flex items-center gap-2 mb-4">
-    <iconify-icon icon="lucide:trending-up" width="20" class="text-[#3d8af5]"></iconify-icon>
+    <iconify-icon icon="lucide:trending-up" width="20" class="text-[#2563EB]"></iconify-icon>
     <h3 class="text-lg font-bold text-[#171a1f]">Grafik Perkembangan</h3>
   </div>
   <div class="h-64">
@@ -87,7 +87,7 @@
 <!-- Report History Timeline -->
 <div class="space-y-4">
   @foreach($riwayatData as $index => $period)
-  <div class="bg-white rounded-2xl border border-[#dee1e6] shadow-sm overflow-hidden {{ $period['is_current'] ? 'ring-2 ring-[#3d8af5]/20' : '' }}">
+  <div class="bg-white rounded-2xl border border-[#dee1e6] shadow-sm overflow-hidden {{ $period['is_current'] ? 'ring-2 ring-[#2563EB]/20' : '' }}">
     <!-- Period Header -->
     <div class="bg-gradient-to-r from-blue-500 via-yellow-500 to-red-500 p-4 text-white">
       <div class="flex items-center justify-between">
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
           label: 'Membaca',
           data: bacaData.map(d => d.percentage),
-          borderColor: '#22C55E',
+          borderColor: '#DC2626',
           backgroundColor: 'rgba(34, 197, 94, 0.1)',
           borderWidth: 2,
           tension: 0.4,

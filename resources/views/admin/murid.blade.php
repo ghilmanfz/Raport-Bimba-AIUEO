@@ -11,11 +11,11 @@
     <p class="text-[#565d6d] mt-1 font-roboto">Kelola informasi murid, kelas, dan status pembelajaran.</p>
   </div>
   <div class="flex flex-wrap items-center gap-3">
-    <a href="{{ route('admin.murid.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#3d8af5]/30 rounded-xl text-[#3d8af5] font-medium text-sm hover:bg-blue-50">
+    <a href="{{ route('admin.murid.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#2563EB]/30 rounded-xl text-[#2563EB] font-medium text-sm hover:bg-blue-50">
       <iconify-icon icon="lucide:download" width="16"></iconify-icon>
       Export CSV
     </a>
-    <button onclick="document.getElementById('modal-tambah-murid').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-[#3d8af5] text-white rounded-xl font-medium text-sm hover:bg-blue-600">
+    <button onclick="document.getElementById('modal-tambah-murid').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-[#2563EB] text-white rounded-xl font-medium text-sm hover:bg-blue-600">
       <iconify-icon icon="lucide:plus" width="16"></iconify-icon>
       Tambah Murid
     </button>
@@ -24,26 +24,26 @@
 
 <!-- Stats Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div class="bg-[#F1F6FE] border border-[#3d8af5]/20 rounded-xl p-6 main-shadow">
+  <div class="bg-[#F1F6FE] border border-[#2563EB]/20 rounded-xl p-6 main-shadow">
     <div class="flex justify-between items-start">
       <div>
         <p class="text-sm font-medium text-[#565d6d]">Total Murid</p>
         <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $totalMurid }}</h3>
       </div>
-      <div class="w-12 h-12 bg-[#3d8af5]/20 rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:users" width="24" class="text-[#3d8af5]"></iconify-icon>
+      <div class="w-12 h-12 bg-[#2563EB]/20 rounded-2xl flex items-center justify-center">
+        <iconify-icon icon="lucide:users" width="24" class="text-[#2563EB]"></iconify-icon>
       </div>
     </div>
     <p class="mt-4 text-xs text-[#565d6d] font-roboto">Terdaftar tahun ajaran {{ date('Y') }}/{{ date('Y') + 1 }}</p>
   </div>
-  <div class="bg-[#EDFDF1] border border-[#63e98f]/20 rounded-xl p-6 main-shadow">
+  <div class="bg-[#EDFDF1] border border-[#DC2626]/20 rounded-xl p-6 main-shadow">
     <div class="flex justify-between items-start">
       <div>
         <p class="text-sm font-medium text-[#565d6d]">Murid Aktif</p>
         <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridAktif }}</h3>
       </div>
-      <div class="w-12 h-12 bg-[#63e98f]/20 rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:user-check" width="24" class="text-[#16a34a]"></iconify-icon>
+      <div class="w-12 h-12 bg-[#DC2626]/20 rounded-2xl flex items-center justify-center">
+        <iconify-icon icon="lucide:user-check" width="24" class="text-[#991B1B]"></iconify-icon>
       </div>
     </div>
     <p class="mt-4 text-xs text-[#565d6d] font-roboto">Aktif dalam kegiatan belajar</p>
@@ -71,7 +71,7 @@
         <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
           <iconify-icon icon="lucide:search" width="16"></iconify-icon>
         </div>
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama atau ID..." class="w-full pl-10 pr-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Nama atau ID..." class="w-full pl-10 pr-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
       </form>
     </div>
   </div>
@@ -95,7 +95,7 @@
           <td class="px-6 py-4 text-sm font-medium text-[#565d6d] font-roboto">{{ $student->nis }}</td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-full bg-[#3d8af5] flex items-center justify-center text-white font-bold text-xs">{{ strtoupper(substr($student->name, 0, 1)) }}</div>
+              <div class="w-9 h-9 rounded-full bg-[#2563EB] flex items-center justify-center text-white font-bold text-xs">{{ strtoupper(substr($student->name, 0, 1)) }}</div>
               <span class="text-sm font-medium text-[#171a1f]">{{ $student->name }}</span>
             </div>
           </td>
@@ -105,7 +105,7 @@
           <td class="px-6 py-4"><span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : 'status-cuti' }}">{{ ucfirst($student->status) }}</span></td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
-              <button onclick="openEditMurid({{ $student->id }}, '{{ addslashes($student->name) }}', '{{ $student->nis }}', '{{ $student->classroom_id }}', '{{ $student->join_date->format('Y-m-d') }}', '{{ $student->status }}')" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
+              <button onclick="openEditMurid({{ $student->id }}, '{{ addslashes($student->name) }}', '{{ $student->nis }}', '{{ $student->classroom_id }}', '{{ $student->join_date->format('Y-m-d') }}', '{{ $student->status }}')" class="p-2 text-[#2563EB] hover:bg-blue-50 rounded-lg"><iconify-icon icon="lucide:pencil" width="14"></iconify-icon></button>
               <form method="POST" action="{{ route('admin.murid.destroy', $student) }}" onsubmit="return confirm('Yakin hapus data murid ini?')">
                 @csrf @method('DELETE')
                 <button type="submit" class="p-2 text-[#D92626] hover:bg-red-50 rounded-lg"><iconify-icon icon="lucide:trash-2" width="14"></iconify-icon></button>
@@ -149,13 +149,13 @@
       @csrf
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
-        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Lengkap">
+        <input type="text" name="name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="Nama Lengkap">
         <p class="text-xs text-[#565d6d] mt-1">NIS akan dibuat otomatis</p>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Level</label>
-          <select name="classroom_id" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <select name="classroom_id" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
               <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
             @endforeach
@@ -163,12 +163,12 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Tgl. Bergabung</label>
-          <input type="date" name="join_date" required value="{{ date('Y-m-d') }}" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="date" name="join_date" required value="{{ date('Y-m-d') }}" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
         </div>
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
-        <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
           <option value="aktif">Aktif</option>
           <option value="cuti">Cuti</option>
         </select>
@@ -178,16 +178,16 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Wali</label>
-          <input type="text" name="parent_name" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="Nama Wali">
+          <input type="text" name="parent_name" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="Nama Wali">
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Email Wali</label>
-          <input type="email" name="parent_email" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none" placeholder="email@wali.com">
+          <input type="email" name="parent_email" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none" placeholder="email@wali.com">
         </div>
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-tambah-murid').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Simpan</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Simpan</button>
       </div>
     </form>
   </div>
@@ -212,13 +212,13 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
-          <input type="text" name="name" id="edit-murid-name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="text" name="name" id="edit-murid-name" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
         </div>
       </div>
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Level</label>
-          <select name="classroom_id" id="edit-murid-classroom" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <select name="classroom_id" id="edit-murid-classroom" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
               <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
             @endforeach
@@ -226,19 +226,19 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Tgl. Bergabung</label>
-          <input type="date" name="join_date" id="edit-murid-joindate" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+          <input type="date" name="join_date" id="edit-murid-joindate" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
         </div>
       </div>
       <div>
         <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
-        <select name="status" id="edit-murid-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#3d8af5]/20 focus:outline-none">
+        <select name="status" id="edit-murid-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#2563EB]/20 focus:outline-none">
           <option value="aktif">Aktif</option>
           <option value="cuti">Cuti</option>
         </select>
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-edit-murid').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Perbarui</button>
       </div>
     </form>
   </div>

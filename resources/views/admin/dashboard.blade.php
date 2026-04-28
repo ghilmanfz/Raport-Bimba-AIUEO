@@ -5,7 +5,7 @@
 
 @section('content')
 <!-- Welcome Section -->
-<section class="mb-8">
+<section class="mb-8 rounded-2xl p-6 border border-[#dee1e6]" style="background: linear-gradient(135deg, rgba(37,99,235,0.12) 0 33.33%, rgba(250,204,21,0.12) 33.33% 66.66%, rgba(220,38,38,0.12) 66.66% 100%);">
   <h1 class="text-2xl lg:text-3xl font-bold text-[#171a1f] tracking-tight">Ringkasan Dashboard</h1>
   <p class="text-[#565d6d] mt-2 font-roboto">Selamat datang kembali, {{ auth()->user()->name }}. Pantau statistik institusi Anda hari ini.</p>
 </section>
@@ -14,10 +14,10 @@
 <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
     <div class="flex justify-between items-start mb-6">
-      <div class="w-10 h-10 bg-[#3d8af5]/10 rounded-lg flex items-center justify-center">
-        <iconify-icon icon="lucide:users" width="22" class="text-[#3d8af5]"></iconify-icon>
+      <div class="w-10 h-10 bg-[#2563EB]/10 rounded-lg flex items-center justify-center">
+        <iconify-icon icon="lucide:users" width="22" class="text-[#2563EB]"></iconify-icon>
       </div>
-      <div class="flex items-center gap-1 text-[#16a34a] text-xs font-medium font-roboto">
+      <div class="flex items-center gap-1 text-[#991B1B] text-xs font-medium font-roboto">
         <iconify-icon icon="lucide:trending-up" width="12"></iconify-icon>
         +12%
       </div>
@@ -29,8 +29,8 @@
 
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
     <div class="flex justify-between items-start mb-6">
-      <div class="w-10 h-10 bg-[#63e98f]/10 rounded-lg flex items-center justify-center">
-        <iconify-icon icon="lucide:user-check" width="22" class="text-[#16a34a]"></iconify-icon>
+      <div class="w-10 h-10 bg-[#DC2626]/10 rounded-lg flex items-center justify-center">
+        <iconify-icon icon="lucide:user-check" width="22" class="text-[#991B1B]"></iconify-icon>
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Total Guru</p>
@@ -50,6 +50,49 @@
   </div>
 </section>
 
+<!-- Jadwal Otomatis Pembagian Rapor (3 Bulanan) -->
+<section class="bg-white p-6 rounded-2xl main-shadow border border-gray-50 mb-10">
+  <div class="mb-5">
+    <div>
+      <h2 class="text-lg font-bold text-[#171a1f]">Jadwal Otomatis Pembagian Rapor</h2>
+      <p class="text-sm text-[#565d6d]">Dihitung otomatis per 3 bulan dari tanggal masuk setiap anak.</p>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="text-left border-b border-[#dee1e6]">
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Nama Anak</th>
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Kelas</th>
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Tanggal Masuk</th>
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Jadwal Bagi Rapor Berikutnya</th>
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Periode</th>
+          <th class="py-2 text-[#565d6d] font-semibold">Sisa Hari</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[#f1f5f9]">
+        @foreach($nextRaporSchedules as $item)
+        <tr>
+          <td class="py-2.5 pr-4 font-medium text-[#171a1f]">{{ $item['student_name'] }}</td>
+          <td class="py-2.5 pr-4 text-[#565d6d]">{{ $item['classroom'] }}</td>
+          <td class="py-2.5 pr-4 text-[#565d6d]">{{ $item['join_date'] }}</td>
+          <td class="py-2.5 pr-4 text-[#171a1f]">{{ $item['next_date'] }}</td>
+          <td class="py-2.5 pr-4">
+            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold bg-[#DBEAFE] text-[#1E40AF]">Ke-{{ $item['period_number'] }}</span>
+          </td>
+          <td class="py-2.5">
+            <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-semibold {{ $item['days_left'] <= 14 ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#FEF9C3] text-[#A16207]' }}">
+              {{ max(0, $item['days_left']) }} hari
+            </span>
+          </td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <!-- Bottom Grid: Aktivitas & Bantuan -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -60,12 +103,12 @@
     <div class="space-y-6 relative">
       <div class="absolute left-[5px] top-2 bottom-2 w-[1px] bg-[#dee1e6]"></div>
       <div class="relative pl-8">
-        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#3d8af5] rounded-full z-10"></div>
-        <p class="text-sm font-medium text-[#171a1f] font-roboto">Input Nilai Level 2 - B</p>
+        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#2563EB] rounded-full z-10"></div>
+        <p class="text-sm font-medium text-[#171a1f] font-roboto">Input Nilai Level 2 - P</p>
         <p class="text-xs text-[#565d6d] font-roboto mt-1">Ibu Ratna • 2 menit lalu</p>
       </div>
       <div class="relative pl-8">
-        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#63e98f] rounded-full z-10"></div>
+        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#DC2626] rounded-full z-10"></div>
         <p class="text-sm font-medium text-[#171a1f] font-roboto">Tambah Murid Baru (M005)</p>
         <p class="text-xs text-[#565d6d] font-roboto mt-1">Bpk. Andi • 45 menit lalu</p>
       </div>
@@ -80,7 +123,7 @@
   <!-- Right Column -->
   <div class="space-y-8">
     <!-- Pusat Bantuan -->
-    <div class="bg-[#3d8af5] p-6 rounded-2xl text-white relative overflow-hidden shadow-[0px_4px_7px_0px_rgba(61,138,245,0.2)]">
+    <div class="bg-[#2563EB] p-6 rounded-2xl text-white relative overflow-hidden shadow-[0px_4px_7px_0px_rgba(61,138,245,0.2)]">
       <div class="absolute -right-4 -top-4 opacity-10 rotate-12">
         <iconify-icon icon="lucide:graduation-cap" width="112" class="text-white"></iconify-icon>
       </div>

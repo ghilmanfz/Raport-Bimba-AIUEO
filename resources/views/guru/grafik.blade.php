@@ -10,7 +10,7 @@
     <div>
       <label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Kelas</label>
       <div class="relative">
-        <select name="classroom_id" class="w-full pl-3 pr-8 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20 bg-white">
+        <select name="classroom_id" class="w-full pl-3 pr-8 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 bg-white">
           <option value="">Semua Kelas</option>
           @foreach($classrooms as $c)
             <option value="{{ $c->id }}" {{ $selectedClassroom == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
@@ -23,10 +23,10 @@
     </div>
     <div>
       <label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Cari Murid</label>
-      <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Ketik nama murid..." class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+      <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Ketik nama murid..." class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20">
     </div>
     <div>
-      <button type="submit" class="w-full px-5 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
+      <button type="submit" class="w-full px-5 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
         <iconify-icon icon="lucide:filter" width="16"></iconify-icon>
         Filter
       </button>
@@ -47,8 +47,8 @@
         <canvas id="grafikTrenChart"></canvas>
       </div>
       <div class="flex flex-wrap items-center gap-4 mt-4">
-        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#63e98f] inline-block"></span><span class="text-xs text-[#565d6d]">Terampil</span></div>
-        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#86d2f9] inline-block"></span><span class="text-xs text-[#565d6d]">Paham</span></div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#DC2626] inline-block"></span><span class="text-xs text-[#565d6d]">Terampil</span></div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#EAB308] inline-block"></span><span class="text-xs text-[#565d6d]">Paham</span></div>
         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#E2E8F0] inline-block"></span><span class="text-xs text-[#565d6d]">Kenal</span></div>
       </div>
     </div>
@@ -69,12 +69,12 @@
       </div>
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-[#B0EC93]/20 border border-[#B0EC93] rounded-xl p-2 text-center">
-          <p class="text-lg font-black text-[#047857]">{{ $statusPercent['T'] }}%</p>
-          <p class="text-[10px] font-semibold text-[#047857]">Terampil</p>
+          <p class="text-lg font-black text-[#991B1B]">{{ $statusPercent['T'] }}%</p>
+          <p class="text-[10px] font-semibold text-[#991B1B]">Terampil</p>
         </div>
         <div class="bg-[#6EC9F7]/20 border border-[#6EC9F7] rounded-xl p-2 text-center">
-          <p class="text-lg font-black text-[#0369A1]">{{ $statusPercent['P'] }}%</p>
-          <p class="text-[10px] font-semibold text-[#0369A1]">Paham</p>
+          <p class="text-lg font-black text-[#A16207]">{{ $statusPercent['P'] }}%</p>
+          <p class="text-[10px] font-semibold text-[#A16207]">Paham</p>
         </div>
         <div class="bg-[#C5CCD3]/20 border border-[#C5CCD3] rounded-xl p-2 text-center">
           <p class="text-lg font-black text-[#334155]">{{ $statusPercent['K'] }}%</p>
@@ -118,14 +118,14 @@
           $pct = $ss['progress_pct'];
           $latestStatus = $ss['latest_status'];
           $badge = match($latestStatus) {
-            'T' => 'bg-[#A7F3D0] text-[#047857]',
-            'P' => 'bg-[#BAE6FD] text-[#0369A1]',
+            'T' => 'bg-[#FEE2E2] text-[#991B1B]',
+            'P' => 'bg-[#FEF9C3] text-[#A16207]',
             default => 'bg-[#E2E8F0] text-[#334155]',
           };
           $initials = collect(explode(' ', $s->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('');
-          $colors = ['#3d8af5','#63e98f','#f2bf8c','#bf93ec','#D92626','#F2930D'];
+          $colors = ['#2563EB','#DC2626','#EAB308','#bf93ec','#D92626','#F2930D'];
           $color = $colors[$s->id % count($colors)];
-          $barColor = match($latestStatus) { 'T' => '#63e98f', 'P' => '#86d2f9', default => '#E2E8F0' };
+          $barColor = match($latestStatus) { 'T' => '#DC2626', 'P' => '#EAB308', default => '#E2E8F0' };
         @endphp
         <tr class="hover:bg-gray-50/50">
           <td class="px-6 py-4">
@@ -146,7 +146,7 @@
           <td class="px-6 py-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $badge }}">{{ $latestStatus }}</span></td>
           <td class="px-6 py-4 text-right">
             <div class="flex justify-end gap-1">
-              <a href="{{ route('guru.nilai', ['student_id' => $s->id]) }}" class="p-1.5 hover:bg-gray-100 rounded text-[#3d8af5]" title="Input Nilai">
+              <a href="{{ route('guru.nilai', ['student_id' => $s->id]) }}" class="p-1.5 hover:bg-gray-100 rounded text-[#2563EB]" title="Input Nilai">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </a>
               <a href="{{ route('guru.rapor', ['student_id' => $s->id]) }}" class="p-1.5 hover:bg-gray-100 rounded text-[#565d6d]" title="Lihat Rapor">
@@ -189,7 +189,7 @@ new Chart(ctx1, {
     labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
     datasets: [{
       data: [{{ $statusCounts['T'] }}, {{ $statusCounts['P'] }}, {{ $statusCounts['K'] }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
+      backgroundColor: ['#DC2626', '#EAB308', '#E2E8F0'],
       borderRadius: 8,
       borderSkipped: false,
     }]
@@ -213,7 +213,7 @@ new Chart(ctx2, {
     labels: ['Terampil', 'Paham', 'Kenal'],
     datasets: [{
       data: [{{ $statusPercent['T'] }}, {{ $statusPercent['P'] }}, {{ $statusPercent['K'] }}],
-      backgroundColor: ['#63e98f', '#86d2f9', '#E2E8F0'],
+      backgroundColor: ['#DC2626', '#EAB308', '#E2E8F0'],
       borderWidth: 0,
       hoverOffset: 4
     }]

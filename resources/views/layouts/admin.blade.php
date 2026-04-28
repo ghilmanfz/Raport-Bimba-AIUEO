@@ -29,14 +29,14 @@
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     .font-roboto { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; }
-    .sidebar-active { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); color: white; }
+    .sidebar-active { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); color: white; }
     .main-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23, 26, 31, 0.07), 0px 0px 2px 0px rgba(23, 26, 31, 0.08); }
-    .help-card-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); box-shadow: 0px 4px 7px 0px rgba(220, 38, 38, 0.2); }
+    .help-card-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); box-shadow: 0px 4px 7px 0px rgba(220, 38, 38, 0.2); }
     .table-row-hover:hover { background-color: #f9fafb; }
     .status-pill { padding: 2px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
-    .status-active { background-color: rgba(99, 233, 143, 0.1); color: #16a34a; }
+    .status-active { background-color: rgba(99, 233, 143, 0.1); color: #991B1B; }
     .status-cuti { background-color: #f3f4f6; color: #565d6d; }
-    .logo-gradient { background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); }
+    .logo-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
     @yield('styles')
   </style>
   @stack('head')
@@ -49,7 +49,7 @@
       <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
         <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
       </div>
-      <span class="font-bold text-lg leading-tight" style="background: linear-gradient(135deg, #2563EB 0%, #EAB308 50%, #DC2626 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA</span>
+      <span class="font-bold text-lg leading-tight" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA</span>
     </div>
 
     <nav class="flex-1 px-4 space-y-1 mt-2">
