@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -18,10 +18,10 @@
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     .font-roboto { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; }
-    .sidebar-active-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); border-radius: 10px; color: white; }
+    .sidebar-active-gradient { background: linear-gradient(180deg, #EA580C 0 33.33%, #F97316 33.33% 66.66%, #FB923C 66.66% 100%); border-radius: 10px; color: white; }
     .main-shadow { box-shadow: 0px 1px 2.5px 0px rgba(23,26,31,0.07), 0px 0px 2px 0px rgba(23,26,31,0.08); }
     .table-row-hover:hover { background-color: #f8fafc; }
-    .logo-gradient { background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); }
+    .logo-gradient { background: linear-gradient(180deg, #EA580C 0 33.33%, #F97316 33.33% 66.66%, #FB923C 66.66% 100%); }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; }
@@ -43,7 +43,7 @@
         <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
           <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
         </div>
-        <span class="font-bold text-lg" style="background: linear-gradient(180deg, #2563EB 0 33.33%, #FACC15 33.33% 66.66%, #DC2626 66.66% 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">E-Rapor BiMBA AIUEO</span>
+        <span class="font-bold text-lg text-[#0f172a]">E-Rapor BiMBA AIUEO</span>
       </div>
     </div>
     <div class="flex items-center gap-4">
@@ -83,7 +83,7 @@
       <div class="p-4 border-t border-[#dee1e6]">
         <form method="POST" action="{{ route('logout') }}">
           @csrf
-          <button type="submit" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-lg hover:bg-red-50 text-[#D92626] font-medium text-sm">
+          <button type="submit" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-lg hover:bg-red-50 text-[#DC2626] font-medium text-sm">
             <iconify-icon icon="lucide:log-out" width="18"></iconify-icon>
             Logout
           </button>

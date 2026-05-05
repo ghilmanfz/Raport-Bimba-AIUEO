@@ -1,9 +1,9 @@
-<!-- Notification Bell Dropdown -->
+﻿<!-- Notification Bell Dropdown -->
 <div x-data="notificationBell()" x-init="fetchNotifications()" class="relative">
   <button @click="toggle()" class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-full relative">
     <iconify-icon icon="lucide:bell" width="20"></iconify-icon>
     <span x-show="unreadCount > 0" x-text="unreadCount > 9 ? '9+' : unreadCount"
-          class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-[#D92626] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"></span>
+          class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-[#F97316] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"></span>
   </button>
 
   <!-- Dropdown Panel -->
@@ -13,7 +13,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between px-5 py-4 border-b border-[#dee1e6]">
       <h3 class="text-base font-bold text-[#171a1f]">Notifikasi</h3>
-      <button x-show="unreadCount > 0" @click="markAllRead()" class="text-xs font-medium text-[#2563EB] hover:underline">
+      <button x-show="unreadCount > 0" @click="markAllRead()" class="text-xs font-medium text-[#F97316] hover:underline">
         Tandai semua dibaca
       </button>
     </div>
@@ -28,14 +28,14 @@
       </template>
       <template x-for="n in notifications" :key="n.id">
         <a :href="n.link || '#'" @click="markRead(n)"
-           :class="n.read ? 'bg-white' : 'bg-[#F1F6FE]/40'"
+           :class="n.read ? 'bg-white' : 'bg-[#FFF7ED]/40'"
            class="flex items-start gap-3 px-5 py-4 hover:bg-gray-50 cursor-pointer">
           <div class="flex-shrink-0 mt-0.5">
             <div :class="{
               'bg-green-100 text-green-600': n.type === 'success',
-              'bg-blue-100 text-[#2563EB]': n.type === 'info',
-              'bg-[#FEF9C3] text-[#A16207]': n.type === 'warning',
-              'bg-red-100 text-[#D92626]': n.type === 'error'
+              'bg-blue-100 text-[#F97316]': n.type === 'info',
+              'bg-[#FFF7ED] text-[#C2410C]': n.type === 'warning',
+              'bg-red-100 text-[#F97316]': n.type === 'error'
             }" class="w-9 h-9 rounded-full flex items-center justify-center">
               <iconify-icon :icon="n.icon" width="16"></iconify-icon>
             </div>
@@ -43,7 +43,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-start justify-between gap-2">
               <p class="text-sm font-semibold text-[#171a1f] truncate" x-text="n.title"></p>
-              <span x-show="!n.read" class="flex-shrink-0 w-2 h-2 bg-[#2563EB] rounded-full mt-1.5"></span>
+              <span x-show="!n.read" class="flex-shrink-0 w-2 h-2 bg-[#F97316] rounded-full mt-1.5"></span>
             </div>
             <p class="text-xs text-[#565d6d] mt-0.5 line-clamp-2" x-text="n.message"></p>
             <p class="text-[10px] text-[#9095a0] mt-1 font-roboto" x-text="n.time"></p>

@@ -1,4 +1,4 @@
-@extends('layouts.wali')
+﻿@extends('layouts.wali')
 
 @section('title', 'Dashboard - E-Rapor BiMBA AIUEO')
 @section('page-title', 'Dashboard')
@@ -15,20 +15,20 @@
 @endphp
 
 <!-- Hero Section -->
-<section class="hero-gradient rounded-3xl p-6 lg:p-8 custom-shadow border border-[#2563EB1a] flex flex-col lg:flex-row items-center lg:justify-between gap-6 mb-8">
+<section class="hero-gradient rounded-3xl p-6 lg:p-8 custom-shadow border border-[#F973161a] flex flex-col lg:flex-row items-center lg:justify-between gap-6 mb-8">
   <div class="flex flex-col lg:flex-row items-center gap-6">
     <div class="w-20 h-20 rounded-full overflow-hidden custom-shadow border-2 border-white flex-shrink-0">
-      <div class="w-full h-full bg-[#EAB308] flex items-center justify-center text-white text-2xl font-black">{{ $studentInitials }}</div>
+      <div class="w-full h-full bg-[#FDBA74] flex items-center justify-center text-white text-2xl font-black">{{ $studentInitials }}</div>
     </div>
     <div class="text-center lg:text-left">
-      <h1 class="text-2xl lg:text-3xl font-bold text-[#2563EB] mb-3">Semangat Belajar, {{ $studentName }}! 👋</h1>
+      <h1 class="text-2xl lg:text-3xl font-bold text-[#F97316] mb-3">Semangat Belajar, {{ $studentName }}! 👋</h1>
       <div class="flex flex-wrap justify-center lg:justify-start gap-3">
-        <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#2563EB33] rounded-full text-xs font-semibold">
-          <iconify-icon icon="lucide:calendar" width="12" class="text-[#2563EB]"></iconify-icon>
+        <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#F9731633] rounded-full text-xs font-semibold">
+          <iconify-icon icon="lucide:calendar" width="12" class="text-[#F97316]"></iconify-icon>
           Tahun Ajaran {{ date('Y') }}/{{ date('Y') + 1 }}
         </div>
-        <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#2563EB33] rounded-full text-xs font-semibold">
-          <iconify-icon icon="lucide:layers" width="12" class="text-[#2563EB]"></iconify-icon>
+        <div class="flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-sm border border-[#F9731633] rounded-full text-xs font-semibold">
+          <iconify-icon icon="lucide:layers" width="12" class="text-[#F97316]"></iconify-icon>
           {{ $classroomName }}
         </div>
       </div>
@@ -38,7 +38,7 @@
 
 <!-- Summary Title -->
 <div class="flex items-center gap-2 mb-6">
-  <iconify-icon icon="lucide:trending-up" width="20" class="text-[#2563EB]"></iconify-icon>
+  <iconify-icon icon="lucide:trending-up" width="20" class="text-[#F97316]"></iconify-icon>
   <h2 class="text-xl font-bold text-[#171a1f]">Ringkasan Progres Saat Ini</h2>
 </div>
 
@@ -47,8 +47,8 @@
   <!-- Membaca -->
   <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
     <div class="flex justify-between items-start mb-6">
-      <div class="w-12 h-12 bg-[#FEE2E2] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:book-open" width="24" class="text-[#DC2626]"></iconify-icon>
+      <div class="w-12 h-12 bg-[#FFEDD5] rounded-2xl flex items-center justify-center">
+        <iconify-icon icon="lucide:book-open" width="24" class="text-[#F97316]"></iconify-icon>
       </div>
       <span class="bg-gray-100 text-[#171a1f] text-[10px] font-bold px-3 py-1 rounded-full border border-gray-200">Status: T</span>
     </div>
@@ -60,10 +60,10 @@
         <span>{{ $bacaPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#2563EB]" style="width: {{ $bacaPct }}%"></div>
+        <div class="h-full bg-[#F97316]" style="width: {{ $bacaPct }}%"></div>    {{-- Orange: Baca --}}
       </div>
     </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#2563EB] text-sm font-medium hover:underline">
+    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
       Lihat Detail Laporan
       <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
     </a>
@@ -73,9 +73,9 @@
   <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
     <div class="flex justify-between items-start mb-6">
       <div class="w-12 h-12 bg-[#DBEAFE] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:pencil" width="24" class="text-[#2563EB]"></iconify-icon>
+        <iconify-icon icon="lucide:pencil" width="24" class="text-[#3B82F6]"></iconify-icon>
       </div>
-      <span class="bg-[#2563EB] text-white text-[10px] font-bold px-3 py-1 rounded-full">Status: P</span>
+      <span class="bg-[#DBEAFE] text-[#2563EB] text-[10px] font-bold px-3 py-1 rounded-full">Status: P</span>
     </div>
     <h3 class="text-lg font-bold text-[#171a1f] mb-2">Menulis (Tulis)</h3>
     <p class="text-sm text-[#565d6d] mb-6 flex-1">Anak memahami struktur huruf dan mulai merangkai kata.</p>
@@ -85,10 +85,10 @@
         <span>{{ $tulisPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#2563EB]" style="width: {{ $tulisPct }}%"></div>
+        <div class="h-full bg-[#3B82F6]" style="width: {{ $tulisPct }}%"></div>
       </div>
     </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#2563EB] text-sm font-medium hover:underline">
+    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
       Lihat Detail Laporan
       <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
     </a>
@@ -97,8 +97,8 @@
   <!-- Berhitung -->
   <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
     <div class="flex justify-between items-start mb-6">
-      <div class="w-12 h-12 bg-[#FEF9C3] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:calculator" width="24" class="text-[#EAB308]"></iconify-icon>
+      <div class="w-12 h-12 bg-[#DCFCE7] rounded-2xl flex items-center justify-center">
+        <iconify-icon icon="lucide:calculator" width="24" class="text-[#22C55E]"></iconify-icon>
       </div>
       <span class="bg-gray-100 text-[#171a1f] text-[10px] font-bold px-3 py-1 rounded-full border border-gray-200">Status: K</span>
     </div>
@@ -110,10 +110,10 @@
         <span>{{ $hitungPct }}%</span>
       </div>
       <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#2563EB]" style="width: {{ $hitungPct }}%"></div>
+        <div class="h-full bg-[#22C55E]" style="width: {{ $hitungPct }}%"></div>
       </div>
     </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#2563EB] text-sm font-medium hover:underline">
+    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
       Lihat Detail Laporan
       <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
     </a>
@@ -136,7 +136,7 @@
           <p class="text-sm font-semibold text-[#171a1f]">{{ $item['student_name'] }}</p>
           <p class="text-xs text-[#565d6d]">Periode ke-{{ $item['period_number'] }} • Jadwal: {{ $item['next_date'] }}</p>
         </div>
-        <span class="inline-flex text-xs font-semibold px-2.5 py-1 rounded-full {{ $item['days_left'] <= 14 ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#DBEAFE] text-[#1E40AF]' }}">
+        <span class="inline-flex text-xs font-semibold px-2.5 py-1 rounded-full {{ $item['days_left'] <= 14 ? 'bg-[#FFEDD5] text-[#C2410C]' : 'bg-[#FFEDD5] text-[#9A3412]' }}">
           {{ max(0, $item['days_left']) }} hari lagi
         </span>
       </div>
@@ -160,7 +160,7 @@
     <!-- Panduan Penilaian -->
     <div class="bg-[#fafafb] rounded-xl p-6 custom-shadow">
       <div class="flex items-center gap-2 mb-5">
-        <iconify-icon icon="lucide:info" width="16" class="text-[#2563EB]"></iconify-icon>
+        <iconify-icon icon="lucide:info" width="16" class="text-[#F97316]"></iconify-icon>
         <h3 class="text-sm font-bold text-[#171a1f]">Panduan Penilaian BiMBA</h3>
       </div>
       <div class="grid grid-cols-3 gap-2">
@@ -172,7 +172,7 @@
           <p class="text-[8px] text-[#565d6d] leading-tight">Tahap pengenalan</p>
         </div>
         <div class="bg-white p-2 rounded-xl custom-shadow text-center">
-          <div class="w-8 h-8 bg-[#2563EB] rounded-full flex items-center justify-center mx-auto mb-2">
+          <div class="w-8 h-8 bg-[#F97316] rounded-full flex items-center justify-center mx-auto mb-2">
             <span class="text-xs font-bold text-white">P</span>
           </div>
           <p class="text-[10px] font-bold mb-0.5">Paham</p>
@@ -202,7 +202,7 @@
             </div>
             <p class="text-sm font-medium text-[#171a1f]">Modul Baca 1B Selesai</p>
           </div>
-          <div class="w-6 h-6 bg-[#FEE2E2] border border-[#FCA5A5] rounded-full flex items-center justify-center text-[10px] font-bold text-[#991B1B]">T</div>
+          <div class="w-6 h-6 bg-[#FFEDD5] border border-[#FCA5A5] rounded-full flex items-center justify-center text-[10px] font-bold text-[#C2410C]">T</div>
         </div>
         <div class="px-5 py-4 flex items-center justify-between">
           <div class="flex items-center gap-4">
@@ -212,7 +212,7 @@
             </div>
             <p class="text-sm font-medium text-[#171a1f]">Latihan Menulis Nama</p>
           </div>
-          <div class="w-6 h-6 bg-[#FEF9C3] border border-[#FDE047] rounded-full flex items-center justify-center text-[10px] font-bold text-[#A16207]">P</div>
+          <div class="w-6 h-6 bg-[#FFF7ED] border border-[#FDE047] rounded-full flex items-center justify-center text-[10px] font-bold text-[#C2410C]">P</div>
         </div>
         <div class="px-5 py-4 flex items-center justify-between">
           <div class="flex items-center gap-4">
@@ -250,35 +250,35 @@ new Chart(waliCtx, {
       {
         label: 'Membaca',
         data: [45, 55, 62, 70, 82],
-        borderColor: '#2563EB',
-        backgroundColor: 'rgba(61,138,245,0.08)',
+        borderColor: '#F97316',
+        backgroundColor: 'rgba(249,115,22,0.08)',
         borderWidth: 2.5,
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: '#2563EB'
+        pointBackgroundColor: '#F97316'
       },
       {
         label: 'Menulis',
         data: [30, 38, 45, 52, 60],
-        borderColor: '#DC2626',
+        borderColor: '#F97316',
         backgroundColor: 'rgba(99,233,143,0.08)',
         borderWidth: 2.5,
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: '#DC2626'
+        pointBackgroundColor: '#F97316'
       },
       {
         label: 'Berhitung',
         data: [55, 58, 65, 75, 88],
-        borderColor: '#EAB308',
+        borderColor: '#FDBA74',
         backgroundColor: 'rgba(242,191,140,0.08)',
         borderWidth: 2.5,
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: '#EAB308'
+        pointBackgroundColor: '#FDBA74'
       }
     ]
   },

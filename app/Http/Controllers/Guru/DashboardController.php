@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guru;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\StudentProgress;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -67,12 +68,43 @@ class DashboardController extends Controller
             'status_percent'  => $statusPercent,
         ];
 
+        $nextRaporSchedules = $this->buildNextRaporSchedules($students);
+
         // Search filter
         $search = request('search');
         if ($search) {
             $students = $students->filter(fn($s) => str_contains(strtolower($s->name), strtolower($search)));
         }
 
-        return view('guru.dashboard', compact('stats', 'students'));
+        return view('guru.dashboard', compact('stats', 'students', 'nextRaporSchedules'));
+    }
+
+    protected function buildNextRaporSchedules($students)
+    {
+        $today = Carbon::today();
+
+        $schedules = $students->filter(fn($s) => !empty($s->join_date))->map(function ($student) use ($today) {
+            $joinDate = Carbon::parse($student->join_date)->startOfDay();
+
+            $monthsDiff = max(0, $joinDate->diffInMonths($today, false));
+            $periodNumber = (int) floor($monthsDiff / 3) + 1;
+            $nextDate = $joinDate->copy()->addMonths($periodNumber * 3);
+
+            while ($nextDate->lt($today)) {
+                $periodNumber++;
+                $nextDate = $joinDate->copy()->addMonths($periodNumber * 3);
+            }
+
+            return [
+                'student_name'  => $student->name,
+                'classroom'     => $student->classroom?->name ?? '-',
+                'join_date'     => $joinDate->translatedFormat('d M Y'),
+                'next_date'     => $nextDate->translatedFormat('d M Y'),
+                'period_number' => $periodNumber,
+                'days_left'     => $today->diffInDays($nextDate, false),
+            ];
+        })->sortBy('days_left')->values()->take(8);
+
+        return $schedules;
     }
 }

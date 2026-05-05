@@ -1,4 +1,4 @@
-{{-- Profile Dropdown (Alpine.js) --}}
+﻿{{-- Profile Dropdown (Alpine.js) --}}
 <div x-data="{ profileOpen: false }" class="relative">
   <button @click="profileOpen = !profileOpen" class="flex items-center gap-3 pl-4 border-l border-[#dee1e6] cursor-pointer hover:opacity-80">
     <div class="text-right hidden sm:block">
@@ -6,8 +6,8 @@
       <p class="text-xs text-[#565d6d] font-roboto mt-0.5">{{ ucfirst(auth()->user()->role) }}</p>
     </div>
     @php
-      $avatarColors = ['admin' => '#2563EB', 'guru' => '#DC2626', 'wali' => '#EAB308'];
-      $avatarColor = $avatarColors[auth()->user()->role] ?? '#2563EB';
+      $avatarColors = ['admin' => '#F97316', 'guru' => '#F97316', 'wali' => '#FDBA74'];
+      $avatarColor = $avatarColors[auth()->user()->role] ?? '#F97316';
     @endphp
     <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm" style="background-color: {{ $avatarColor }}">
       {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
@@ -43,7 +43,7 @@
     <div class="border-t border-[#dee1e6] py-2">
       <form method="POST" action="{{ route('logout') }}">
         @csrf
-        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#D92626] hover:bg-red-50 cursor-pointer">
+        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#F97316] hover:bg-red-50 cursor-pointer">
           <iconify-icon icon="lucide:log-out" width="16"></iconify-icon>
           Logout
         </button>

@@ -1,4 +1,4 @@
-@extends('layouts.wali')
+﻿@extends('layouts.wali')
 
 @section('title', 'Laporan Rapor - E-Rapor BiMBA AIUEO')
 @section('page-title', 'Laporan Rapor')
@@ -15,8 +15,8 @@
   .rapor-header-table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
   .rapor-header-table td { padding: 3px 8px; font-size: 13px; border: none; vertical-align: top; }
   .group-header td { background: #e2e8f0; font-weight: 700; font-size: 13px; }
-  .status-T { background: #FEE2E2; color: #991B1B; font-weight: 700; }
-  .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
+  .status-T { background: #FFEDD5; color: #C2410C; font-weight: 700; }
+  .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-B { background: #f1f5f9; color: #475569; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
 
@@ -39,7 +39,7 @@
   </div>
   <div class="flex flex-wrap gap-2">
     <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-      <iconify-icon icon="lucide:printer" width="16" class="text-[#2563EB]"></iconify-icon>
+      <iconify-icon icon="lucide:printer" width="16" class="text-[#F97316]"></iconify-icon>
       Cetak Rapor
     </button>
   </div>
@@ -53,7 +53,7 @@
       <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
         <iconify-icon icon="lucide:user" width="16"></iconify-icon>
       </div>
-      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 bg-white">
+      <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 bg-white">
         @foreach($children as $c)
           <option value="{{ $c->id }}" {{ $student?->id == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->classroom?->name ?? '-' }})</option>
         @endforeach
@@ -64,7 +64,7 @@
     </div>
   </div>
   <div class="md:col-span-4">
-    <button type="submit" class="w-full py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium shadow-md hover:bg-blue-600 flex items-center justify-center gap-2">
+    <button type="submit" class="w-full py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium shadow-md hover:bg-orange-600 flex items-center justify-center gap-2">
       <iconify-icon icon="lucide:search" width="16"></iconify-icon>
       Tampilkan
     </button>
@@ -300,7 +300,7 @@
 
 <!-- Summary Cards (no-print) -->
 <div class="no-print max-w-[850px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#DC2626'], 'tulis' => ['Menulis', 'lucide:pencil', '#2563EB'], 'hitung' => ['Berhitung', 'lucide:calculator', '#EAB308']] as $skillKey => [$label, $icon, $color])
+  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#F97316'], 'tulis' => ['Menulis', 'lucide:pencil', '#F97316'], 'hitung' => ['Berhitung', 'lucide:calculator', '#FDBA74']] as $skillKey => [$label, $icon, $color])
   <div class="bg-white rounded-2xl border border-[#dee1e6] p-5 shadow-sm">
     <div class="flex items-center gap-3 mb-3">
       <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $color }}15;">
@@ -323,13 +323,13 @@
 @if($prevReportData)
 <div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm mb-6">
   <div class="flex items-center gap-2 mb-5">
-    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#2563EB]"></iconify-icon>
+    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#F97316]"></iconify-icon>
     <h3 class="text-base font-bold text-[#171a1f]">Perbandingan dengan Periode Sebelumnya</h3>
   </div>
   <p class="text-xs text-[#565d6d] mb-4">Perbandingan pencapaian bulan ini vs bulan {{ now()->subMonth()->translatedFormat('F Y') }}</p>
 
   <div class="space-y-4">
-    @foreach(['baca' => ['Membaca', '#DC2626'], 'tulis' => ['Menulis', '#2563EB'], 'hitung' => ['Berhitung', '#EAB308']] as $skillKey => [$label, $color])
+    @foreach(['baca' => ['Membaca', '#F97316'], 'tulis' => ['Menulis', '#F97316'], 'hitung' => ['Berhitung', '#FDBA74']] as $skillKey => [$label, $color])
     @php
       $current = round($reportData[$skillKey]['percentage']);
       $prev = round($prevReportData[$skillKey]['percentage']);
@@ -375,7 +375,7 @@
 <!-- Panduan Penilaian (no-print) -->
 <div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm">
   <div class="flex items-center gap-2 mb-4">
-    <iconify-icon icon="lucide:info" width="18" class="text-[#2563EB]"></iconify-icon>
+    <iconify-icon icon="lucide:info" width="18" class="text-[#F97316]"></iconify-icon>
     <h3 class="text-sm font-bold text-[#171a1f]">Panduan Penilaian BiMBA AIUEO</h3>
   </div>
   <div class="grid grid-cols-3 gap-3">
@@ -386,16 +386,16 @@
       <p class="text-xs font-bold text-[#171a1f]">Kenal</p>
       <p class="text-[10px] text-[#565d6d]">Tahap pengenalan awal</p>
     </div>
-    <div class="bg-[#dbeafe] border border-[#93c5fd] rounded-xl p-3 text-center">
-      <div class="w-8 h-8 bg-[#1e40af]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-        <span class="text-[#1e40af] font-bold text-sm">P</span>
+    <div class="bg-[#FFEDD5] border border-[#93c5fd] rounded-xl p-3 text-center">
+      <div class="w-8 h-8 bg-[#9A3412]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+        <span class="text-[#9A3412] font-bold text-sm">P</span>
       </div>
       <p class="text-xs font-bold text-[#171a1f]">Paham</p>
       <p class="text-[10px] text-[#565d6d]">Memahami konsep materi</p>
     </div>
-    <div class="bg-[#FEE2E2] border border-[#86efac] rounded-xl p-3 text-center">
-      <div class="w-8 h-8 bg-[#991B1B]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-        <span class="text-[#991B1B] font-bold text-sm">T</span>
+    <div class="bg-[#FFEDD5] border border-[#86efac] rounded-xl p-3 text-center">
+      <div class="w-8 h-8 bg-[#C2410C]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+        <span class="text-[#C2410C] font-bold text-sm">T</span>
       </div>
       <p class="text-xs font-bold text-[#171a1f]">Terampil</p>
       <p class="text-[10px] text-[#565d6d]">Mahir dan mandiri</p>
@@ -423,11 +423,11 @@ new Chart(radarCtx, {
     datasets: [{
       label: 'Kompetensi (%)',
       data: [{{ $reportData['baca']['percentage'] }}, {{ $reportData['tulis']['percentage'] }}, {{ $reportData['hitung']['percentage'] }}],
-      borderColor: '#1e40af',
+      borderColor: '#9A3412',
       backgroundColor: 'rgba(30,64,175,0.12)',
       borderWidth: 2,
       pointRadius: 5,
-      pointBackgroundColor: '#1e40af',
+      pointBackgroundColor: '#9A3412',
       pointHoverRadius: 7
     }]
   },

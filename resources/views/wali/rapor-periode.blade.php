@@ -1,4 +1,4 @@
-@extends('layouts.wali')
+﻿@extends('layouts.wali')
 
 @section('title')
 Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }} - E-Rapor BiMBA AIUEO
@@ -20,8 +20,8 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   .rapor-header-table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
   .rapor-header-table td { padding: 3px 8px; font-size: 13px; border: none; vertical-align: top; }
   .group-header td { background: #e2e8f0; font-weight: 700; font-size: 13px; }
-  .status-T { background: #FEE2E2; color: #991B1B; font-weight: 700; }
-  .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
+  .status-T { background: #FFEDD5; color: #C2410C; font-weight: 700; }
+  .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
 
   @media print {
@@ -50,10 +50,10 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   </div>
   <div class="flex flex-wrap gap-2">
     <a href="{{ route('wali.riwayat', ['student_id' => $student->id]) }}" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
-      <iconify-icon icon="lucide:arrow-left" width="16" class="text-[#2563EB]"></iconify-icon>
+      <iconify-icon icon="lucide:arrow-left" width="16" class="text-[#F97316]"></iconify-icon>
       Kembali ke Riwayat
     </a>
-    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] text-white rounded-xl text-sm font-medium hover:bg-blue-600">
+    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium hover:bg-orange-600">
       <iconify-icon icon="lucide:printer" width="16"></iconify-icon>
       Cetak Rapor
     </button>
@@ -81,7 +81,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   <div class="text-center mb-6">
     <h1 class="text-xl font-bold uppercase tracking-wide" style="letter-spacing: 2px;">Ringkasan Laporan Hasil Belajar Murid</h1>
     <div class="w-24 h-1 bg-[#1e293b] mx-auto mt-2"></div>
-    <p class="mt-3 text-sm font-semibold" style="color: #dc2626;">PERIODE {{ $periodInfo['number'] }}</p>
+    <p class="mt-3 text-sm font-semibold" style="color: #F97316;">PERIODE {{ $periodInfo['number'] }}</p>
   </div>
 
   <!-- Institution Header -->
@@ -304,7 +304,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 
 <!-- Summary Cards (no-print) -->
 <div class="no-print max-w-[850px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#DC2626'], 'tulis' => ['Menulis', 'lucide:pencil', '#2563EB'], 'hitung' => ['Berhitung', 'lucide:calculator', '#EAB308']] as $skillKey => [$label, $icon, $color])
+  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#F97316'], 'tulis' => ['Menulis', 'lucide:pencil', '#F97316'], 'hitung' => ['Berhitung', 'lucide:calculator', '#FDBA74']] as $skillKey => [$label, $icon, $color])
   <div class="bg-white rounded-2xl border border-[#dee1e6] p-5 shadow-sm">
     <div class="flex items-center gap-3 mb-3">
       <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $color }}15;">
@@ -338,11 +338,11 @@ document.addEventListener('DOMContentLoaded', function() {
       datasets: [{
         label: 'Kompetensi (%)',
         data: [{{ $reportData['baca']['percentage'] }}, {{ $reportData['tulis']['percentage'] }}, {{ $reportData['hitung']['percentage'] }}],
-        borderColor: '#1e40af',
+        borderColor: '#9A3412',
         backgroundColor: 'rgba(30,64,175,0.12)',
         borderWidth: 2,
         pointRadius: 5,
-        pointBackgroundColor: '#1e40af',
+        pointBackgroundColor: '#9A3412',
         pointBorderColor: '#fff',
         pointBorderWidth: 2
       }]
