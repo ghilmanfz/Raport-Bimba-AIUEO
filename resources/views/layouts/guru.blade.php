@@ -40,8 +40,13 @@
         <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
       </button>
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
-          <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
+        @php $headerLogo = \App\Models\Setting::get('institution_logo'); @endphp
+        <div class="w-8 h-8 {{ $headerLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+          @if($headerLogo)
+            <img src="{{ asset('storage/' . $headerLogo) }}" class="w-8 h-8 rounded-full object-cover" alt="Logo">
+          @else
+            <iconify-icon icon="lucide:graduation-cap" width="18" style="color:#fff"></iconify-icon>
+          @endif
         </div>
         <span class="font-bold text-lg text-[#0f172a]">E-Rapor BiMBA AIUEO</span>
       </div>

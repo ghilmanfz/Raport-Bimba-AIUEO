@@ -115,7 +115,7 @@
 
 <!-- Bottom Panels -->
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-  <div class="xl:col-span-2 bg-[#0D7FF2] p-6 lg:p-8 rounded-2xl main-shadow flex flex-col sm:flex-row gap-6">
+  <div class="xl:col-span-2 bg-gradient-to-br from-[#F97316] to-[#EA580C] p-6 lg:p-8 rounded-2xl main-shadow flex flex-col sm:flex-row gap-6">
     <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex-shrink-0 flex items-center justify-center">
       <iconify-icon icon="lucide:lightbulb" width="22" class="text-[#F97316]"></iconify-icon>
     </div>

@@ -1,6 +1,6 @@
 ﻿<!-- Notification Bell Dropdown -->
 <div x-data="notificationBell()" x-init="fetchNotifications()" class="relative">
-  <button @click="toggle()" class="p-2 text-[#565d6d] hover:bg-gray-100 rounded-full relative">
+  <button @click="toggle()" class="relative flex h-10 w-10 items-center justify-center rounded-full text-[#565d6d] hover:bg-gray-100">
     <iconify-icon icon="lucide:bell" width="20"></iconify-icon>
     <span x-show="unreadCount > 0" x-text="unreadCount > 9 ? '9+' : unreadCount"
           class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] bg-[#F97316] text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1"></span>

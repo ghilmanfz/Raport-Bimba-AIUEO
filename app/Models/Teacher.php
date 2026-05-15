@@ -13,11 +13,18 @@ class Teacher extends Model
      */
     public static function generateNip(): string
     {
-        $lastNip = static::whereNotNull('nip')
-            ->orderByRaw("CAST(SUBSTR(nip, 3) AS INTEGER) DESC")
-            ->value('nip');
+        $lastNumber = static::whereNotNull('nip')
+            ->where('nip', 'like', 'T-%')
+            ->pluck('nip')
+            ->map(function (string $nip): ?int {
+                return preg_match('/^T-(\d+)$/', $nip, $matches)
+                    ? (int) $matches[1]
+                    : null;
+            })
+            ->filter(fn (?int $number): bool => $number !== null)
+            ->max() ?? 0;
 
-        $nextNum = $lastNip ? ((int) substr($lastNip, 2)) + 1 : 1;
+        $nextNum = $lastNumber + 1;
 
         return 'T-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
     }

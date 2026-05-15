@@ -9,12 +9,16 @@ use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class MuridController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Student::with(['classroom', 'parent']);
+        $query = Student::with([
+            'classroom',
+            'parent' => fn ($query) => $query->withCount('students'),
+        ]);
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -32,44 +36,68 @@ class MuridController extends Controller
         $totalMurid   = Student::count();
         $muridAktif   = Student::where('status', 'aktif')->count();
         $muridCuti    = Student::where('status', 'cuti')->count();
+        $waliUsers    = User::where('role', 'wali')
+            ->withCount('students')
+            ->orderBy('name')
+            ->get();
 
-        return view('admin.murid', compact('students', 'classrooms', 'totalMurid', 'muridAktif', 'muridCuti'));
+        return view('admin.murid', compact('students', 'classrooms', 'totalMurid', 'muridAktif', 'muridCuti', 'waliUsers'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'         => 'required|string|max:255',
-            'classroom_id' => 'required|exists:classrooms,id',
-            'join_date'    => 'required|date',
-            'status'       => 'required|in:aktif,cuti,nonaktif',
-            'parent_name'  => 'nullable|string|max:255',
-            'parent_email' => 'nullable|email|unique:users,email',
+        $request->merge([
+            'parent_mode' => $request->input(
+                'parent_mode',
+                $request->filled('parent_email') ? 'new' : 'none'
+            ),
         ]);
 
-        // Create parent user if provided
+        $validated = $request->validate([
+            'name'               => 'required|string|max:255',
+            'classroom_id'       => 'required|exists:classrooms,id',
+            'join_date'          => 'required|date',
+            'status'             => 'required|in:aktif,cuti,nonaktif',
+            'parent_mode'        => 'required|in:none,existing,new',
+            'existing_parent_id' => [
+                'required_if:parent_mode,existing',
+                'nullable',
+                Rule::exists('users', 'id')->where(fn ($query) => $query->where('role', 'wali')),
+            ],
+            'parent_name'        => 'required_if:parent_mode,new|nullable|string|max:255',
+            'parent_email'       => 'required_if:parent_mode,new|nullable|email|unique:users,email',
+            'parent_password'    => 'required_if:parent_mode,new|nullable|string|min:6',
+        ]);
+
         $parentId = null;
-        if ($request->filled('parent_email')) {
+
+        if ($validated['parent_mode'] === 'existing') {
+            $parentId = (int) $validated['existing_parent_id'];
+        }
+
+        if ($validated['parent_mode'] === 'new') {
             $parent = User::create([
-                'name'     => $request->parent_name ?? 'Wali ' . $request->name,
-                'email'    => $request->parent_email,
-                'role'     => 'wali',
-                'password' => Hash::make('password123'),
+                'name'           => $validated['parent_name'],
+                'email'          => $validated['parent_email'],
+                'role'           => 'wali',
+                'password'       => Hash::make($validated['parent_password']),
+                'plain_password' => $validated['parent_password'],
             ]);
+
             $parentId = $parent->id;
         }
 
         $student = Student::create([
-            'name'         => $request->name,
-            'classroom_id' => $request->classroom_id,
+            'name'         => $validated['name'],
+            'classroom_id' => $validated['classroom_id'],
             'parent_id'    => $parentId,
-            'join_date'    => $request->join_date,
-            'status'       => $request->status,
+            'join_date'    => $validated['join_date'],
+            'status'       => $validated['status'],
         ]);
 
         Notification::notifyAdmins(
             'Murid Baru Ditambahkan',
-            'Data murid ' . $request->name . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
+            'Data murid ' . $validated['name'] . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.murid')

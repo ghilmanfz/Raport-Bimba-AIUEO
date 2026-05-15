@@ -5,13 +5,15 @@
 
 @section('content')
 @php
-  $child = $childrenData->first();
+  $child = $selectedChildData ?? $childrenData->first();
   $studentName = $child ? $child['student']->name : 'Anak';
   $studentInitials = $child ? collect(explode(' ', $child['student']->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('') : '?';
-  $classroomName = $child ? ($child['student']->classroom->name ?? '-') : '-';
+  $classroomName = $child ? ($child['student']->classroom?->name ?? '-') : '-';
   $bacaPct = $child ? round($child['baca']) : 0;
   $tulisPct = $child ? round($child['tulis']) : 0;
   $hitungPct = $child ? round($child['hitung']) : 0;
+  $selectedStudentId = $child ? $child['student']->id : null;
+  $reportUrl = $selectedStudentId ? route('wali.rapor', ['student_id' => $selectedStudentId]) : route('wali.rapor');
 @endphp
 
 <!-- Hero Section -->
@@ -34,7 +36,35 @@
       </div>
     </div>
   </div>
+  <form method="GET" action="{{ route('wali.dashboard') }}" class="w-full lg:w-80 bg-white/85 backdrop-blur-sm border border-[#F9731633] rounded-2xl p-4">
+    <label class="text-xs font-semibold text-[#565d6d] uppercase tracking-wider">Pilih Anak</label>
+    <div class="relative mt-2">
+      <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#F97316]">
+        <iconify-icon icon="lucide:user-round" width="16"></iconify-icon>
+      </div>
+      <select name="student_id" onchange="this.form.submit()" class="w-full pl-9 pr-10 py-2.5 bg-white border border-[#dee1e6] rounded-xl text-sm font-medium text-[#171a1f] appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+        @forelse($children as $student)
+          <option value="{{ $student->id }}" {{ $selectedStudentId === $student->id ? 'selected' : '' }}>
+            {{ $student->name }} ({{ $student->classroom?->name ?? '-' }})
+          </option>
+        @empty
+          <option value="">Belum ada anak terhubung</option>
+        @endforelse
+      </select>
+      <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#565d6d]">
+        <iconify-icon icon="lucide:chevron-down" width="14"></iconify-icon>
+      </div>
+    </div>
+  </form>
 </section>
+
+@if(!$child)
+<div class="bg-white rounded-2xl border border-[#dee1e6] p-12 text-center custom-shadow">
+  <iconify-icon icon="lucide:user-x" width="48" class="text-[#dee1e6] mx-auto mb-4"></iconify-icon>
+  <h2 class="text-lg font-bold text-[#171a1f] mb-2">Belum Ada Anak Terhubung</h2>
+  <p class="text-sm text-[#565d6d] max-w-md mx-auto">Akun wali ini belum terhubung ke data murid. Silakan hubungi admin BiMBA untuk menghubungkan akun wali dengan murid yang sesuai.</p>
+</div>
+@else
 
 <!-- Summary Title -->
 <div class="flex items-center gap-2 mb-6">
@@ -44,80 +74,48 @@
 
 <!-- 3 Subject Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-  <!-- Membaca -->
-  <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
-    <div class="flex justify-between items-start mb-6">
-      <div class="w-12 h-12 bg-[#FFEDD5] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:book-open" width="24" class="text-[#F97316]"></iconify-icon>
+  @php
+    $skillVisuals = [
+      'baca' => ['icon' => 'lucide:book-open', 'bg' => 'bg-[#FFEDD5]', 'text' => 'text-[#F97316]', 'bar' => 'bg-[#F97316]'],
+      'tulis' => ['icon' => 'lucide:pencil', 'bg' => 'bg-[#DBEAFE]', 'text' => 'text-[#3B82F6]', 'bar' => 'bg-[#3B82F6]'],
+      'hitung' => ['icon' => 'lucide:calculator', 'bg' => 'bg-[#DCFCE7]', 'text' => 'text-[#22C55E]', 'bar' => 'bg-[#22C55E]'],
+    ];
+    $statusBadgeClasses = [
+      'T' => 'bg-[#FFEDD5] text-[#C2410C] border border-[#FDBA74]',
+      'P' => 'bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE]',
+      'K' => 'bg-gray-100 text-[#171a1f] border border-gray-200',
+    ];
+  @endphp
+  @foreach(['baca', 'tulis', 'hitung'] as $skillKey)
+    @php
+      $card = $skillCards[$skillKey];
+      $visual = $skillVisuals[$skillKey];
+      $badgeClass = $statusBadgeClasses[$card['status']] ?? $statusBadgeClasses['K'];
+    @endphp
+    <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
+      <div class="flex justify-between items-start mb-6">
+        <div class="w-12 h-12 {{ $visual['bg'] }} rounded-2xl flex items-center justify-center">
+          <iconify-icon icon="{{ $visual['icon'] }}" width="24" class="{{ $visual['text'] }}"></iconify-icon>
+        </div>
+        <span class="{{ $badgeClass }} text-[10px] font-bold px-3 py-1 rounded-full">Status: {{ $card['status'] }}</span>
       </div>
-      <span class="bg-gray-100 text-[#171a1f] text-[10px] font-bold px-3 py-1 rounded-full border border-gray-200">Status: T</span>
+      <h3 class="text-lg font-bold text-[#171a1f] mb-2">{{ $card['label'] }}</h3>
+      <p class="text-sm text-[#565d6d] mb-6 flex-1">{{ $card['description'] }}</p>
+      <div class="space-y-2 mb-6">
+        <div class="flex justify-between text-xs font-semibold">
+          <span>Progres Belajar</span>
+          <span>{{ $card['percentage'] }}%</span>
+        </div>
+        <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
+          <div class="h-full {{ $visual['bar'] }}" style="width: {{ $card['percentage'] }}%"></div>
+        </div>
+      </div>
+      <a href="{{ $reportUrl }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
+        Lihat Detail Laporan
+        <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
+      </a>
     </div>
-    <h3 class="text-lg font-bold text-[#171a1f] mb-2">Membaca (Baca)</h3>
-    <p class="text-sm text-[#565d6d] mb-6 flex-1">Anak sudah mampu membaca kalimat sederhana dengan lancar.</p>
-    <div class="space-y-2 mb-6">
-      <div class="flex justify-between text-xs font-semibold">
-        <span>Progres Belajar</span>
-        <span>{{ $bacaPct }}%</span>
-      </div>
-      <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#F97316]" style="width: {{ $bacaPct }}%"></div>    {{-- Orange: Baca --}}
-      </div>
-    </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
-      Lihat Detail Laporan
-      <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
-    </a>
-  </div>
-
-  <!-- Menulis -->
-  <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
-    <div class="flex justify-between items-start mb-6">
-      <div class="w-12 h-12 bg-[#DBEAFE] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:pencil" width="24" class="text-[#3B82F6]"></iconify-icon>
-      </div>
-      <span class="bg-[#DBEAFE] text-[#2563EB] text-[10px] font-bold px-3 py-1 rounded-full">Status: P</span>
-    </div>
-    <h3 class="text-lg font-bold text-[#171a1f] mb-2">Menulis (Tulis)</h3>
-    <p class="text-sm text-[#565d6d] mb-6 flex-1">Anak memahami struktur huruf dan mulai merangkai kata.</p>
-    <div class="space-y-2 mb-6">
-      <div class="flex justify-between text-xs font-semibold">
-        <span>Progres Belajar</span>
-        <span>{{ $tulisPct }}%</span>
-      </div>
-      <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#3B82F6]" style="width: {{ $tulisPct }}%"></div>
-      </div>
-    </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
-      Lihat Detail Laporan
-      <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
-    </a>
-  </div>
-
-  <!-- Berhitung -->
-  <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
-    <div class="flex justify-between items-start mb-6">
-      <div class="w-12 h-12 bg-[#DCFCE7] rounded-2xl flex items-center justify-center">
-        <iconify-icon icon="lucide:calculator" width="24" class="text-[#22C55E]"></iconify-icon>
-      </div>
-      <span class="bg-gray-100 text-[#171a1f] text-[10px] font-bold px-3 py-1 rounded-full border border-gray-200">Status: K</span>
-    </div>
-    <h3 class="text-lg font-bold text-[#171a1f] mb-2">Berhitung (Hitung)</h3>
-    <p class="text-sm text-[#565d6d] mb-6 flex-1">Sedang dalam tahap pengenalan angka 1-20 dan penjumlahan dasar.</p>
-    <div class="space-y-2 mb-6">
-      <div class="flex justify-between text-xs font-semibold">
-        <span>Progres Belajar</span>
-        <span>{{ $hitungPct }}%</span>
-      </div>
-      <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-        <div class="h-full bg-[#22C55E]" style="width: {{ $hitungPct }}%"></div>
-      </div>
-    </div>
-    <a href="{{ route('wali.rapor') }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
-      Lihat Detail Laporan
-      <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
-    </a>
-  </div>
+  @endforeach
 </div>
 
 <!-- Jadwal Pembagian Rapor -->
@@ -194,44 +192,41 @@
         <h3 class="text-sm font-bold text-[#171a1f]">Aktivitas Terakhir</h3>
       </div>
       <div class="divide-y divide-[#dee1e6]">
-        <div class="px-5 py-4 flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="text-center">
-              <p class="text-[8px] font-bold text-[#565d6d] uppercase">Okt</p>
-              <p class="text-sm font-bold text-[#171a1f]">22</p>
+        @forelse($recentProgress as $progress)
+          @php
+            $progressDate = $progress->updated_at ?? $progress->created_at;
+            $statusClass = match($progress->status) {
+              'T' => 'bg-[#FFEDD5] border-[#FCA5A5] text-[#C2410C]',
+              'P' => 'bg-[#FFF7ED] border-[#FDE047] text-[#C2410C]',
+              default => 'bg-[#f3f4f6] border-[#dee1e6] text-[#475569]',
+            };
+          @endphp
+          <div class="px-5 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="text-center w-8">
+                <p class="text-[8px] font-bold text-[#565d6d] uppercase">{{ $progressDate?->translatedFormat('M') ?? '-' }}</p>
+                <p class="text-sm font-bold text-[#171a1f]">{{ $progressDate?->format('d') ?? '-' }}</p>
+              </div>
+              <p class="text-sm font-medium text-[#171a1f]">{{ $progress->material?->name ?? 'Materi belum tersedia' }}</p>
             </div>
-            <p class="text-sm font-medium text-[#171a1f]">Modul Baca 1B Selesai</p>
+            <div class="w-6 h-6 border rounded-full flex items-center justify-center text-[10px] font-bold {{ $statusClass }}">{{ $progress->status }}</div>
           </div>
-          <div class="w-6 h-6 bg-[#FFEDD5] border border-[#FCA5A5] rounded-full flex items-center justify-center text-[10px] font-bold text-[#C2410C]">T</div>
-        </div>
-        <div class="px-5 py-4 flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="text-center">
-              <p class="text-[8px] font-bold text-[#565d6d] uppercase">Okt</p>
-              <p class="text-sm font-bold text-[#171a1f]">20</p>
-            </div>
-            <p class="text-sm font-medium text-[#171a1f]">Latihan Menulis Nama</p>
+        @empty
+          <div class="px-5 py-8 text-center">
+            <iconify-icon icon="lucide:clipboard-list" width="28" class="text-[#dee1e6] mx-auto mb-2"></iconify-icon>
+            <p class="text-sm text-[#565d6d]">Belum ada aktivitas nilai untuk {{ $studentName }}.</p>
           </div>
-          <div class="w-6 h-6 bg-[#FFF7ED] border border-[#FDE047] rounded-full flex items-center justify-center text-[10px] font-bold text-[#C2410C]">P</div>
-        </div>
-        <div class="px-5 py-4 flex items-center justify-between">
-          <div class="flex items-center gap-4">
-            <div class="text-center">
-              <p class="text-[8px] font-bold text-[#565d6d] uppercase">Okt</p>
-              <p class="text-sm font-bold text-[#171a1f]">18</p>
-            </div>
-            <p class="text-sm font-medium text-[#171a1f]">Pengenalan Angka 1-10</p>
-          </div>
-          <div class="w-6 h-6 bg-[#f3f4f6] border border-[#dee1e6] rounded-full flex items-center justify-center text-[10px] font-bold text-[#475569]">K</div>
-        </div>
+        @endforelse
       </div>
     </div>
   </div>
 </div>
 
+@endif
+
 <!-- Footer -->
 <footer class="mt-12 py-6 border-t border-[#dee1e6] text-center">
-  <p class="text-xs text-[#565d6d]">© 2026 E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
+  <p class="text-xs text-[#565d6d]">© {{ date('Y') }} E-Rapor {{ $institutionName }}. All rights reserved.</p>
 </footer>
 @endsection
 
@@ -239,17 +234,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 @endpush
 
+@if($child)
 @push('scripts')
 <script>
+const waliDashboardChartData = @json($skillTrend);
 const waliCtx = document.getElementById('waliDashboardChart').getContext('2d');
 new Chart(waliCtx, {
   type: 'line',
   data: {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
+    labels: waliDashboardChartData.labels,
     datasets: [
       {
-        label: 'Membaca',
-        data: [45, 55, 62, 70, 82],
+        label: waliDashboardChartData.series.baca.label,
+        data: waliDashboardChartData.series.baca.data,
         borderColor: '#F97316',
         backgroundColor: 'rgba(249,115,22,0.08)',
         borderWidth: 2.5,
@@ -259,19 +256,19 @@ new Chart(waliCtx, {
         pointBackgroundColor: '#F97316'
       },
       {
-        label: 'Menulis',
-        data: [30, 38, 45, 52, 60],
-        borderColor: '#F97316',
+        label: waliDashboardChartData.series.tulis.label,
+        data: waliDashboardChartData.series.tulis.data,
+        borderColor: '#3B82F6',
         backgroundColor: 'rgba(99,233,143,0.08)',
         borderWidth: 2.5,
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: '#F97316'
+        pointBackgroundColor: '#3B82F6'
       },
       {
-        label: 'Berhitung',
-        data: [55, 58, 65, 75, 88],
+        label: waliDashboardChartData.series.hitung.label,
+        data: waliDashboardChartData.series.hitung.data,
         borderColor: '#FDBA74',
         backgroundColor: 'rgba(242,191,140,0.08)',
         borderWidth: 2.5,
@@ -296,3 +293,4 @@ new Chart(waliCtx, {
 });
 </script>
 @endpush
+@endif

@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - E-Rapor BiMBA</title>
+  @php
+    $institutionName = \App\Models\Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre');
+    $landingTitle = \App\Models\Setting::get('landing_title', 'E-Rapor');
+    $landingHighlight = \App\Models\Setting::get('landing_highlight', 'BiMBA');
+  @endphp
+  <title>Login - {{ $landingTitle }} {{ $landingHighlight }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +32,10 @@
   </style>
 </head>
 <body class="bg-login-fresh min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
+  <a href="{{ url('/') }}" class="absolute left-4 top-4 md:left-8 md:top-8 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/80 border border-[#dee1e6] rounded-xl text-sm font-semibold text-[#171a1f] hover:bg-white soft-shadow">
+    <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>
+    Kembali ke Beranda
+  </a>
 
   <!-- Decorative Background -->
   <div class="absolute top-[8%] left-[3%] w-72 h-72 bg-[#F97316]/12 rounded-full blur-[64px] -z-10"></div>
@@ -52,7 +61,7 @@
               <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-6 h-6">
             @endif
           </div>
-          <span class="font-bold text-2xl tracking-tight text-[#0f172a]">E-Rapor BiMBA</span>
+          <span class="font-bold text-2xl tracking-tight text-[#0f172a]">{{ $landingTitle }} {{ $landingHighlight }}</span>
         </div>
 
         <!-- Welcome Text -->
@@ -145,7 +154,7 @@
       <!-- Footer Links -->
       <footer class="mt-12 pt-6 border-t border-[#dee1e6]">
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-[12px] text-[#565d6d]">
-          <span>© {{ date('Y') }} BiMBA AIUEO Smart Education</span>
+          <span>© {{ date('Y') }} {{ $institutionName }}</span>
           <div class="flex gap-6">
             <a href="#" class="text-[#F97316] hover:text-[#EA580C] transition-colors">Bantuan</a>
             <a href="#" class="text-[#F97316] hover:text-[#EA580C] transition-colors">Kebijakan Privasi</a>
@@ -171,10 +180,10 @@
       <!-- Illustration Card -->
       <div class="relative z-10 photo-card-bg p-6 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] mb-10 w-full max-w-[304px]">
         @php
-          $logo = \App\Models\Setting::get('institution_logo');
+          $heroImage = \App\Models\Setting::get('hero_image');
         @endphp
-        @if($logo)
-          <img src="{{ asset('storage/' . $logo) }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
+        @if($heroImage)
+          <img src="{{ asset('storage/' . $heroImage) }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
         @else
           <img src="{{ asset('assets/IMG_21.webp') }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
         @endif

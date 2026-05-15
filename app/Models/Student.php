@@ -14,11 +14,18 @@ class Student extends Model
      */
     public static function generateNis(): string
     {
-        $lastNis = static::whereNotNull('nis')
-            ->orderByRaw("CAST(SUBSTR(nis, 3) AS INTEGER) DESC")
-            ->value('nis');
+        $lastNumber = static::whereNotNull('nis')
+            ->where('nis', 'like', 'BM%')
+            ->pluck('nis')
+            ->map(function (string $nis): ?int {
+                return preg_match('/^BM(\d+)$/', $nis, $matches)
+                    ? (int) $matches[1]
+                    : null;
+            })
+            ->filter(fn (?int $number): bool => $number !== null)
+            ->max() ?? 0;
 
-        $nextNum = $lastNis ? ((int) substr($lastNis, 3)) + 1 : 1;
+        $nextNum = $lastNumber + 1;
 
         return 'BM' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
     }

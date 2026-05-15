@@ -184,8 +184,8 @@ class RaporController extends Controller
                     $skilledDate = \Carbon\Carbon::parse($prog->skilled_date);
                     if ($skilledDate->lte($periodEnd)) return true;
                 }
-                if ($prog->status == 'P' && $prog->paham_date) {
-                    $pahamDate = \Carbon\Carbon::parse($prog->paham_date);
+                if ($prog->status == 'P' && $prog->understand_date) {
+                    $pahamDate = \Carbon\Carbon::parse($prog->understand_date);
                     if ($pahamDate->lte($periodEnd)) return true;
                 }
                 if ($prog->status == 'K' && $prog->start_date) {
@@ -242,4 +242,3 @@ class RaporController extends Controller
         ));
     }
 }
-

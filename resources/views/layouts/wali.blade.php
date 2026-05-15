@@ -34,8 +34,13 @@
   <!-- Header -->
   <header class="no-print fixed top-0 left-0 right-0 h-16 bg-white/60 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-12">
     <div class="flex items-center gap-3">
-      <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
-        <img src="{{ asset('assets/IMG_1.svg') }}" alt="Logo" class="w-5 h-5">
+      @php $headerLogo = \App\Models\Setting::get('institution_logo'); @endphp
+      <div class="w-8 h-8 {{ $headerLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+        @if($headerLogo)
+          <img src="{{ asset('storage/' . $headerLogo) }}" class="w-8 h-8 rounded-full object-cover" alt="Logo">
+        @else
+          <iconify-icon icon="lucide:graduation-cap" width="18" style="color:#fff"></iconify-icon>
+        @endif
       </div>
       <span class="font-bold text-lg lg:text-xl font-['Inter'] text-[#171a1f]">E-Rapor BiMBA AIUEO</span>
     </div>

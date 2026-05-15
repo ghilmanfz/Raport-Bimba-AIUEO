@@ -18,8 +18,8 @@
         <iconify-icon icon="lucide:users" width="22" class="text-[#F97316]"></iconify-icon>
       </div>
       <div class="flex items-center gap-1 text-[#C2410C] text-xs font-medium font-roboto">
-        <iconify-icon icon="lucide:trending-up" width="12"></iconify-icon>
-        +12%
+        <iconify-icon icon="lucide:user-plus" width="12"></iconify-icon>
+        {{ $stats['murid_baru'] }} baru
       </div>
     </div>
     <p class="text-sm font-medium text-[#565d6d] mb-1">Total Murid</p>
@@ -59,21 +59,28 @@
     <p class="text-sm text-[#565d6d] font-roboto mb-6">Log aktivitas dalam 24 jam terakhir.</p>
     <div class="space-y-6 relative">
       <div class="absolute left-[5px] top-2 bottom-2 w-[1px] bg-[#dee1e6]"></div>
-      <div class="relative pl-8">
-        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#F97316] rounded-full z-10"></div>
-        <p class="text-sm font-medium text-[#171a1f] font-roboto">Input Nilai Level 2 - P</p>
-        <p class="text-xs text-[#565d6d] font-roboto mt-1">Ibu Ratna • 2 menit lalu</p>
-      </div>
-      <div class="relative pl-8">
-        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#3B82F6] rounded-full z-10"></div>
-          <p class="text-sm font-medium text-[#171a1f] font-roboto">Tambah Murid Baru (M005)</p>
-        <p class="text-xs text-[#565d6d] font-roboto mt-1">Bpk. Andi • 45 menit lalu</p>
-      </div>
-      <div class="relative pl-8">
-        <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#dee1e6] rounded-full z-10"></div>
-        <p class="text-sm font-medium text-[#171a1f] font-roboto">Update Pengaturan Jadwal</p>
-        <p class="text-xs text-[#565d6d] font-roboto mt-1">Sistem • 3 jam lalu</p>
-      </div>
+      @forelse($recentActivities as $activity)
+        @php
+          $activityColor = match($activity->type) {
+            'success' => '#22C55E',
+            'warning' => '#F97316',
+            'error' => '#DC2626',
+            default => '#3B82F6',
+          };
+        @endphp
+        <a href="{{ $activity->link ?: '#' }}" class="relative pl-8 block hover:opacity-80">
+          <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 rounded-full z-10" style="border-color: {{ $activityColor }}"></div>
+          <p class="text-sm font-medium text-[#171a1f] font-roboto">{{ $activity->title }}</p>
+          <p class="text-xs text-[#565d6d] font-roboto mt-1">{{ $activity->message }}</p>
+          <p class="text-[10px] text-[#9095a0] font-roboto mt-1">{{ $activity->created_at?->diffForHumans() }}</p>
+        </a>
+      @empty
+        <div class="relative pl-8">
+          <div class="absolute left-0 top-1.5 w-3 h-3 bg-white border-2 border-[#dee1e6] rounded-full z-10"></div>
+          <p class="text-sm font-medium text-[#171a1f] font-roboto">Belum ada aktivitas</p>
+          <p class="text-xs text-[#565d6d] font-roboto mt-1">Aktivitas admin akan muncul setelah ada perubahan data.</p>
+        </div>
+      @endforelse
     </div>
   </div>
 
@@ -84,9 +91,9 @@
       <div class="absolute -right-4 -top-4 opacity-10 rotate-12">
         <iconify-icon icon="lucide:graduation-cap" width="112" class="text-white"></iconify-icon>
       </div>
-      <h2 class="text-lg font-bold mb-2 relative z-10">Pusat Bantuan BiMBA</h2>
+      <h2 class="text-lg font-bold mb-2 relative z-10 text-white">Pusat Bantuan BiMBA</h2>
       <p class="text-sm text-white/80 font-roboto mb-6 relative z-10 leading-relaxed">Butuh bantuan dalam mengelola data atau sistem rapor? Tim teknis kami siap membantu 24/7.</p>
-      <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor." target="_blank" class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10 block text-center">
+      <a href="{{ $supportWhatsappUrl ?? '#' }}" target="_blank" class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10 block text-center">
         <iconify-icon icon="lucide:message-circle" width="16" class="inline mr-1"></iconify-icon>
         Hubungi Support via WhatsApp
       </a>

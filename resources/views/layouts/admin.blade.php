@@ -46,8 +46,13 @@
   <!-- Sidebar -->
   <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
     <div class="p-6 flex items-center gap-3">
-      <div class="w-8 h-8 logo-gradient rounded-full flex items-center justify-center">
-        <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
+      @php $sidebarLogo = \App\Models\Setting::get('institution_logo'); @endphp
+      <div class="w-8 h-8 {{ $sidebarLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+        @if($sidebarLogo)
+          <img src="{{ asset('storage/' . $sidebarLogo) }}" class="w-8 h-8 rounded-full object-cover" alt="Logo">
+        @else
+          <iconify-icon icon="lucide:graduation-cap" width="18" style="color:#fff"></iconify-icon>
+        @endif
       </div>
       <span class="font-bold text-lg leading-tight text-[#171a1f]">E-Rapor BiMBA</span>
     </div>
@@ -98,17 +103,17 @@
   <div class="flex-1 flex flex-col lg:ml-64 min-w-0">
 
     <!-- Header -->
-    <header class="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-md border-b border-[#dee1e6] flex items-center justify-between px-4 lg:px-8">
-      <div class="flex items-center gap-4">
+    <header data-admin-headbar class="sticky top-0 z-30 min-h-[72px] bg-white/90 backdrop-blur-md border-b border-[#dee1e6] flex items-center justify-between px-4 py-2 lg:px-8">
+      <div class="flex min-h-12 items-center gap-4">
         <button id="mobile-menu-btn" class="lg:hidden p-2 text-[#565d6d] hover:bg-gray-100 rounded-lg">
           <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
         </button>
-        <div class="hidden lg:block">
+        <div class="hidden lg:flex min-h-12 items-center">
           <h2 class="text-base font-semibold text-[#171a1f]">@yield('page-title', 'Dashboard')</h2>
         </div>
       </div>
 
-      <div class="flex items-center gap-4">
+      <div class="flex min-h-12 items-center gap-3 sm:gap-4">
         @include('partials.notification-bell')
         @include('partials.profile-dropdown')
       </div>

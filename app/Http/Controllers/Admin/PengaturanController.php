@@ -21,6 +21,15 @@ class PengaturanController extends Controller
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
             'unit_name'           => Setting::get('unit_name', ''),
             'institution_logo'    => Setting::get('institution_logo'),
+            'support_whatsapp'    => Setting::get('support_whatsapp', '6281234567890'),
+            'support_email'       => Setting::get('support_email', 'info@bimba-aiueo.com'),
+            'landing_badge'       => Setting::get('landing_badge', 'Masa Depan Belajar Anak'),
+            'landing_title'       => Setting::get('landing_title', 'E-Rapor'),
+            'landing_highlight'   => Setting::get('landing_highlight', 'BiMBA AIUEO'),
+            'landing_description' => Setting::get('landing_description', 'Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.'),
+            'landing_cta_title'   => Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?'),
+            'landing_cta_description' => Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.'),
+            'hero_image'          => Setting::get('hero_image'),
         ];
 
         return view('admin.pengaturan', compact('classrooms', 'settings'));
@@ -32,12 +41,29 @@ class PengaturanController extends Controller
             'institution_name'    => 'required|string|max:255',
             'institution_address' => 'required|string|max:500',
             'unit_name'           => 'nullable|string|max:255',
+            'support_whatsapp'    => 'nullable|string|max:30',
+            'support_email'       => 'nullable|email|max:255',
+            'landing_badge'       => 'nullable|string|max:120',
+            'landing_title'       => 'nullable|string|max:120',
+            'landing_highlight'   => 'nullable|string|max:120',
+            'landing_description' => 'nullable|string|max:500',
+            'landing_cta_title'   => 'nullable|string|max:180',
+            'landing_cta_description' => 'nullable|string|max:500',
             'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'hero_image'          => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
         ]);
 
         Setting::set('institution_name', $request->institution_name);
         Setting::set('institution_address', $request->institution_address);
         Setting::set('unit_name', $request->unit_name ?? '');
+        Setting::set('support_whatsapp', preg_replace('/\D+/', '', $request->support_whatsapp ?? ''));
+        Setting::set('support_email', $request->support_email ?? '');
+        Setting::set('landing_badge', $request->landing_badge ?? '');
+        Setting::set('landing_title', $request->landing_title ?? '');
+        Setting::set('landing_highlight', $request->landing_highlight ?? '');
+        Setting::set('landing_description', $request->landing_description ?? '');
+        Setting::set('landing_cta_title', $request->landing_cta_title ?? '');
+        Setting::set('landing_cta_description', $request->landing_cta_description ?? '');
 
         if ($request->hasFile('institution_logo')) {
             $oldLogo = Setting::get('institution_logo');
@@ -47,6 +73,16 @@ class PengaturanController extends Controller
 
             $path = $request->file('institution_logo')->store('logos', 'public');
             Setting::set('institution_logo', $path);
+        }
+
+        if ($request->hasFile('hero_image')) {
+            $oldHero = Setting::get('hero_image');
+            if ($oldHero && Storage::disk('public')->exists($oldHero)) {
+                Storage::disk('public')->delete($oldHero);
+            }
+
+            $path = $request->file('hero_image')->store('heroes', 'public');
+            Setting::set('hero_image', $path);
         }
 
         Notification::notifyAdmins(

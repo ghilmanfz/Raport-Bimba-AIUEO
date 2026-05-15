@@ -39,6 +39,16 @@
             <label class="block text-sm font-bold text-[#171a1f] mb-2">Alamat Lengkap</label>
             <textarea name="institution_address" rows="4" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 resize-none">{{ $settings['institution_address'] }}</textarea>
           </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">WhatsApp Support</label>
+              <input type="text" name="support_whatsapp" value="{{ $settings['support_whatsapp'] }}" placeholder="6281234567890" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Email Support</label>
+              <input type="email" name="support_email" value="{{ $settings['support_email'] }}" placeholder="support@bimba.id" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+          </div>
         </div>
         <div x-data="{ preview: '{{ $settings['institution_logo'] ? asset('storage/' . $settings['institution_logo']) : '' }}' }">
           <label class="block text-sm font-bold text-[#171a1f] mb-2">Logo Institusi</label>
@@ -57,6 +67,57 @@
               </div>
             </template>
           </label>
+        </div>
+        <div class="lg:col-span-2 border-t border-[#dee1e6] pt-8">
+          <div class="mb-5">
+            <h3 class="text-base font-bold text-[#171a1f]">Informasi Landing Page</h3>
+            <p class="text-sm text-[#565d6d]">Atur teks utama yang tampil di halaman beranda sebelum login.</p>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="lg:col-span-2" x-data="{ heroPreview: '{{ $settings['hero_image'] ? asset('storage/' . $settings['hero_image']) : '' }}' }">
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Hero (Landing Page & Login)</label>
+              <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-[#F97316]/5 h-[180px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#F97316]/10 transition-colors">
+                <input type="file" name="hero_image" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) heroPreview = URL.createObjectURL($event.target.files[0])">
+                <template x-if="heroPreview">
+                  <img :src="heroPreview" class="max-h-[140px] max-w-full object-contain rounded-lg">
+                </template>
+                <template x-if="!heroPreview">
+                  <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 bg-white rounded-full shadow-sm flex items-center justify-center mb-3">
+                      <iconify-icon icon="lucide:image-plus" width="26" class="text-[#F97316]"></iconify-icon>
+                    </div>
+                    <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret foto ke sini</p>
+                    <p class="text-xs text-[#565d6d]">PNG, JPG, WebP — maks. 5MB (Rekomendasi rasio 4:5)</p>
+                  </div>
+                </template>
+              </label>
+              <p class="text-xs text-[#565d6d] mt-1.5">Foto ini akan ditampilkan di sisi kanan halaman landing page dan login. Jika kosong, foto default akan digunakan.</p>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Badge Hero</label>
+              <input type="text" name="landing_badge" value="{{ $settings['landing_badge'] }}" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Sorotan Judul</label>
+              <input type="text" name="landing_highlight" value="{{ $settings['landing_highlight'] }}" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Judul Hero Landing Page</label>
+              <input type="text" name="landing_title" value="{{ $settings['landing_title'] }}" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Judul CTA Landing Page</label>
+              <input type="text" name="landing_cta_title" value="{{ $settings['landing_cta_title'] }}" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Deskripsi Hero</label>
+              <textarea name="landing_description" rows="4" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 resize-none">{{ $settings['landing_description'] }}</textarea>
+            </div>
+            <div>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Deskripsi CTA</label>
+              <textarea name="landing_cta_description" rows="4" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 resize-none">{{ $settings['landing_cta_description'] }}</textarea>
+            </div>
+          </div>
         </div>
       </div>
       <div class="px-8 pb-6 flex justify-end">

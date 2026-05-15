@@ -4,7 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Rapor BiMBA AIUEO - Digital Learning Progress</title>
+  @php
+    $institutionName = \App\Models\Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre');
+    $logo = \App\Models\Setting::get('institution_logo');
+    $supportWhatsapp = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', '6281234567890'));
+    $supportEmail = \App\Models\Setting::get('support_email', 'info@bimba-aiueo.com');
+    $landingBadge = \App\Models\Setting::get('landing_badge', 'Masa Depan Belajar Anak');
+    $landingTitle = \App\Models\Setting::get('landing_title', 'E-Rapor');
+    $landingHighlight = \App\Models\Setting::get('landing_highlight', 'BiMBA AIUEO');
+    $landingDescription = \App\Models\Setting::get('landing_description', 'Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.');
+    $landingCtaTitle = \App\Models\Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?');
+    $landingCtaDescription = \App\Models\Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.');
+    $supportWhatsappUrl = $supportWhatsapp ? 'https://wa.me/' . $supportWhatsapp . '?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya.' : '#';
+  @endphp
+  <title>{{ $landingTitle }} {{ $landingHighlight }} - Digital Learning Progress</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -34,9 +47,6 @@
   <header class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-[#dee1e6] h-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 h-full flex items-center justify-between">
       <div class="flex items-center gap-3">
-        @php
-          $logo = \App\Models\Setting::get('institution_logo');
-        @endphp
         <div class="w-8 h-8 {{ $logo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center {{ $logo ? '' : 'bg-white' }}">
           @if($logo)
             <img src="{{ asset('storage/' . $logo) }}" class="w-8 h-8 rounded-full object-cover" alt="Logo">
@@ -44,7 +54,7 @@
             <img src="{{ asset('assets/IMG_1.svg') }}" class="w-5 h-5" alt="Logo">
           @endif
         </div>
-        <span class="font-bold text-lg sm:text-xl font-['Inter'] text-[#171a1f]">E-Rapor BiMBA AIUEO</span>
+        <span class="font-bold text-lg sm:text-xl font-['Inter'] text-[#171a1f]">{{ $landingTitle }} {{ $landingHighlight }}</span>
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
         <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-[#171a1f] hover:bg-gray-100 rounded-md">Login</a>
@@ -63,14 +73,14 @@
         <div class="flex flex-col items-start">
           <div class="inline-flex items-center gap-2 px-4 py-1 bg-white/50 backdrop-blur-sm border border-[#F97316]/20 rounded-full mb-8">
             <img src="{{ asset('assets/IMG_3.svg') }}" class="w-3.5 h-3.5" alt="Smile">
-            <span class="text-[12px] font-bold tracking-widest uppercase text-[#F97316]">Masa Depan Belajar Anak</span>
+            <span class="text-[12px] font-bold tracking-widest uppercase text-[#F97316]">{{ $landingBadge }}</span>
           </div>
           <h1 class="text-5xl sm:text-6xl lg:text-[68px] leading-tight mb-6">
-            <span class="text-[#171a1f]">E-Rapor </span>
-            <span class="text-[#F97316]">BiMBA AIUEO</span>
+            <span class="text-[#171a1f]">{{ $landingTitle }} </span>
+            <span class="text-[#F97316]">{{ $landingHighlight }}</span>
           </h1>
           <p class="text-lg sm:text-xl mb-10 max-w-[520px]">
-            Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.
+            {{ $landingDescription }}
           </p>
           <div class="flex flex-wrap gap-4 mb-12">
             <a href="{{ route('login') }}" class="px-10 py-4 btn-gradient text-white font-semibold rounded-full shadow-lg hover:bg-[#EA580C] text-lg">Mulai Sekarang</a>
@@ -103,14 +113,12 @@
           <div class="relative w-full max-w-[430px] lg:max-w-[460px] mt-8 mb-4 lg:mt-10 lg:mb-8">
             <!-- Main image card -->
             <div class="bg-white p-6 lg:p-7 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] border border-[#e5e7eb]">
-              @php
-                $heroImage = \App\Models\Setting::get('institution_logo');
-              @endphp
-              @if($heroImage)
-                <img src="{{ asset('storage/' . $heroImage) }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
-              @else
-                <img src="{{ asset('assets/IMG_21.webp') }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
-              @endif
+                @php $heroImage = \App\Models\Setting::get('hero_image'); @endphp
+                @if($heroImage)
+                  <img src="{{ asset('storage/' . $heroImage) }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
+                @else
+                  <img src="{{ asset('assets/IMG_21.webp') }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
+                @endif
             </div>
 
             <!-- Top badge (level info) -->
@@ -157,7 +165,7 @@
         </div>
         <div class="bg-[#EDFDF1] p-8 rounded-2xl soft-shadow flex flex-col h-full">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center soft-shadow mb-8">
-            <img src="{{ asset('assets/IMG_1.svg') }}" class="w-6 h-6" alt="Teacher">
+            <iconify-icon icon="lucide:graduation-cap" width="22" class="text-[#22C55E]"></iconify-icon>
           </div>
           <h3 class="text-xl mb-4">Dashboard Guru</h3>
           <p class="text-sm opacity-80">Input nilai progres harian dengan metode penilaian unik BiMBA (K, B, P, T) secara cepat dan akurat melalui antarmuka yang intuitif.</p>
@@ -232,8 +240,8 @@
           <div class="absolute -top-32 -left-32 w-64 h-64 bg-white/10 rounded-full blur-[64px]"></div>
           <div class="absolute top-36 -right-48 w-96 h-96 bg-black/5 rounded-full blur-[64px]"></div>
           <div class="relative z-10 max-w-3xl mx-auto">
-            <h2 class="text-white text-4xl sm:text-5xl mb-8">Siap Mencoba Era Baru Pelaporan Pendidikan?</h2>
-            <p class="text-white/80 text-lg mb-12">Bergabunglah dengan ribuan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.</p>
+            <h2 class="text-white text-4xl sm:text-5xl mb-8">{{ $landingCtaTitle }}</h2>
+            <p class="text-white/80 text-lg mb-12">{{ $landingCtaDescription }}</p>
             <div class="flex flex-wrap justify-center gap-4">
               <a href="{{ route('login') }}" class="px-12 py-4 bg-[#f3f4f6] text-[#1e2128] font-bold rounded-full shadow-lg hover:bg-white text-lg">Masuk Sekarang</a>
               <a href="{{ route('login') }}" class="px-12 py-4 bg-transparent border border-white text-white font-bold rounded-full hover:bg-white/10 text-lg">Lihat Demo</a>
@@ -253,9 +261,9 @@
             <div class="w-9 h-9 logo-gradient rounded-full flex items-center justify-center">
               <img src="{{ asset('assets/IMG_1.svg') }}" class="w-6 h-6" alt="Logo">
             </div>
-            <span class="font-bold text-2xl font-['Inter'] text-[#171a1f]">E-Rapor BiMBA AIUEO</span>
+            <span class="font-bold text-2xl font-['Inter'] text-[#171a1f]">{{ $landingTitle }} {{ $landingHighlight }}</span>
           </div>
-          <p class="max-w-sm text-sm">Platform digital pemantauan perkembangan belajar anak dengan metode penilaian modern dan pelaporan komprehensif.</p>
+          <p class="max-w-sm text-sm">{{ $landingDescription }}</p>
         </div>
         <div>
           <h4 class="text-base font-bold mb-6">Fitur Utama</h4>
@@ -269,14 +277,14 @@
         <div>
           <h4 class="text-base font-bold mb-6">Hubungi Kami</h4>
           <ul class="space-y-3 text-sm text-[#565d6d]">
-            <li><a href="mailto:info@bimba-aiueo.com" class="hover:text-[#F97316]">info@bimba-aiueo.com</a></li>
-            <li><a href="https://wa.me/6281234567890?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya." target="_blank" class="hover:text-[#F97316]">Support Center (WhatsApp)</a></li>
-            <li><a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan." target="_blank" class="hover:text-[#F97316]">Pusat Bantuan</a></li>
+            <li><a href="mailto:{{ $supportEmail }}" class="hover:text-[#F97316]">{{ $supportEmail }}</a></li>
+            <li><a href="{{ $supportWhatsappUrl }}" target="_blank" class="hover:text-[#F97316]">Support Center (WhatsApp)</a></li>
+            <li><a href="{{ $supportWhatsappUrl }}" target="_blank" class="hover:text-[#F97316]">{{ $supportWhatsapp }}</a></li>
           </ul>
         </div>
       </div>
       <div class="pt-8 border-t border-[#dee1e6] text-center">
-        <p class="text-sm">© {{ date('Y') }} Smart Education Centre. Modern child learning solutions.</p>
+        <p class="text-sm">© {{ date('Y') }} {{ $institutionName }}. Modern child learning solutions.</p>
       </div>
     </div>
   </footer>

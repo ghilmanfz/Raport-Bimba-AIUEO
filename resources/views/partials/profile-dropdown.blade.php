@@ -1,6 +1,6 @@
 ﻿{{-- Profile Dropdown (Alpine.js) --}}
 <div x-data="{ profileOpen: false }" class="relative">
-  <button @click="profileOpen = !profileOpen" class="flex items-center gap-3 pl-4 border-l border-[#dee1e6] cursor-pointer hover:opacity-80">
+  <button @click="profileOpen = !profileOpen" class="flex h-12 items-center gap-3 rounded-xl border-l border-[#dee1e6] pl-4 pr-2 cursor-pointer hover:bg-gray-50">
     <div class="text-right hidden sm:block">
       <p class="text-sm font-semibold text-[#171a1f] font-roboto leading-none">{{ auth()->user()->name }}</p>
       <p class="text-xs text-[#565d6d] font-roboto mt-0.5">{{ ucfirst(auth()->user()->role) }}</p>
