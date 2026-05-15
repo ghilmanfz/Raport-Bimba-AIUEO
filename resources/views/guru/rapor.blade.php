@@ -4,8 +4,6 @@
 @section('page-title', 'Cetak Rapor Digital')
 
 @push('head')
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
   .font-poppins { font-family: 'Poppins', sans-serif; }
   .rapor-table { border-collapse: collapse; width: 100%; }
@@ -398,6 +396,7 @@
 @if($student && $reportData)
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 const radarCtx = document.getElementById('raporRadarChart').getContext('2d');
 new Chart(radarCtx, {
   type: 'radar',
@@ -431,6 +430,7 @@ new Chart(radarCtx, {
       }
     }
   }
+});
 });
 </script>
 @endpush

@@ -9,10 +9,7 @@
     $landingHighlight = \App\Models\Setting::get('landing_highlight', 'BiMBA');
   @endphp
   <title>Login - {{ $landingTitle }} {{ $landingHighlight }}</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
     body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; color: #1e293b; -webkit-font-smoothing: antialiased; }
     h1, h2, h3, h4, h5, h6 { font-family: "Roboto", ui-sans-serif, system-ui, sans-serif; font-weight: 700; color: #0f172a; }

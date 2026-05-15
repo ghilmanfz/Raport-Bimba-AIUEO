@@ -4,8 +4,6 @@
 @section('page-title', 'Riwayat Rapor')
 
 @push('head')
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
   .font-poppins { font-family: 'Poppins', sans-serif; }
 </style>

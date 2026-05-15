@@ -175,12 +175,9 @@
 </footer>
 @endsection
 
-@push('head')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-@endpush
-
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 // Bar Chart
 const ctx1 = document.getElementById('grafikTrenChart').getContext('2d');
 new Chart(ctx1, {
@@ -224,6 +221,7 @@ new Chart(ctx2, {
     cutout: '65%',
     plugins: { legend: { display: false } }
   }
+});
 });
 </script>
 @endpush

@@ -134,12 +134,9 @@
 </section>
 @endsection
 
-@push('head')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-@endpush
-
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 const ctxBar = document.getElementById('dashboardBarChart').getContext('2d');
 new Chart(ctxBar, {
   type: 'bar',
@@ -181,6 +178,7 @@ new Chart(ctxDonut, {
     cutout: '62%',
     plugins: { legend: { display: false } }
   }
+});
 });
 </script>
 @endpush

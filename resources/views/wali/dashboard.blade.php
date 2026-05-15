@@ -230,13 +230,10 @@
 </footer>
 @endsection
 
-@push('head')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-@endpush
-
 @if($child)
 @push('scripts')
 <script>
+document.addEventListener('DOMContentLoaded', function() {
 const waliDashboardChartData = @json($skillTrend);
 const waliCtx = document.getElementById('waliDashboardChart').getContext('2d');
 new Chart(waliCtx, {
@@ -290,6 +287,7 @@ new Chart(waliCtx, {
       y: { beginAtZero: true, max: 100, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } }
     }
   }
+});
 });
 </script>
 @endpush

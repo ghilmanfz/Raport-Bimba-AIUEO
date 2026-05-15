@@ -18,11 +18,7 @@
     $supportWhatsappUrl = $supportWhatsapp ? 'https://wa.me/' . $supportWhatsapp . '?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya.' : '#';
   @endphp
   <title>{{ $landingTitle }} {{ $landingHighlight }} - Digital Learning Progress</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@3.0.2/dist/iconify-icon.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
   <style>
     body { font-family: "Inter", ui-sans-serif, system-ui, sans-serif; color: #171a1f; -webkit-font-smoothing: antialiased; background-color: #ffffff; }
     h1, h2, h3, h4, h5, h6 { font-family: "Poppins", ui-sans-serif, system-ui, sans-serif; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
