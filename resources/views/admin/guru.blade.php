@@ -23,7 +23,7 @@
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
     <div>
       <p class="text-sm font-medium text-[#565d6d]">Total Guru</p>
@@ -42,17 +42,43 @@
       <iconify-icon icon="lucide:user-check" width="24" class="text-[#16a34a]"></iconify-icon>
     </div>
   </div>
+  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
+    <div>
+      <p class="text-sm font-medium text-[#565d6d]">Guru Cuti</p>
+      <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $guruCuti }}</h3>
+    </div>
+    <div class="w-14 h-14 bg-[#FEF3C7] rounded-2xl flex items-center justify-center">
+      <iconify-icon icon="lucide:pause-circle" width="24" class="text-[#92400E]"></iconify-icon>
+    </div>
+  </div>
+  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
+    <div>
+      <p class="text-sm font-medium text-[#565d6d]">Guru Nonaktif</p>
+      <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $guruNonaktif }}</h3>
+    </div>
+    <div class="w-14 h-14 bg-[#FEE2E2] rounded-2xl flex items-center justify-center">
+      <iconify-icon icon="lucide:user-x" width="24" class="text-[#DC2626]"></iconify-icon>
+    </div>
+  </div>
 </div>
 
 <!-- Table Section -->
 <div class="bg-white rounded-2xl border border-[#dee1e6] overflow-hidden main-shadow mb-8">
   <div class="p-4 border-b border-[#dee1e6] flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div class="flex flex-col sm:flex-row items-center gap-3">
-      <form method="GET" action="{{ route('admin.guru') }}" class="relative w-full sm:w-80">
-        <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
-          <iconify-icon icon="lucide:search" width="16"></iconify-icon>
+      <form method="GET" action="{{ route('admin.guru') }}" class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+        <div class="relative w-full sm:w-80">
+          <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
+            <iconify-icon icon="lucide:search" width="16"></iconify-icon>
+          </div>
+          <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau NIP..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
         </div>
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari berdasarkan nama atau NIP..." class="w-full pl-10 pr-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+        <select name="status" class="px-4 py-2 bg-[#fafafb] border border-transparent rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#3d8af5]/20">
+          <option value="">Semua Status</option>
+          <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
+          <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
+          <option value="nonaktif" {{ request('status') === 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+        </select>
       </form>
     </div>
     <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-bold">{{ $teachers->count() }}</span> dari <span class="font-bold">{{ $totalGuru }}</span> guru</p>
@@ -66,6 +92,7 @@
           <th class="px-6 py-4">Nama Guru</th>
           <th class="px-6 py-4">Email</th>
           <th class="px-6 py-4">Kelas</th>
+          <th class="px-6 py-4">Murid Dibimbing</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Aksi</th>
         </tr>
@@ -88,18 +115,31 @@
               <span class="text-[#9095a0]">-</span>
             @endif
           </td>
-          <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
+          <td class="px-6 py-4">
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-2">
+                <span class="text-sm font-semibold text-[#171a1f]">{{ $teacher->students->count() }}</span>
+                <span class="text-xs text-[#565d6d]">murid</span>
+              </div>
+              @if($teacher->students->count())
+                <p class="text-xs text-[#565d6d]">{{ $teacher->students->take(3)->pluck('name')->join(', ') }}{{ $teacher->students->count() > 3 ? ' ...' : '' }}</p>
+              @endif
+            </div>
+          </td>
           <td class="px-6 py-4">
             <span class="status-pill {{ $teacher->status === 'aktif' ? 'status-active' : ($teacher->status === 'cuti' ? 'status-cuti' : 'status-nonaktif') }}">{{ ucfirst($teacher->status) }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
+              <a href="{{ route('admin.guru.show', $teacher) }}" class="p-2 text-[#7c3aed] hover:bg-purple-50 rounded-lg" title="Lihat Detail">
+                <iconify-icon icon="lucide:eye" width="14"></iconify-icon>
+              </a>
               <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}', {{ json_encode($teacher->classrooms->pluck('id')) }})" class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
-              <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" onsubmit="return confirm('Yakin hapus data guru ini?')">
+              <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" id="form-del-guru-{{ $teacher->id }}" class="inline">
                 @csrf @method('DELETE')
-                <button type="submit" class="p-2 text-[#D92626] hover:bg-red-50 rounded-lg" title="Hapus">
+                <button type="button" onclick="showDeleteModal('form-del-guru-{{ $teacher->id }}', 'Guru', '{{ addslashes($teacher->user->name) }}')" class="p-2 text-[#D92626] hover:bg-red-50 rounded-lg" title="Hapus">
                   <iconify-icon icon="lucide:trash-2" width="14"></iconify-icon>
                 </button>
               </form>
@@ -286,4 +326,59 @@ function openEditGuru(id, name, email, nip, status, classroomIds) {
   document.getElementById('modal-edit-guru').classList.remove('hidden');
 }
 </script>
+
+<style>
+  .status-pill {
+    @apply inline-block px-3 py-1.5 text-xs font-medium rounded-lg;
+  }
+  .status-pill.status-active {
+    @apply bg-[#DCFAE6] text-[#166534];
+  }
+  .status-pill.status-cuti {
+    @apply bg-[#FEF3C7] text-[#92400E];
+  }
+  .status-pill.status-nonaktif {
+    @apply bg-[#FEE2E2] text-[#991B1B];
+  }
+</style>
+
+<script>
+let _deleteFormId = null;
+function showDeleteModal(formId, type, name) {
+  _deleteFormId = formId;
+  document.getElementById('del-modal-type').textContent = type;
+  document.getElementById('del-modal-name').textContent = name;
+  const m = document.getElementById('modal-delete-list');
+  m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeDeleteModal() {
+  document.getElementById('modal-delete-list').classList.add('hidden');
+  document.getElementById('modal-delete-list').classList.remove('flex');
+  _deleteFormId = null;
+}
+function doDelete() {
+  if (_deleteFormId) document.getElementById(_deleteFormId).submit();
+}
+</script>
+
+<!-- Delete Confirmation Modal -->
+<div id="modal-delete-list" class="hidden fixed inset-0 z-50 bg-black/50 items-center justify-center">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 shadow-xl">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <iconify-icon icon="lucide:alert-triangle" width="24" class="text-red-600"></iconify-icon>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-[#171a1f]">Konfirmasi Hapus</h3>
+        <p class="text-sm text-[#565d6d]">Tindakan ini tidak dapat dibatalkan</p>
+      </div>
+    </div>
+    <p class="text-sm text-[#565d6d] mb-6">Anda yakin ingin menghapus <span class="font-semibold text-[#171a1f]" id="del-modal-type"></span> <span class="font-semibold text-[#171a1f]" id="del-modal-name"></span>? Data tidak dapat dipulihkan.</p>
+    <div class="flex gap-3">
+      <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
+      <button type="button" onclick="doDelete()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">Hapus</button>
+    </div>
+  </div>
+</div>
+
 @endsection

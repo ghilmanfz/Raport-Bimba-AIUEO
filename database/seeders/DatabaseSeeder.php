@@ -73,45 +73,75 @@ class DatabaseSeeder extends Seeder
             $teachers[] = $teacher;
         }
 
-        // ─── Parents & Students ────────────────────────────
-        $studentData = [
-            ['BM001', 'Aisyah Putri',    'Bpk. Budi',    'budi.wali@bimba.id',   0, '2024-01-12', 'aktif'],
-            ['BM002', 'Bima Satria',      'Ibu Siti',     'siti.wali@bimba.id',   1, '2024-02-05', 'aktif'],
-            ['BM003', 'Citra Kirana',     'Bpk. Agus',    'agus.wali@bimba.id',   2, '2024-02-20', 'cuti'],
-            ['BM004', 'Dedi Kurniawan',   'Ibu Lani',     'lani.wali@bimba.id',   3, '2024-03-15', 'aktif'],
-            ['BM005', 'Eka Prasetya',     'Bpk. Toto',    'toto.wali@bimba.id',   4, '2024-04-01', 'aktif'],
-            ['BM006', 'Fira Amelia',      'Ibu Rina',     'rina.wali@bimba.id',   0, '2024-01-20', 'aktif'],
-            ['BM007', 'Galih Permana',    'Bpk. Hendra',  'hendra.wali@bimba.id', 1, '2024-03-10', 'aktif'],
-            ['BM008', 'Hana Safitri',     'Ibu Dewi',     'dewi.wali@bimba.id',   2, '2024-02-28', 'aktif'],
-            ['BM009', 'Irfan Maulana',    'Bpk. Joko',    'joko.wali@bimba.id',   5, '2024-04-15', 'aktif'],
-            ['BM010', 'Jasmine Zahra',    'Ibu Nita',     'nita.wali@bimba.id',   6, '2024-05-01', 'aktif'],
-            ['BM011', 'Kemal Farhan',     'Bpk. Rudi',    'rudi.wali@bimba.id',   0, '2024-01-05', 'aktif'],
-            ['BM012', 'Luna Maharani',    'Ibu Yanti',    'yanti.wali@bimba.id',  3, '2024-06-10', 'aktif'],
-            ['BM013', 'Mahesa Putra',     'Bpk. Doni',    'doni.wali@bimba.id',   7, '2024-03-22', 'aktif'],
-            ['BM014', 'Nabila Rahma',     'Ibu Fitri',    'fitri.wali@bimba.id',  4, '2024-07-01', 'cuti'],
-            ['BM015', 'Omar Fariz',       'Bpk. Eko',     'eko.wali@bimba.id',    5, '2024-02-14', 'aktif'],
+        // ─── Wali & Students ───────────────────────────────
+        $guardianData = [
+            ['andirina', 'Bpk. Andi Pratama',   'Ibu Rina Pratama',   '081234567801', '081234567802', 'Jl. Melati No. 12, Bandung',   'andi.rina@bimba.id'],
+            ['budisari', 'Bpk. Budi Santoso',    'Ibu Sari Wulandari', '081234567803', '081234567804', 'Jl. Kenanga No. 8, Bandung',   'budi.sari@bimba.id'],
+            ['aguslina', 'Bpk. Agus Hermanto',   'Ibu Lani Kurnia',    '081234567805', '081234567806', 'Jl. Mawar No. 21, Cimahi',     'agus.lina@bimba.id'],
+            ['dewijoko', 'Bpk. Joko Wibowo',     'Ibu Dewi Kartika',   '081234567807', '081234567808', 'Jl. Flamboyan No. 5, Bandung', 'dewi.joko@bimba.id'],
+            ['totoyanti', 'Bpk. Toto Priambodo',  'Ibu Yanti Susanti',  '081234567809', '081234567810', 'Jl. Cempaka No. 14, Bandung',   'toto.yanti@bimba.id'],
+            ['ekofitri', 'Bpk. Eko Saputra',     'Ibu Fitri Handayani', '081234567811', '081234567812', 'Jl. Anggrek No. 19, Cimahi',    'eko.fitri@bimba.id'],
         ];
 
-        $students = [];
-        foreach ($studentData as $sd) {
-            $parent = User::create([
-                'name'           => $sd[2],
+        $guardians = [];
+        foreach ($guardianData as $gd) {
+            $guardians[$gd[0]] = User::create([
+                'name'           => $gd[1] . ' & ' . $gd[2],
                 'role'           => 'wali',
-                'email'          => $sd[3],
+                'email'          => $gd[6],
+                'father_name'    => $gd[1],
+                'mother_name'    => $gd[2],
+                'father_phone'   => $gd[3],
+                'mother_phone'   => $gd[4],
+                'address'        => $gd[5],
                 'password'       => Hash::make('password'),
                 'plain_password' => 'password',
             ]);
+        }
 
+        $studentData = [
+            ['BM001', 'Aisyah Putri',  'aktif', 'andirina', 0, '2024-01-12'],
+            ['BM002', 'Bima Satria',    'aktif', 'budisari', 1, '2024-02-05'],
+            ['BM003', 'Citra Kirana',   'pindah','aguslina', 2, '2024-02-20'],
+            ['BM004', 'Dedi Kurniawan', 'aktif', 'dewijoko', 3, '2024-03-15'],
+            ['BM005', 'Eka Prasetya',   'aktif', 'totoyanti', 4, '2024-04-01'],
+            ['BM006', 'Fira Amelia',    'aktif', 'andirina', 0, '2024-01-20'],
+            ['BM007', 'Galih Permana',  'aktif', 'budisari', 1, '2024-03-10'],
+            ['BM008', 'Hana Safitri',   'aktif', 'aguslina', 2, '2024-02-28'],
+            ['BM009', 'Irfan Maulana',  'aktif', 'dewijoko', 5, '2024-04-15'],
+            ['BM010', 'Jasmine Zahra',  'aktif', 'totoyanti', 6, '2024-05-01'],
+            ['BM011', 'Kemal Farhan',   'aktif', 'andirina', 0, '2024-01-05'],
+            ['BM012', 'Luna Maharani',  'aktif', 'budisari', 3, '2024-06-10'],
+            ['BM013', 'Mahesa Putra',   'aktif', 'aguslina', 7, '2024-03-22'],
+            ['BM014', 'Nabila Rahma',   'lulus', 'ekofitri', 4, '2024-07-01'],
+            ['BM015', 'Omar Fariz',     'aktif', 'totoyanti', 5, '2024-02-14'],
+            // 10 more students for first teacher (total 25)
+            ['BM016', 'Putri Anjani',    'aktif', 'andirina', 0, '2024-01-15'],
+            ['BM017', 'Qisma Azzahra',   'aktif', 'budisari', 1, '2024-02-10'],
+            ['BM018', 'Riza Pratama',    'aktif', 'aguslina', 2, '2024-03-01'],
+            ['BM019', 'Siti Nurhaliza',  'aktif', 'dewijoko', 0, '2024-03-20'],
+            ['BM020', 'Taufik Rahman',   'aktif', 'totoyanti', 1, '2024-04-05'],
+            ['BM021', 'Uswatun Hasanah', 'aktif', 'andirina', 2, '2024-04-12'],
+            ['BM022', 'Veda Christiana', 'aktif', 'budisari', 0, '2024-02-08'],
+            ['BM023', 'Wahyu Satrio',    'aktif', 'aguslina', 1, '2024-03-05'],
+            ['BM024', 'Xiomara Valentina','aktif', 'dewijoko', 3, '2024-04-10'],
+            ['BM025', 'Yasmin Fathia',   'aktif', 'totoyanti', 2, '2024-05-05'],
+        ];
+
+        $students = [];
+        foreach ($studentData as $idx => $sd) {
             $classIdx = $sd[4] % count($classrooms);
-            $students[] = Student::create([
+            $student = Student::create([
                 'nis'          => $sd[0],
                 'name'         => $sd[1],
                 'classroom_id' => $classrooms[$classIdx]->id,
-                'parent_id'    => $parent->id,
+                'parent_id'    => $guardians[$sd[3]]->id,
                 'join_date'    => $sd[5],
-                'status'       => $sd[6],
+                'status'       => $sd[2],
                 'report_token' => Str::random(40),
+                'teacher_id'   => $idx < 25 ? $teachers[0]->id : $teachers[array_rand($teachers)]->id, // First 25 to Siti Aminah
             ]);
+            $students[] = $student;
         }
 
         // ─── Materials (Baca, Tulis, Hitung) ───────────────

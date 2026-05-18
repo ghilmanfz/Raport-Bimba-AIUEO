@@ -63,6 +63,11 @@
           <iconify-icon icon="lucide:layout-dashboard" width="18"></iconify-icon>
           Dashboard
         </a>
+        <a href="{{ route('guru.murid') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.murid*') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:users" width="18"></iconify-icon>
+          Daftar Murid Bimbingan
+        </a>
         <a href="{{ route('guru.nilai') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.nilai*') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
           <iconify-icon icon="lucide:clipboard-list" width="18"></iconify-icon>

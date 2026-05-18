@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
@@ -25,13 +27,24 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = [
-            'email'    => $request->email,
-            'password' => $request->password,
-            'role'     => $request->role,
-        ];
+        $identifier = trim($request->email);
+        $userQuery = User::where('role', $request->role);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if ($request->role === 'guru') {
+            $userQuery->where(function ($query) use ($identifier) {
+                $query->where('email', $identifier)
+                    ->orWhereHas('teacher', function ($teacherQuery) use ($identifier) {
+                        $teacherQuery->where('nip', $identifier);
+                    });
+            });
+        } else {
+            $userQuery->where('email', $identifier);
+        }
+
+        $user = $userQuery->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
             Notification::send(
@@ -46,7 +59,7 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Email atau kata sandi salah.',
+            'email' => 'Email, NIP, atau kata sandi salah.',
         ])->withInput($request->only('email', 'role'));
     }
 

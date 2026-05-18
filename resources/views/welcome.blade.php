@@ -27,6 +27,9 @@
   </style>
 </head>
 <body class="overflow-x-hidden">
+  @php
+    $sharedBanner = \App\Models\Setting::get('institution_banner') ? asset('storage/' . \App\Models\Setting::get('institution_banner')) : asset('assets/IMG_2.webp');
+  @endphp
 
   <!-- Navigation -->
   <header class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-[#dee1e6] h-16">
@@ -90,7 +93,7 @@
         <div class="relative flex justify-center lg:justify-end">
           <div class="relative w-full max-w-[480px] aspect-[4/5] bg-white p-2 rounded-[32px] shadow-2xl overflow-hidden">
             <div class="relative w-full h-full rounded-[24px] overflow-hidden">
-              <img src="{{ asset('assets/IMG_2.webp') }}" class="w-full h-full object-cover" alt="Anak belajar">
+              <img src="{{ $sharedBanner }}" class="w-full h-full object-cover" alt="Anak belajar">
               <div class="absolute inset-0 bg-gradient-to-t from-[#3d8af5]/20 to-transparent"></div>
             </div>
           </div>

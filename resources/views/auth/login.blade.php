@@ -19,6 +19,9 @@
   </style>
 </head>
 <body class="bg-[#fafafb] min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
+  @php
+    $sharedBanner = \App\Models\Setting::get('institution_banner') ? asset('storage/' . \App\Models\Setting::get('institution_banner')) : asset('assets/IMG_2.webp');
+  @endphp
 
   <!-- Decorative Background -->
   <div class="absolute top-[10%] left-[5%] w-64 h-64 bg-[#3d8af5]/5 rounded-full blur-[64px] -z-10"></div>
@@ -83,7 +86,7 @@
 
           <!-- Email/Username Input -->
           <div class="space-y-2">
-            <label for="email">Username / Email</label>
+            <label for="email">Email / NIP</label>
             <div class="relative flex items-center">
               <div class="absolute left-4 text-[#565d6d]/60">
                 <iconify-icon icon="lucide:user" width="18"></iconify-icon>
@@ -153,7 +156,7 @@
 
       <!-- Illustration Card -->
       <div class="relative z-10 bg-white p-6 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] mb-10 w-full max-w-[304px]">
-        <img src="{{ asset('assets/IMG_8.webp') }}" alt="Learning Illustration" class="w-full h-auto rounded-lg">
+        <img src="{{ $sharedBanner }}" alt="Learning Illustration" class="w-full h-auto rounded-lg">
       </div>
 
       <div class="text-center max-w-[320px] relative z-10">

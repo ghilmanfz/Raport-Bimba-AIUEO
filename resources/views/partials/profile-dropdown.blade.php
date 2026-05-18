@@ -21,7 +21,7 @@
     <!-- User Info -->
     <div class="p-4 bg-[#f3f4f6]/50 border-b border-[#dee1e6]">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background-color: {{ $avatarColor }}">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0" style="background-color: {{ $avatarColor }}">
           {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
         </div>
         <div class="min-w-0">
@@ -33,10 +33,17 @@
 
     <!-- Menu Items -->
     <div class="py-2">
-      <button @click="profileOpen = false; $dispatch('open-profile-modal')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#171a1f] hover:bg-gray-50 cursor-pointer">
-        <iconify-icon icon="lucide:settings" width="16" class="text-[#565d6d]"></iconify-icon>
-        Pengaturan Profil
-      </button>
+      @if(auth()->user()->role === 'admin')
+        <a href="{{ route('admin.pengaturan') }}" @click="profileOpen = false" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#171a1f] hover:bg-gray-50 cursor-pointer">
+          <iconify-icon icon="lucide:settings" width="16" class="text-[#565d6d]"></iconify-icon>
+          Pengaturan Profil
+        </a>
+      @else
+        <button @click="profileOpen = false; $dispatch('open-profile-modal')" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#171a1f] hover:bg-gray-50 cursor-pointer">
+          <iconify-icon icon="lucide:settings" width="16" class="text-[#565d6d]"></iconify-icon>
+          Pengaturan Profil
+        </button>
+      @endif
     </div>
 
     <!-- Logout -->

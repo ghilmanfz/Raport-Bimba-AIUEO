@@ -6,9 +6,11 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\GuruController as AdminGuruController;
+use App\Http\Controllers\Admin\WaliController as AdminWaliController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\MuridController as GuruMuridController;
 use App\Http\Controllers\Guru\NilaiController;
 use App\Http\Controllers\Guru\GrafikController;
 use App\Http\Controllers\Guru\RaporController as GuruRaporController;
@@ -57,17 +59,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/murid', [MuridController::class, 'index'])->name('murid');
+    Route::get('/murid/{student}/detail', [MuridController::class, 'show'])->name('murid.show');
     Route::get('/murid/export', [MuridController::class, 'export'])->name('murid.export');
     Route::post('/murid', [MuridController::class, 'store'])->name('murid.store');
     Route::put('/murid/{student}', [MuridController::class, 'update'])->name('murid.update');
     Route::delete('/murid/{student}', [MuridController::class, 'destroy'])->name('murid.destroy');
 
     Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru');
+    Route::get('/guru/{teacher}/detail', [AdminGuruController::class, 'show'])->name('guru.show');
     Route::get('/guru/export', [AdminGuruController::class, 'export'])->name('guru.export');
     Route::post('/guru/import', [AdminGuruController::class, 'import'])->name('guru.import');
     Route::post('/guru', [AdminGuruController::class, 'store'])->name('guru.store');
     Route::put('/guru/{teacher}', [AdminGuruController::class, 'update'])->name('guru.update');
     Route::delete('/guru/{teacher}', [AdminGuruController::class, 'destroy'])->name('guru.destroy');
+
+    Route::get('/wali', [AdminWaliController::class, 'index'])->name('wali');
+    Route::get('/wali/{user}/detail', [AdminWaliController::class, 'show'])->name('wali.show');
+    Route::get('/wali/export', [AdminWaliController::class, 'export'])->name('wali.export');
+    Route::put('/wali/{user}', [AdminWaliController::class, 'update'])->name('wali.update');
+    Route::delete('/wali/{user}', [AdminWaliController::class, 'destroy'])->name('wali.destroy');
 
     Route::get('/user', [AdminUserController::class, 'index'])->name('user');
     Route::put('/user/{user}', [AdminUserController::class, 'update'])->name('user.update');
@@ -86,6 +96,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 */
 Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(function () {
     Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/murid', [GuruMuridController::class, 'index'])->name('murid');
 
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');

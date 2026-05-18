@@ -15,9 +15,7 @@ class NilaiController extends Controller
     public function index(Request $request)
     {
         $teacher = Auth::user()->teacher;
-        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
-
-        $students = Student::whereIn('classroom_id', $classroomIds)
+        $students = Student::where('teacher_id', $teacher?->id)
             ->where('status', 'aktif')
             ->orderBy('name')
             ->get();
@@ -50,7 +48,9 @@ class NilaiController extends Controller
             }
         }
 
-        $selectedStudent = $selectedStudentId ? Student::find($selectedStudentId) : null;
+        $selectedStudent = $selectedStudentId
+            ? Student::where('teacher_id', $teacher?->id)->find($selectedStudentId)
+            : null;
 
         return view('guru.nilai', compact(
             'students', 'selectedStudent', 'selectedSkill', 'selectedLevel', 'progress'
@@ -69,6 +69,10 @@ class NilaiController extends Controller
         ]);
 
         $teacher = Auth::user()->teacher;
+        $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
+        if (!$student) {
+            return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
+        }
 
         foreach ($request->progress as $item) {
             $status = 'K';
@@ -91,7 +95,6 @@ class NilaiController extends Controller
             );
         }
 
-        $student = Student::find($request->student_id);
         $guruName = Auth::user()->name;
 
         // Notify the teacher

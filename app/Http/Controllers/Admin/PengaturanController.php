@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Notification;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +22,7 @@ class PengaturanController extends Controller
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
             'unit_name'           => Setting::get('unit_name', ''),
             'institution_logo'    => Setting::get('institution_logo'),
+            'institution_banner'   => Setting::get('institution_banner'),
         ];
 
         return view('admin.pengaturan', compact('classrooms', 'settings'));
@@ -33,6 +35,7 @@ class PengaturanController extends Controller
             'institution_address' => 'required|string|max:500',
             'unit_name'           => 'nullable|string|max:255',
             'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'institution_banner'  => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
         ]);
 
         Setting::set('institution_name', $request->institution_name);
@@ -47,6 +50,16 @@ class PengaturanController extends Controller
 
             $path = $request->file('institution_logo')->store('logos', 'public');
             Setting::set('institution_logo', $path);
+        }
+
+        if ($request->hasFile('institution_banner')) {
+            $oldBanner = Setting::get('institution_banner');
+            if ($oldBanner && Storage::disk('public')->exists($oldBanner)) {
+                Storage::disk('public')->delete($oldBanner);
+            }
+
+            $path = $request->file('institution_banner')->store('banners', 'public');
+            Setting::set('institution_banner', $path);
         }
 
         Notification::notifyAdmins(
@@ -73,7 +86,9 @@ class PengaturanController extends Controller
             return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
         }
 
-        $user->update(['password' => Hash::make($request->password)]);
+        User::query()
+            ->whereKey($user->id)
+            ->update(['password' => Hash::make($request->password)]);
 
         Notification::send(
             $user->id,

@@ -67,15 +67,10 @@
         <iconify-icon icon="lucide:user-check" width="18"></iconify-icon>
         Data Guru
       </a>
-      <a href="{{ route('admin.user') }}"
-         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.user*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
-        <iconify-icon icon="lucide:shield" width="18"></iconify-icon>
-        Manajemen User
-      </a>
-      <a href="{{ route('admin.pengaturan') }}"
-         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.pengaturan') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
-        <iconify-icon icon="lucide:settings" width="18"></iconify-icon>
-        Pengaturan
+      <a href="{{ route('admin.wali') }}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.wali*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
+        <iconify-icon icon="lucide:users-round" width="18"></iconify-icon>
+        Data Wali Murid
       </a>
     </nav>
 
@@ -112,9 +107,6 @@
         @include('partials.profile-dropdown')
       </div>
     </header>
-
-    <!-- Profile Modal -->
-    @include('partials.profile-modal')
 
     <!-- Page Content -->
     <main class="flex-1 p-4 lg:p-8">

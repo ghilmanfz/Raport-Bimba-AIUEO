@@ -7,8 +7,9 @@ Aplikasi **E-Rapor Digital** untuk lembaga pendidikan anak **BiMBA AIUEO** — s
 ## ✨ Fitur Utama
 
 - 📊 **Dashboard Admin** — Statistik murid, guru, dan aktivitas terkini
-- 👨‍🎓 **Manajemen Data Murid** — CRUD data murid dengan status aktif/cuti
-- 👩‍🏫 **Manajemen Data Guru** — Data motivator/guru beserta spesialisasi
+- 👨‍🎓 **Manajemen Data Murid** — CRUD data murid dengan status aktif/lulus/pindah
+- 👩‍🏫 **Manajemen Data Guru** — Data motivator/guru, status aktif/nonaktif/cuti, dan plotting siswa bimbingan
+- 👪 **Manajemen Data Wali Murid** — Daftar wali murid, relasi anak, dan status otomatis berbasis data siswa
 - 📝 **Pengolahan Nilai Progres** — Input nilai per aspek (Baca, Tulis, Hitung) dengan skala K/B/P/T
 - 📈 **Grafik Perkembangan** — Visualisasi tren kemajuan level siswa per periode
 - 🖨️ **Cetak Rapor Digital** — Generate dan print laporan perkembangan murid
@@ -34,8 +35,8 @@ Aplikasi **E-Rapor Digital** untuk lembaga pendidikan anak **BiMBA AIUEO** — s
 
 | Role | Akses |
 |------|-------|
-| **Admin** | Dashboard, Data Murid, Data Guru, Pengaturan |
-| **Guru / Motivator** | Dashboard, Pengolahan Nilai, Grafik, Cetak Rapor |
+| **Admin** | Dashboard, Data Guru, Data Murid, Data Wali Murid |
+| **Guru / Motivator** | Dashboard, Daftar Murid Bimbingan, Pengolahan Nilai, Grafik, Cetak Rapor |
 | **Wali Murid** | Dashboard anak, Laporan Rapor |
 
 ---
@@ -77,6 +78,9 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+
+# opsional jika baru clone dan ingin data awal
+# php artisan db:seed
 ```
 
 Akses: `http://raportbimba.test/`

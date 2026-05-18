@@ -7,7 +7,18 @@ use Illuminate\Support\Str;
 
 class Student extends Model
 {
-    protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
+    protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'teacher_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
+
+    public static function generateNextNis(): string
+    {
+        $lastNis = static::where('nis', 'like', 'BM%')
+            ->orderByRaw("CAST(SUBSTR(nis, 3) AS INTEGER) DESC")
+            ->value('nis');
+
+        $nextNumber = $lastNis ? ((int) substr($lastNis, 2)) + 1 : 1;
+
+        return 'BM' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+    }
 
     protected static function booted(): void
     {
@@ -33,6 +44,11 @@ class Student extends Model
     public function parent()
     {
         return $this->belongsTo(User::class, 'parent_id');
+    }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
     }
 
     public function progress()
