@@ -35,8 +35,8 @@
     <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridLulus }}</h3>
   </div>
   <div class="bg-white border border-[#dee1e6] rounded-xl p-6 main-shadow">
-    <p class="text-sm font-medium text-[#565d6d]">Murid Pindah</p>
-    <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridPindah }}</h3>
+    <p class="text-sm font-medium text-[#565d6d]">Murid Keluar</p>
+    <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridKeluar }}</h3>
   </div>
 </div>
 
@@ -49,7 +49,8 @@
         <option value="">Semua Status</option>
         <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
         <option value="lulus" {{ request('status') === 'lulus' ? 'selected' : '' }}>Lulus</option>
-        <option value="pindah" {{ request('status') === 'pindah' ? 'selected' : '' }}>Pindah</option>
+        <option value="keluar" {{ request('status') === 'keluar' ? 'selected' : '' }}>Keluar</option>
+        <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
       </select>
       <select name="teacher_id" class="px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
         <option value="">Semua Guru Pembimbing</option>
@@ -83,7 +84,7 @@
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->teacher?->user->name ?? '-' }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->parent?->father_name && $student->parent?->mother_name ? $student->parent->father_name . ' & ' . $student->parent->mother_name : ($student->parent?->name ?? '-') }}</td>
           <td class="px-6 py-4 text-sm">
-            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : 'status-pindah') }}">{{ ucfirst($student->status) }}</span>
+            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
@@ -176,7 +177,8 @@
           <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
             <option value="aktif" @selected(old('status', 'aktif') === 'aktif')>Aktif</option>
             <option value="lulus" @selected(old('status') === 'lulus')>Lulus</option>
-            <option value="pindah" @selected(old('status') === 'pindah')>Pindah</option>
+            <option value="keluar" @selected(old('status') === 'keluar')>Keluar</option>
+            <option value="cuti" @selected(old('status') === 'cuti')>Cuti</option>
           </select>
         </div>
       </div>
@@ -303,7 +305,8 @@
           <select name="status" id="edit-murid-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm">
             <option value="aktif">Aktif</option>
             <option value="lulus">Lulus</option>
-            <option value="pindah">Pindah</option>
+            <option value="keluar">Keluar</option>
+            <option value="cuti">Cuti</option>
           </select>
         </div>
       </div>

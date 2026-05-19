@@ -44,9 +44,9 @@ class MuridController extends Controller
         $totalMurid   = Student::count();
         $muridAktif   = Student::where('status', 'aktif')->count();
         $muridLulus   = Student::where('status', 'lulus')->count();
-        $muridPindah  = Student::where('status', 'pindah')->count();
+        $muridKeluar  = Student::where('status', 'keluar')->count();
 
-        return view('admin.murid', compact('students', 'classrooms', 'teachers', 'guardians', 'nextNis', 'totalMurid', 'muridAktif', 'muridLulus', 'muridPindah'));
+        return view('admin.murid', compact('students', 'classrooms', 'teachers', 'guardians', 'nextNis', 'totalMurid', 'muridAktif', 'muridLulus', 'muridKeluar'));
     }
 
     public function store(Request $request)
@@ -61,7 +61,7 @@ class MuridController extends Controller
             'classroom_id' => 'required|exists:classrooms,id',
             'teacher_id'   => 'nullable|exists:teachers,id',
             'join_date'    => 'required|date',
-            'status'       => 'required|in:aktif,lulus,pindah',
+            'status'       => 'required|in:aktif,lulus,keluar,cuti',
             'parent_id'    => 'nullable|exists:users,id',
             'father_name'  => 'nullable|string|max:255',
             'mother_name'  => 'nullable|string|max:255',
@@ -140,7 +140,7 @@ class MuridController extends Controller
             'classroom_id' => 'required|exists:classrooms,id',
             'teacher_id'   => 'nullable|exists:teachers,id',
             'join_date'    => 'required|date',
-            'status'       => 'required|in:aktif,lulus,pindah',
+            'status'       => 'required|in:aktif,lulus,keluar,cuti',
             'parent_id'    => 'nullable|exists:users,id',
         ]);
 

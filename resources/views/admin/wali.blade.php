@@ -35,7 +35,8 @@
         <option value="">Semua Status</option>
         <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
         <option value="lulus" {{ request('status') === 'lulus' ? 'selected' : '' }}>Lulus</option>
-        <option value="pindah" {{ request('status') === 'pindah' ? 'selected' : '' }}>Pindah</option>
+        <option value="keluar" {{ request('status') === 'keluar' ? 'selected' : '' }}>Keluar</option>
+        <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
       </select>
       <button type="submit" class="px-4 py-2 bg-[#F97316] text-white rounded-xl text-sm hover:bg-[#EA580C]">Filter</button>
     </form>
@@ -63,8 +64,10 @@
               $waliStatus = 'Aktif';
             } elseif (count($studentStatuses) === 1 && $studentStatuses[0] === 'lulus') {
               $waliStatus = 'Lulus';
-            } elseif (count($studentStatuses) === 1 && $studentStatuses[0] === 'pindah') {
-              $waliStatus = 'Pindah';
+            } elseif (count($studentStatuses) === 1 && $studentStatuses[0] === 'keluar') {
+              $waliStatus = 'Keluar';
+            } elseif (count($studentStatuses) === 1 && $studentStatuses[0] === 'cuti') {
+              $waliStatus = 'Cuti';
             } else {
               $waliStatus = 'Aktif';
             }
@@ -76,7 +79,7 @@
           <td class="px-6 py-4 text-sm font-medium text-[#171a1f]">{{ $parent->mother_name ?: '-' }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $parent->address ?: '-' }}</td>
           <td class="px-6 py-4 text-sm">
-            <span class="status-pill {{ $waliStatus === 'Aktif' ? 'status-active' : ($waliStatus === 'Lulus' ? 'status-lulus' : ($waliStatus === 'Pindah' ? 'status-pindah' : 'status-neutral')) }}">{{ $waliStatus }}</span>
+            <span class="status-pill {{ $waliStatus === 'Aktif' ? 'status-active' : ($waliStatus === 'Lulus' ? 'status-lulus' : ($waliStatus === 'Keluar' ? 'status-keluar' : ($waliStatus === 'Cuti' ? 'status-cuti' : 'status-neutral'))) }}">{{ $waliStatus }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">

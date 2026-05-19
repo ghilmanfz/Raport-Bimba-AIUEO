@@ -31,7 +31,10 @@
     .table-row-hover:hover { background-color: #f9fafb; }
     .status-pill { padding: 2px 12px; border-radius: 10px; font-size: 12px; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; }
     .status-active { background-color: rgba(99, 233, 143, 0.1); color: #C2410C; }
-    .status-cuti { background-color: #f3f4f6; color: #565d6d; }
+    .status-lulus { background-color: rgba(239, 68, 68, 0.1); color: #991B1B; }
+    .status-keluar { background-color: rgba(251, 191, 36, 0.15); color: #92400E; }
+    .status-cuti { background-color: #E0E7FF; color: #3730A3; }
+    .status-neutral { background-color: #f3f4f6; color: #565d6d; }
     .logo-gradient { background: linear-gradient(180deg, #EA580C 0 33.33%, #F97316 33.33% 66.66%, #FB923C 66.66% 100%); }
     @yield('styles')
   </style>

@@ -32,7 +32,7 @@
         </div>
         <div>
           <p class="text-sm text-[#565d6d] mb-1">Status</p>
-          <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : 'status-pindah') }}">{{ ucfirst($student->status) }}</span>
+          <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
         </div>
         <div>
           <p class="text-sm text-[#565d6d] mb-1">Tgl. Bergabung</p>

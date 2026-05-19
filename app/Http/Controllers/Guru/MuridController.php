@@ -33,8 +33,8 @@ class MuridController extends Controller
         $totalMurid   = $teacher->students()->count();
         $muridAktif   = $teacher->students()->where('status', 'aktif')->count();
         $muridLulus   = $teacher->students()->where('status', 'lulus')->count();
-        $muridPindah  = $teacher->students()->where('status', 'pindah')->count();
+        $muridKeluar  = $teacher->students()->where('status', 'keluar')->count();
 
-        return view('guru.murid', compact('students', 'totalMurid', 'muridAktif', 'muridLulus', 'muridPindah'));
+        return view('guru.murid', compact('students', 'totalMurid', 'muridAktif', 'muridLulus', 'muridKeluar'));
     }
 }

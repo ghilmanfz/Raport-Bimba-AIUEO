@@ -71,7 +71,7 @@
                   <td class="py-3 font-medium text-[#171a1f]">{{ $student->name }}</td>
                   <td class="py-3">{{ $student->classroom?->name ?? '-' }}</td>
                   <td class="py-3">
-                    <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : 'status-pindah') }}">{{ ucfirst($student->status) }}</span>
+                    <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
                   </td>
                   <td class="py-3 text-right">
                     <a href="{{ route('admin.murid.show', $student) }}" class="text-[#3d8af5] hover:underline text-xs font-medium">
@@ -130,8 +130,8 @@
           <p class="text-xl font-bold text-blue-600">{{ $user->students->where('status', 'lulus')->count() }}</p>
         </div>
         <div>
-          <p class="text-sm text-[#565d6d] mb-1">Anak Pindah</p>
-          <p class="text-xl font-bold text-orange-600">{{ $user->students->where('status', 'pindah')->count() }}</p>
+          <p class="text-sm text-[#565d6d] mb-1">Anak Keluar</p>
+          <p class="text-xl font-bold text-orange-600">{{ $user->students->where('status', 'keluar')->count() }}</p>
         </div>
       </div>
     </div>

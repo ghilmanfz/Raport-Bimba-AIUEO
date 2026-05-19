@@ -39,13 +39,17 @@ class WaliController extends Controller
             if ($status === 'lulus') {
                 $query->whereDoesntHave('students', fn ($q) => $q->where('status', 'aktif'))
                     ->whereHas('students')
-                    ->whereDoesntHave('students', fn ($q) => $q->where('status', 'pindah'));
+                    ->whereDoesntHave('students', fn ($q) => $q->where('status', 'keluar'));
             }
 
-            if ($status === 'pindah') {
+            if ($status === 'keluar') {
                 $query->whereDoesntHave('students', fn ($q) => $q->where('status', 'aktif'))
                     ->whereHas('students')
                     ->whereDoesntHave('students', fn ($q) => $q->where('status', 'lulus'));
+            }
+
+            if ($status === 'cuti') {
+                $query->whereHas('students', fn ($q) => $q->where('status', 'cuti'));
             }
         }
 
@@ -154,7 +158,7 @@ class WaliController extends Controller
                     ], ';');
                 } else {
                     $statuses = $w->students->pluck('status')->unique()->toArray();
-                    $waliStatus = in_array('aktif', $statuses) ? 'Aktif' : ((count($statuses) === 1 && $statuses[0] === 'lulus') ? 'Lulus' : 'Pindah');
+                    $waliStatus = in_array('aktif', $statuses) ? 'Aktif' : ((count($statuses) === 1 && $statuses[0] === 'lulus') ? 'Lulus' : 'Keluar');
 
                     foreach ($w->students as $index => $student) {
                         fputcsv($file, [

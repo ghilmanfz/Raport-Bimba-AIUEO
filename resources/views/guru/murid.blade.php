@@ -40,13 +40,13 @@
     <div class="flex justify-between items-start">
       <div>
         <p class="text-sm font-medium text-[#565d6d]">Lainnya</p>
-        <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridLulus + $muridPindah }}</h3>
+        <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridLulus + $muridKeluar }}</h3>
       </div>
       <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
         <iconify-icon icon="lucide:archive" width="24" class="text-[#565d6d]"></iconify-icon>
       </div>
     </div>
-    <p class="mt-4 text-xs text-[#565d6d] font-roboto">Lulus / Pindah</p>
+    <p class="mt-4 text-xs text-[#565d6d] font-roboto">Lulus / Keluar / Cuti</p>
   </div>
 </div>
 
@@ -65,7 +65,8 @@
         <option value="">Semua Status</option>
         <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
         <option value="lulus" {{ request('status') === 'lulus' ? 'selected' : '' }}>Lulus</option>
-        <option value="pindah" {{ request('status') === 'pindah' ? 'selected' : '' }}>Pindah</option>
+        <option value="keluar" {{ request('status') === 'keluar' ? 'selected' : '' }}>Keluar</option>
+        <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
       </select>
     </div>
   </div>
@@ -96,7 +97,7 @@
           <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $student->parent?->name ?? '-' }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $student->join_date->translatedFormat('d M Y') }}</td>
           <td class="px-6 py-4">
-            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : 'status-pindah') }}">
+            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">
               {{ ucfirst($student->status) }}
             </span>
           </td>
@@ -142,8 +143,11 @@
   .status-pill.status-lulus {
     @apply bg-[#FEE2E2] text-[#991B1B];
   }
-  .status-pill.status-pindah {
+  .status-pill.status-keluar {
     @apply bg-[#FEF3C7] text-[#92400E];
+  }
+  .status-pill.status-cuti {
+    @apply bg-[#E0E7FF] text-[#3730A3];
   }
 </style>
 @endsection

@@ -32,7 +32,7 @@
         </div>
         <div>
           <p class="text-sm text-[#565d6d] mb-1">Status</p>
-          <span class="status-pill {{ $teacher->status === 'aktif' ? 'status-active' : ($teacher->status === 'cuti' ? 'status-lulus' : 'status-pindah') }}">{{ ucfirst($teacher->status) }}</span>
+          <span class="status-pill {{ $teacher->status === 'aktif' ? 'status-active' : ($teacher->status === 'cuti' ? 'status-lulus' : 'status-keluar') }}">{{ ucfirst($teacher->status) }}</span>
         </div>
         @if($teacher->specialization)
         <div class="col-span-2">
@@ -82,7 +82,7 @@
                   <td class="py-3 font-medium text-[#171a1f]">{{ $student->name }}</td>
                   <td class="py-3">{{ $student->classroom?->name ?? '-' }}</td>
                   <td class="py-3">
-                    <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : 'status-pindah') }}">{{ ucfirst($student->status) }}</span>
+                    <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
                   </td>
                   <td class="py-3 text-right">
                     <a href="{{ route('admin.murid.show', $student) }}" class="text-[#3d8af5] hover:underline text-xs font-medium">
