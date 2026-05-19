@@ -21,8 +21,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        $classroomIds = $teacher->classrooms()->pluck('classrooms.id');
-        $students = Student::whereIn('classroom_id', $classroomIds)
+        $students = Student::where('teacher_id', $teacher->id)
             ->where('status', 'aktif')
             ->with('classroom')
             ->get();

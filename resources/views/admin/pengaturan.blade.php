@@ -50,23 +50,45 @@
             </div>
           </div>
         </div>
-        <div x-data="{ preview: '{{ $settings['institution_logo'] ? asset('storage/' . $settings['institution_logo']) : '' }}' }">
-          <label class="block text-sm font-bold text-[#171a1f] mb-2">Logo Institusi</label>
-          <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-[#F97316]/5 h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#F97316]/10 transition-colors">
-            <input type="file" name="institution_logo" accept="image/png,image/jpeg" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
-            <template x-if="preview">
-              <img :src="preview" class="max-h-[160px] max-w-full object-contain rounded-lg">
-            </template>
-            <template x-if="!preview">
-              <div class="flex flex-col items-center">
-                <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4">
-                  <iconify-icon icon="lucide:upload-cloud" width="28" class="text-[#F97316]"></iconify-icon>
+        <div class="space-y-6">
+          <div x-data="{ preview: '{{ $settings['institution_logo'] ? asset('storage/' . $settings['institution_logo']) : '' }}' }">
+            <label class="block text-sm font-bold text-[#171a1f] mb-2">Logo Institusi</label>
+            <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-[#F97316]/5 h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#F97316]/10 transition-colors">
+              <input type="file" name="institution_logo" accept="image/png,image/jpeg" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
+              <template x-if="preview">
+                <img :src="preview" class="max-h-[160px] max-w-full object-contain rounded-lg">
+              </template>
+              <template x-if="!preview">
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4">
+                    <iconify-icon icon="lucide:upload-cloud" width="28" class="text-[#F97316]"></iconify-icon>
+                  </div>
+                  <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret logo ke sini</p>
+                  <p class="text-xs text-[#565d6d]">PNG, JPG up to 2MB (Rekomendasi 512x512px)</p>
                 </div>
-                <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret logo ke sini</p>
-                <p class="text-xs text-[#565d6d]">PNG, JPG up to 2MB (Rekomendasi 512x512px)</p>
-              </div>
-            </template>
-          </label>
+              </template>
+            </label>
+          </div>
+
+          <div x-data="{ preview: '{{ $settings['institution_banner'] ? asset('storage/' . $settings['institution_banner']) : '' }}' }">
+            <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Beranda & Login</label>
+            <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-white h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#FFF7ED] transition-colors">
+              <input type="file" name="institution_banner" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
+              <template x-if="preview">
+                <img :src="preview" class="max-h-[160px] max-w-full object-cover rounded-lg shadow-sm">
+              </template>
+              <template x-if="!preview">
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 bg-[#FFF7ED] rounded-full flex items-center justify-center mb-4">
+                    <iconify-icon icon="lucide:image-plus" width="28" class="text-[#F97316]"></iconify-icon>
+                  </div>
+                  <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret foto ke sini</p>
+                  <p class="text-xs text-[#565d6d]">PNG, JPG, WEBP up to 4MB</p>
+                </div>
+              </template>
+            </label>
+            <p class="text-xs text-[#565d6d] mt-2">Foto ini dipakai bersama di halaman beranda dan login.</p>
+          </div>
         </div>
         <div class="lg:col-span-2 border-t border-[#dee1e6] pt-8">
           <div class="mb-5">

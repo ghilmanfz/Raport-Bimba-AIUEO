@@ -14,7 +14,7 @@ class GuruController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Teacher::with(['user', 'classrooms']);
+        $query = Teacher::with(['user', 'classrooms', 'students']);
 
         if ($search = $request->input('search')) {
             $query->whereHas('user', function ($q) use ($search) {
@@ -23,12 +23,18 @@ class GuruController extends Controller
             })->orWhere('nip', 'like', "%{$search}%");
         }
 
+        if ($statusFilter = $request->input('status')) {
+            $query->where('status', $statusFilter);
+        }
+
         $teachers     = $query->latest()->paginate(10);
         $classrooms   = Classroom::orderBy('name')->get();
         $totalGuru    = Teacher::count();
         $guruAktif    = Teacher::where('status', 'aktif')->count();
+        $guruNonaktif = Teacher::where('status', 'nonaktif')->count();
+        $guruCuti     = Teacher::where('status', 'cuti')->count();
 
-        return view('admin.guru', compact('teachers', 'classrooms', 'totalGuru', 'guruAktif'));
+        return view('admin.guru', compact('teachers', 'classrooms', 'totalGuru', 'guruAktif', 'guruNonaktif', 'guruCuti'));
     }
 
     public function store(Request $request)
@@ -117,6 +123,13 @@ class GuruController extends Controller
         );
 
         return redirect()->route('admin.guru')->with('success', 'Data guru berhasil dihapus.');
+    }
+
+    public function show(Teacher $teacher)
+    {
+        $teacher->load(['user', 'classrooms', 'students']);
+        
+        return view('admin.guru-detail', compact('teacher'));
     }
 
     public function export()

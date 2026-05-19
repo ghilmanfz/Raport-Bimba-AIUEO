@@ -14,6 +14,9 @@
   $hitungPct = $child ? round($child['hitung']) : 0;
   $selectedStudentId = $child ? $child['student']->id : null;
   $reportUrl = $selectedStudentId ? route('wali.rapor', ['student_id' => $selectedStudentId]) : route('wali.rapor');
+  $statusClass = function ($status) {
+    return $status === 'aktif' ? 'bg-[#DCFCE7] text-[#166534]' : ($status === 'lulus' ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#FEF3C7] text-[#92400E]');
+  };
 @endphp
 
 <!-- Hero Section -->
@@ -56,6 +59,26 @@
       </div>
     </div>
   </form>
+</section>
+
+<!-- Status Anak -->
+<section class="mb-8">
+  <div class="bg-white rounded-2xl p-5 custom-shadow border border-[#dee1e6]">
+    <div class="flex items-center gap-2 mb-4">
+      <iconify-icon icon="lucide:users-round" width="18" class="text-[#3d8af5]"></iconify-icon>
+      <h3 class="text-base font-bold text-[#171a1f]">Status Siswa</h3>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      @forelse($childrenData as $item)
+        <div class="flex items-center justify-between px-4 py-3 bg-[#fafafb] rounded-xl border border-[#eef0f3]">
+          <p class="text-sm font-medium text-[#171a1f]">{{ $item['student']->name }}</p>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg {{ $statusClass($item['student']->status) }}">{{ ucfirst($item['student']->status) }}</span>
+        </div>
+      @empty
+        <p class="text-sm text-[#565d6d]">Belum ada data siswa.</p>
+      @endforelse
+    </div>
+  </div>
 </section>
 
 @if(!$child)

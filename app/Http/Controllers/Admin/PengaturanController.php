@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classroom;
 use App\Models\Notification;
 use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +22,7 @@ class PengaturanController extends Controller
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
             'unit_name'           => Setting::get('unit_name', ''),
             'institution_logo'    => Setting::get('institution_logo'),
+<<<<<<< HEAD
             'support_whatsapp'    => Setting::get('support_whatsapp', '6281234567890'),
             'support_email'       => Setting::get('support_email', 'info@bimba-aiueo.com'),
             'landing_badge'       => Setting::get('landing_badge', 'Masa Depan Belajar Anak'),
@@ -30,6 +32,9 @@ class PengaturanController extends Controller
             'landing_cta_title'   => Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?'),
             'landing_cta_description' => Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.'),
             'hero_image'          => Setting::get('hero_image'),
+=======
+            'institution_banner'   => Setting::get('institution_banner'),
+>>>>>>> origin/master
         ];
 
         return view('admin.pengaturan', compact('classrooms', 'settings'));
@@ -50,7 +55,11 @@ class PengaturanController extends Controller
             'landing_cta_title'   => 'nullable|string|max:180',
             'landing_cta_description' => 'nullable|string|max:500',
             'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+<<<<<<< HEAD
             'hero_image'          => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+=======
+            'institution_banner'  => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
+>>>>>>> origin/master
         ]);
 
         Setting::set('institution_name', $request->institution_name);
@@ -75,6 +84,7 @@ class PengaturanController extends Controller
             Setting::set('institution_logo', $path);
         }
 
+<<<<<<< HEAD
         if ($request->hasFile('hero_image')) {
             $oldHero = Setting::get('hero_image');
             if ($oldHero && Storage::disk('public')->exists($oldHero)) {
@@ -83,6 +93,16 @@ class PengaturanController extends Controller
 
             $path = $request->file('hero_image')->store('heroes', 'public');
             Setting::set('hero_image', $path);
+=======
+        if ($request->hasFile('institution_banner')) {
+            $oldBanner = Setting::get('institution_banner');
+            if ($oldBanner && Storage::disk('public')->exists($oldBanner)) {
+                Storage::disk('public')->delete($oldBanner);
+            }
+
+            $path = $request->file('institution_banner')->store('banners', 'public');
+            Setting::set('institution_banner', $path);
+>>>>>>> origin/master
         }
 
         Notification::notifyAdmins(
@@ -109,7 +129,9 @@ class PengaturanController extends Controller
             return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
         }
 
-        $user->update(['password' => Hash::make($request->password)]);
+        User::query()
+            ->whereKey($user->id)
+            ->update(['password' => Hash::make($request->password)]);
 
         Notification::send(
             $user->id,

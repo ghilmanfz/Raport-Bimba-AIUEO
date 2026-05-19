@@ -29,6 +29,9 @@
   </style>
 </head>
 <body class="bg-login-fresh min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
+  @php
+    $sharedBanner = \App\Models\Setting::get('institution_banner') ? asset('storage/' . \App\Models\Setting::get('institution_banner')) : asset('assets/IMG_2.webp');
+  @endphp
   <a href="{{ url('/') }}" class="absolute left-4 top-4 md:left-8 md:top-8 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/80 border border-[#dee1e6] rounded-xl text-sm font-semibold text-[#171a1f] hover:bg-white soft-shadow">
     <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>
     Kembali ke Beranda
@@ -106,7 +109,7 @@
 
           <!-- Email/Username Input -->
           <div class="space-y-2">
-            <label for="email">Username / Email</label>
+            <label for="email">Email / NIP</label>
             <div class="relative flex items-center">
               <div class="absolute left-4 text-[#565d6d]/60">
                 <iconify-icon icon="lucide:user" width="18"></iconify-icon>
@@ -181,6 +184,8 @@
         @endphp
         @if($heroImage)
           <img src="{{ asset('storage/' . $heroImage) }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
+        @elseif($sharedBanner)
+          <img src="{{ $sharedBanner }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
         @else
           <img src="{{ asset('assets/IMG_21.webp') }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
         @endif

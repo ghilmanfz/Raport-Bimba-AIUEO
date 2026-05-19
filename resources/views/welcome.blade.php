@@ -38,6 +38,9 @@
   </style>
 </head>
 <body class="overflow-x-hidden">
+  @php
+    $sharedBanner = \App\Models\Setting::get('institution_banner') ? asset('storage/' . \App\Models\Setting::get('institution_banner')) : asset('assets/IMG_2.webp');
+  @endphp
 
   <!-- Navigation -->
   <header class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-[#dee1e6] h-16">
@@ -109,9 +112,11 @@
           <div class="relative w-full max-w-[430px] lg:max-w-[460px] mt-8 mb-4 lg:mt-10 lg:mb-8">
             <!-- Main image card -->
             <div class="bg-white p-6 lg:p-7 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] border border-[#e5e7eb]">
-                @php $heroImage = \App\Models\Setting::get('hero_image'); @endphp
+                @php $heroImage = \App\Models\Setting::get('hero_image'); $bannerImage = \App\Models\Setting::get('institution_banner'); @endphp
                 @if($heroImage)
                   <img src="{{ asset('storage/' . $heroImage) }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
+                @elseif($bannerImage)
+                  <img src="{{ asset('storage/' . $bannerImage) }}" class="w-full aspect-[4/5] rounded-xl object-cover bg-[#FFF7ED]" alt="BiMBA AIUEO School">
                 @else
                   <img src="{{ asset('assets/IMG_21.webp') }}" class="w-full aspect-[4/5] rounded-xl object-contain bg-[#FFF7ED]" alt="BiMBA AIUEO School">
                 @endif

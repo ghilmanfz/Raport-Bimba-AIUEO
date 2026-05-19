@@ -13,12 +13,11 @@ class GrafikController extends Controller
     public function index(Request $request)
     {
         $teacher = Auth::user()->teacher;
-        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
         $classrooms = $teacher ? $teacher->classrooms : collect();
 
         $selectedClassroom = $request->input('classroom_id');
 
-        $query = Student::whereIn('classroom_id', $classroomIds)
+        $query = Student::where('teacher_id', $teacher?->id)
             ->where('status', 'aktif');
 
         if ($selectedClassroom) {
