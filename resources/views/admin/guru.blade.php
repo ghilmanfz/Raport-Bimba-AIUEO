@@ -169,7 +169,7 @@
       <iconify-icon icon="lucide:lightbulb" width="22" class="text-[#F97316]"></iconify-icon>
     </div>
     <div>
-      <h4 class="text-lg font-bold text-white mb-2">Tips Manajemen Motivator</h4>
+      <h4 class="text-lg font-bold text-white mb-2" style="color: white;">Tips Manajemen Motivator</h4>
       <p class="text-white/80 text-sm leading-relaxed">
         Pastikan beban kelas setiap guru tidak melebihi 5 kelas per minggu untuk menjaga kualitas pengajaran BiMBA AIUEO yang optimal bagi anak-anak.
       </p>

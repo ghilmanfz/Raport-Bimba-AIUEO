@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -25,12 +26,48 @@ class UserController extends Controller
             $query->where('role', $role);
         }
 
-        $users     = $query->orderBy('role')->orderBy('name')->paginate(15);
-        $totalUser = User::whereIn('role', ['guru', 'wali'])->count();
-        $totalGuru = User::where('role', 'guru')->count();
-        $totalWali = User::where('role', 'wali')->count();
+        $users      = $query->orderBy('role')->orderBy('name')->paginate(15);
+        $totalUser  = User::whereIn('role', ['guru', 'wali'])->count();
+        $totalGuru  = User::where('role', 'guru')->count();
+        $totalWali  = User::where('role', 'wali')->count();
+        $admins     = User::where('role', 'admin')->orderBy('name')->get();
+        $totalAdmin = $admins->count();
 
-        return view('admin.user', compact('users', 'totalUser', 'totalGuru', 'totalWali'));
+        return view('admin.user', compact('users', 'totalUser', 'totalGuru', 'totalWali', 'admins', 'totalAdmin'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+        ]);
+
+        User::create([
+            'name'           => $request->name,
+            'email'          => $request->email,
+            'role'           => 'admin',
+            'password'       => Hash::make($request->password),
+            'plain_password' => $request->password,
+        ]);
+
+        return redirect()->route('admin.user')->with('success', 'Akun admin baru berhasil ditambahkan.');
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->id === Auth::id()) {
+            return redirect()->route('admin.user')->with('error', 'Tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1) {
+            return redirect()->route('admin.user')->with('error', 'Tidak dapat menghapus admin terakhir.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.user')->with('success', 'Akun admin berhasil dihapus.');
     }
 
     public function update(Request $request, User $user)

@@ -8,13 +8,16 @@
 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
   <div>
     <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Manajemen User</h1>
-    <p class="text-[#565d6d] mt-1 font-roboto">Kelola akun guru dan wali murid beserta password. Tambah/hapus dilakukan di menu Data Guru & Data Murid.</p>
+    <p class="text-[#565d6d] mt-1 font-roboto">Kelola akun administrator, guru, dan wali murid.</p>
   </div>
-
+  <button onclick="document.getElementById('modal-tambah-admin').classList.remove('hidden')" class="flex items-center gap-2 px-5 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-semibold hover:bg-[#EA580C] transition-colors">
+    <iconify-icon icon="lucide:user-plus" width="16"></iconify-icon>
+    Tambah Admin
+  </button>
 </div>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
     <div>
       <p class="text-sm font-medium text-[#565d6d]">Total User</p>
@@ -22,6 +25,15 @@
     </div>
     <div class="w-14 h-14 bg-[#FFF7ED] rounded-2xl flex items-center justify-center">
       <iconify-icon icon="lucide:users" width="24" class="text-[#F97316]"></iconify-icon>
+    </div>
+  </div>
+  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
+    <div>
+      <p class="text-sm font-medium text-[#565d6d]">Akun Admin</p>
+      <h3 class="text-3xl font-bold mt-1 text-[#171a1f]">{{ $totalAdmin }}</h3>
+    </div>
+    <div class="w-14 h-14 bg-[#FFF7ED] rounded-2xl flex items-center justify-center">
+      <iconify-icon icon="lucide:shield" width="24" class="text-[#F97316]"></iconify-icon>
     </div>
   </div>
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow flex items-center justify-between">
@@ -41,6 +53,74 @@
     <div class="w-14 h-14 bg-[#FFF7ED] rounded-2xl flex items-center justify-center">
       <iconify-icon icon="lucide:user" width="24" class="text-[#FDBA74]"></iconify-icon>
     </div>
+  </div>
+</div>
+
+<!-- Admin Accounts Section -->
+<div class="bg-white rounded-2xl border border-[#dee1e6] overflow-hidden main-shadow mb-8">
+  <div class="p-4 border-b border-[#dee1e6] flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-[#FFF7ED] rounded-lg flex items-center justify-center">
+        <iconify-icon icon="lucide:shield" width="16" class="text-[#F97316]"></iconify-icon>
+      </div>
+      <h2 class="text-sm font-bold text-[#171a1f]">Akun Administrator</h2>
+    </div>
+    <span class="text-xs text-[#565d6d] font-roboto">{{ $totalAdmin }} akun</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead class="bg-[#fafafb] border-b border-[#dee1e6]">
+        <tr class="text-[#565d6d] text-sm font-semibold">
+          <th class="px-6 py-3">No</th>
+          <th class="px-6 py-3">Nama</th>
+          <th class="px-6 py-3">Email</th>
+          <th class="px-6 py-3">Password</th>
+          <th class="px-6 py-3 text-right">Aksi</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-[#dee1e6]">
+        @forelse($admins as $idx => $a)
+        <tr class="hover:bg-gray-50/50">
+          <td class="px-6 py-3 text-sm text-[#565d6d]">{{ $idx + 1 }}</td>
+          <td class="px-6 py-3">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-full bg-[#F97316] flex items-center justify-center text-white font-bold text-xs">{{ strtoupper(substr($a->name, 0, 1)) }}</div>
+              <div>
+                <span class="text-sm font-semibold text-[#171a1f]">{{ $a->name }}</span>
+                @if($a->id === auth()->id())
+                  <span class="ml-2 text-xs bg-[#FFF7ED] text-[#F97316] font-bold px-2 py-0.5 rounded-full">Anda</span>
+                @endif
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-3 text-sm text-[#565d6d] font-roboto">{{ $a->email }}</td>
+          <td class="px-6 py-3" x-data="{ show: false }">
+            <div class="flex items-center gap-2">
+              <code class="text-sm font-mono bg-[#f3f4f6] px-2 py-1 rounded" x-text="show ? '{{ $a->plain_password ?? '••••••••' }}' : '••••••••'"></code>
+              <button @click="show = !show" class="p-1 text-[#565d6d] hover:text-[#F97316] rounded" :title="show ? 'Sembunyikan' : 'Lihat Password'">
+                <iconify-icon :icon="show ? 'lucide:eye-off' : 'lucide:eye'" width="14"></iconify-icon>
+              </button>
+            </div>
+          </td>
+          <td class="px-6 py-3 text-right">
+            @if($a->id !== auth()->id())
+            <form method="POST" action="{{ route('admin.user.destroy', $a) }}" class="inline"
+              onsubmit="return confirm('Hapus akun admin {{ addslashes($a->name) }}?')">
+              @csrf @method('DELETE')
+              <button type="submit" class="p-2 text-red-400 hover:bg-red-50 rounded-lg" title="Hapus">
+                <iconify-icon icon="lucide:trash-2" width="14"></iconify-icon>
+              </button>
+            </form>
+            @else
+            <span class="text-xs text-[#565d6d] italic px-2">—</span>
+            @endif
+          </td>
+        </tr>
+        @empty
+        <tr><td colspan="5" class="px-6 py-6 text-center text-sm text-[#565d6d]">Belum ada akun admin.</td></tr>
+        @endforelse
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -146,6 +226,12 @@
 </div>
 @endif
 
+@if(session('error'))
+<div class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium z-50" x-data x-init="setTimeout(() => $el.remove(), 5000)">
+  {{ session('error') }}
+</div>
+@endif
+
 @if($errors->any())
 <div class="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium z-50" x-data x-init="setTimeout(() => $el.remove(), 5000)">
   @foreach($errors->all() as $error)
@@ -153,6 +239,42 @@
   @endforeach
 </div>
 @endif
+
+<!-- Modal Tambah Admin -->
+<div id="modal-tambah-admin" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-lg mx-4 shadow-xl">
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-[#FFF7ED] rounded-xl flex items-center justify-center">
+          <iconify-icon icon="lucide:user-plus" width="20" class="text-[#F97316]"></iconify-icon>
+        </div>
+        <h3 class="text-xl font-bold text-[#171a1f]">Tambah Akun Admin</h3>
+      </div>
+      <button onclick="document.getElementById('modal-tambah-admin').classList.add('hidden')" class="text-[#565d6d] hover:text-[#171a1f]">
+        <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+      </button>
+    </div>
+    <form method="POST" action="{{ route('admin.user.store') }}" class="space-y-4">
+      @csrf
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Lengkap</label>
+        <input type="text" name="name" required placeholder="cth: Admin Cabang 2" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Email</label>
+        <input type="email" name="email" required placeholder="cth: admin2@bimba.id" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-1">Password <span class="text-[#565d6d] font-normal">(min. 6 karakter)</span></label>
+        <input type="text" name="password" required placeholder="Buat password" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="document.getElementById('modal-tambah-admin').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-semibold hover:bg-[#EA580C]">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <!-- Modal Edit User -->
 <div id="modal-edit-user" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">

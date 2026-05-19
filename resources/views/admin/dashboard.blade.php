@@ -91,7 +91,7 @@
       <div class="absolute -right-4 -top-4 opacity-10 rotate-12">
         <iconify-icon icon="lucide:graduation-cap" width="112" class="text-white"></iconify-icon>
       </div>
-      <h2 class="text-lg font-bold mb-2 relative z-10 text-white">Pusat Bantuan BiMBA</h2>
+      <h2 class="text-lg font-bold mb-2 relative z-10 text-white" style="color: white;">Pusat Bantuan BiMBA</h2>
       <p class="text-sm text-white/80 font-roboto mb-6 relative z-10 leading-relaxed">Butuh bantuan dalam mengelola data atau sistem rapor? Tim teknis kami siap membantu 24/7.</p>
       <a href="{{ $supportWhatsappUrl ?? '#' }}" target="_blank" class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10 block text-center">
         <iconify-icon icon="lucide:message-circle" width="16" class="inline mr-1"></iconify-icon>

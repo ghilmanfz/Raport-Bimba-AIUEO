@@ -80,8 +80,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('/wali/{user}', [AdminWaliController::class, 'destroy'])->name('wali.destroy');
 
     Route::get('/user', [AdminUserController::class, 'index'])->name('user');
+    Route::post('/user', [AdminUserController::class, 'store'])->name('user.store');
     Route::put('/user/{user}', [AdminUserController::class, 'update'])->name('user.update');
     Route::post('/user/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('user.resetPassword');
+    Route::delete('/user/{user}', [AdminUserController::class, 'destroy'])->name('user.destroy');
 
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
     Route::put('/pengaturan', [PengaturanController::class, 'updateSettings'])->name('pengaturan.update');

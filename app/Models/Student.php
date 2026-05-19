@@ -12,7 +12,7 @@ class Student extends Model
     public static function generateNextNis(): string
     {
         $lastNis = static::where('nis', 'like', 'BM%')
-            ->orderByRaw("CAST(SUBSTR(nis, 3) AS INTEGER) DESC")
+            ->orderByRaw("CAST(SUBSTR(nis, 3) AS UNSIGNED) DESC")
             ->value('nis');
 
         $nextNumber = $lastNis ? ((int) substr($lastNis, 2)) + 1 : 1;

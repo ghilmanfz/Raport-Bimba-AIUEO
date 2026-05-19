@@ -348,24 +348,6 @@
             <input type="password" name="password_confirmation" placeholder="••••••••" required class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
           </div>
         </div>
-        <!-- 2FA Toggle -->
-        <div class="bg-[#FFF7ED]/20 border border-[#F97316]/20 rounded-2xl p-6 flex items-center gap-6">
-          <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center flex-shrink-0">
-            <iconify-icon icon="lucide:shield" width="22" class="text-[#F97316]"></iconify-icon>
-          </div>
-          <div class="flex-1">
-            <h3 class="text-sm font-bold text-[#171a1f] mb-1">Autentikasi Dua Faktor (2FA)</h3>
-            <p class="text-xs text-[#565d6d] max-w-lg">Tambahkan lapisan keamanan ekstra ke akun Anda. Kode verifikasi akan diminta setiap kali Anda login melalui perangkat baru.</p>
-          </div>
-          <div class="flex items-center gap-3 flex-shrink-0">
-            <span class="text-[10px] font-bold text-[#565d6d] uppercase">Nonaktif</span>
-            <label class="relative inline-flex items-center cursor-pointer" x-data="{ enabled: false }">
-              <input type="checkbox" x-model="enabled" class="sr-only peer">
-              <div class="w-11 h-6 bg-[#bdc1ca] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F97316]"></div>
-            </label>
-            <span class="text-[10px] font-bold text-[#F97316] uppercase">Aktif</span>
-          </div>
-        </div>
       </div>
       <div class="px-8 pb-6 flex justify-end">
         <button type="submit" class="flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-white bg-[#F97316] hover:bg-orange-600 rounded-xl shadow-lg shadow-orange-200">

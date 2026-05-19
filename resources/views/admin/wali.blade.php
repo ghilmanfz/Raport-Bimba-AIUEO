@@ -9,7 +9,7 @@
     <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Manajemen Wali Murid</h1>
     <p class="text-[#565d6d] mt-1 font-roboto">Data wali murid terhubung dengan siswa. Status wali dihitung otomatis dari status siswa.</p>
   </div>
-  <a href="{{ route('admin.wali.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#3d8af5]/30 rounded-xl text-[#3d8af5] font-medium text-sm hover:bg-blue-50">
+  <a href="{{ route('admin.wali.export') }}" class="flex items-center gap-2 px-4 py-2 bg-white border border-[#F97316]/30 rounded-xl text-[#F97316] font-medium text-sm hover:bg-orange-50">
     <iconify-icon icon="lucide:download" width="16"></iconify-icon>
     Export CSV
   </a>
@@ -37,7 +37,7 @@
         <option value="lulus" {{ request('status') === 'lulus' ? 'selected' : '' }}>Lulus</option>
         <option value="pindah" {{ request('status') === 'pindah' ? 'selected' : '' }}>Pindah</option>
       </select>
-      <button type="submit" class="px-4 py-2 bg-[#3d8af5] text-white rounded-xl text-sm">Filter</button>
+      <button type="submit" class="px-4 py-2 bg-[#F97316] text-white rounded-xl text-sm hover:bg-[#EA580C]">Filter</button>
     </form>
   </div>
 
@@ -85,7 +85,7 @@
               </a>
               <button
                 onclick="openEditWali({{ $parent->id }}, '{{ addslashes($parent->father_name ?? '') }}', '{{ addslashes($parent->mother_name ?? '') }}', '{{ addslashes($parent->father_phone ?? '') }}', '{{ addslashes($parent->mother_phone ?? '') }}', '{{ addslashes($parent->address ?? '') }}', '{{ $parent->email }}')"
-                class="p-2 text-[#3d8af5] hover:bg-blue-50 rounded-lg" title="Edit"
+                class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg" title="Edit"
               >
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
@@ -160,7 +160,7 @@
 
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="closeWaliModal()" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-        <button type="submit" class="flex-1 py-2.5 bg-[#3d8af5] text-white rounded-xl text-sm font-medium hover:bg-blue-600">Simpan</button>
+        <button type="submit" class="flex-1 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium hover:bg-[#EA580C]">Simpan</button>
       </div>
     </form>
   </div>
