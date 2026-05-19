@@ -10,20 +10,12 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class MuridController extends Controller
 {
     public function index(Request $request)
     {
-<<<<<<< HEAD
-        $query = Student::with([
-            'classroom',
-            'parent' => fn ($query) => $query->withCount('students'),
-        ]);
-=======
         $query = Student::with(['classroom', 'parent', 'teacher']);
->>>>>>> origin/master
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
@@ -51,62 +43,15 @@ class MuridController extends Controller
         $nextNis      = Student::generateNextNis();
         $totalMurid   = Student::count();
         $muridAktif   = Student::where('status', 'aktif')->count();
-<<<<<<< HEAD
-        $muridCuti    = Student::where('status', 'cuti')->count();
-        $waliUsers    = User::where('role', 'wali')
-            ->withCount('students')
-            ->orderBy('name')
-            ->get();
-
-        return view('admin.murid', compact('students', 'classrooms', 'totalMurid', 'muridAktif', 'muridCuti', 'waliUsers'));
-=======
         $muridLulus   = Student::where('status', 'lulus')->count();
         $muridPindah  = Student::where('status', 'pindah')->count();
 
         return view('admin.murid', compact('students', 'classrooms', 'teachers', 'guardians', 'nextNis', 'totalMurid', 'muridAktif', 'muridLulus', 'muridPindah'));
->>>>>>> origin/master
     }
 
     public function store(Request $request)
     {
         $request->merge([
-<<<<<<< HEAD
-            'parent_mode' => $request->input(
-                'parent_mode',
-                $request->filled('parent_email') ? 'new' : 'none'
-            ),
-        ]);
-
-        $validated = $request->validate([
-            'name'               => 'required|string|max:255',
-            'classroom_id'       => 'required|exists:classrooms,id',
-            'join_date'          => 'required|date',
-            'status'             => 'required|in:aktif,cuti,nonaktif',
-            'parent_mode'        => 'required|in:none,existing,new',
-            'existing_parent_id' => [
-                'required_if:parent_mode,existing',
-                'nullable',
-                Rule::exists('users', 'id')->where(fn ($query) => $query->where('role', 'wali')),
-            ],
-            'parent_name'        => 'required_if:parent_mode,new|nullable|string|max:255',
-            'parent_email'       => 'required_if:parent_mode,new|nullable|email|unique:users,email',
-            'parent_password'    => 'required_if:parent_mode,new|nullable|string|min:6',
-        ]);
-
-        $parentId = null;
-
-        if ($validated['parent_mode'] === 'existing') {
-            $parentId = (int) $validated['existing_parent_id'];
-        }
-
-        if ($validated['parent_mode'] === 'new') {
-            $parent = User::create([
-                'name'           => $validated['parent_name'],
-                'email'          => $validated['parent_email'],
-                'role'           => 'wali',
-                'password'       => Hash::make($validated['parent_password']),
-                'plain_password' => $validated['parent_password'],
-=======
             'nis' => $request->filled('nis') ? $request->nis : Student::generateNextNis(),
         ]);
 
@@ -156,47 +101,36 @@ class MuridController extends Controller
                 'address'  => $request->address,
                 'password' => Hash::make($defaultParentPassword),
                 'plain_password' => $defaultParentPassword,
->>>>>>> origin/master
             ]);
 
             $parentId = $parent->id;
             $createdParentPassword = $defaultParentPassword;
         }
 
-<<<<<<< HEAD
         $student = Student::create([
-            'name'         => $validated['name'],
-            'classroom_id' => $validated['classroom_id'],
-=======
-        Student::create([
             'name'         => $request->name,
             'nis'          => $request->nis,
             'classroom_id' => $request->classroom_id,
             'teacher_id'   => $request->teacher_id,
->>>>>>> origin/master
             'parent_id'    => $parentId,
-            'join_date'    => $validated['join_date'],
-            'status'       => $validated['status'],
+            'join_date'    => $request->join_date,
+            'status'       => $request->status,
         ]);
 
         Notification::notifyAdmins(
             'Murid Baru Ditambahkan',
-            'Data murid ' . $validated['name'] . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
+            'Data murid ' . $request->name . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.murid')
         );
 
-<<<<<<< HEAD
-        return redirect()->route('admin.murid')->with('success', 'Murid berhasil ditambahkan dengan NIS: ' . $student->nis);
-=======
         $successMessage = 'Murid berhasil ditambahkan.';
         if ($createdParentPassword) {
             $successMessage .= ' Akun wali baru dibuat dengan password default: ' . $createdParentPassword;
         }
 
         return redirect()->route('admin.murid')->with('success', $successMessage);
->>>>>>> origin/master
     }
 
     public function update(Request $request, Student $student)
@@ -210,9 +144,6 @@ class MuridController extends Controller
             'parent_id'    => 'nullable|exists:users,id',
         ]);
 
-<<<<<<< HEAD
-        $student->update($request->only('name', 'classroom_id', 'join_date', 'status'));
-=======
         if ($request->filled('teacher_id') && (int) $request->teacher_id !== (int) $student->teacher_id) {
             $assignedCount = Student::where('teacher_id', $request->teacher_id)->count();
             if ($assignedCount >= 25) {
@@ -233,7 +164,6 @@ class MuridController extends Controller
             'status'       => $request->status,
             'parent_id'    => $request->filled('parent_id') ? (int) $request->parent_id : null,
         ]);
->>>>>>> origin/master
 
         Notification::notifyAdmins(
             'Data Murid Diperbarui',
