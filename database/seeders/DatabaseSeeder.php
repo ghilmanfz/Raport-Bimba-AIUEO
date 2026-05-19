@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
         $studentData = [
             ['BM001', 'Aisyah Putri',  'aktif', 'andirina', 0, '2024-01-12'],
             ['BM002', 'Bima Satria',    'aktif', 'budisari', 1, '2024-02-05'],
-            ['BM003', 'Citra Kirana',   'pindah','aguslina', 2, '2024-02-20'],
+            ['BM003', 'Citra Kirana',   'keluar','aguslina', 2, '2024-02-20'],
             ['BM004', 'Dedi Kurniawan', 'aktif', 'dewijoko', 3, '2024-03-15'],
             ['BM005', 'Eka Prasetya',   'aktif', 'totoyanti', 4, '2024-04-01'],
             ['BM006', 'Fira Amelia',    'aktif', 'andirina', 0, '2024-01-20'],
