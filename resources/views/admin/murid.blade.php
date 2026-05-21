@@ -115,8 +115,9 @@
   </div>
 </div>
 
-<div id="modal-tambah-murid" class="{{ $errors->any() ? '' : 'hidden' }} fixed inset-0 z-50 bg-black/50 items-center justify-center">
-  <div class="bg-white rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-xl max-h-[92vh] overflow-y-auto">
+<div id="modal-tambah-murid" class="{{ $errors->any() ? '' : 'hidden' }} fixed inset-0 z-50 bg-black/50 overflow-y-auto">
+  <div class="flex min-h-full items-center justify-center p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-xl">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold text-[#171a1f]">Tambah Murid Baru</h3>
       <button onclick="closeMuridModal('modal-tambah-murid')" class="text-[#565d6d] hover:text-[#171a1f]">
@@ -256,10 +257,12 @@
       </div>
     </form>
   </div>
+  </div>
 </div>
 
-<div id="modal-edit-murid" class="hidden fixed inset-0 z-50 bg-black/50 items-center justify-center">
-  <div class="bg-white rounded-2xl p-8 w-full max-w-lg mx-4 shadow-xl">
+<div id="modal-edit-murid" class="hidden fixed inset-0 z-50 bg-black/50 overflow-y-auto">
+  <div class="flex min-h-full items-center justify-center p-4">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold text-[#171a1f]">Edit Data Murid</h3>
       <button onclick="closeMuridModal('modal-edit-murid')" class="text-[#565d6d] hover:text-[#171a1f]">
@@ -335,6 +338,7 @@
       </div>
     </form>
   </div>
+  </div>
 </div>
 
 @if(session('success'))
@@ -355,7 +359,6 @@
 function openMuridModal(id) {
   const modal = document.getElementById(id);
   modal.classList.remove('hidden');
-  modal.classList.add('flex');
   if (id === 'modal-tambah-murid') {
     const pilihRadio = document.querySelector('input[name="wali_option"][value="pilih"]');
     if (pilihRadio) { pilihRadio.checked = true; }
@@ -366,7 +369,6 @@ function openMuridModal(id) {
 function closeMuridModal(id) {
   const modal = document.getElementById(id);
   modal.classList.add('hidden');
-  modal.classList.remove('flex');
 }
 
 function toggleWaliOption(option) {
