@@ -116,7 +116,7 @@
 </div>
 
 <div id="modal-tambah-murid" class="{{ $errors->any() ? '' : 'hidden' }} fixed inset-0 z-50 bg-black/50 items-center justify-center">
-  <div class="bg-white rounded-2xl p-8 w-full max-w-2xl mx-4 shadow-xl max-h-[92vh] overflow-y-auto">
+  <div class="bg-white rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-xl max-h-[92vh] overflow-y-auto">
     <div class="flex justify-between items-center mb-6">
       <h3 class="text-xl font-bold text-[#171a1f]">Tambah Murid Baru</h3>
       <button onclick="closeMuridModal('modal-tambah-murid')" class="text-[#565d6d] hover:text-[#171a1f]">
@@ -187,12 +187,12 @@
       <h4 class="text-sm font-semibold text-[#171a1f]">Data Wali Murid</h4>
 
       <div class="flex gap-3 mb-4">
-        <label class="flex items-center gap-2 px-3 py-2 border border-[#dee1e6] rounded-xl cursor-pointer hover:bg-orange-50 has-checked:bg-orange-50 has-checked:border-orange-400">
-          <input type="radio" name="wali_option" value="pilih" class="w-4 h-4 checked" onchange="toggleWaliOption('pilih')">
-          <span class="text-sm font-medium text-[#565d6d]">Pilih Wali yang Ada</span>
+        <label id="wali-label-pilih" class="flex items-center gap-2 px-3 py-2 border rounded-xl cursor-pointer transition-colors has-[:checked]:bg-orange-50 has-[:checked]:border-orange-400 border-orange-400 bg-orange-50 hover:bg-orange-50">
+          <input type="radio" name="wali_option" value="pilih" class="accent-[#F97316] w-4 h-4" checked onchange="toggleWaliOption('pilih')">
+          <span class="text-sm font-medium text-[#171a1f]">Pilih Wali yang Ada</span>
         </label>
-        <label class="flex items-center gap-2 px-3 py-2 border border-[#dee1e6] rounded-xl cursor-pointer hover:bg-orange-50 has-checked:bg-orange-50 has-checked:border-orange-400">
-          <input type="radio" name="wali_option" value="buat" class="w-4 h-4" onchange="toggleWaliOption('buat')">
+        <label id="wali-label-buat" class="flex items-center gap-2 px-3 py-2 border border-[#dee1e6] rounded-xl cursor-pointer transition-colors has-[:checked]:bg-orange-50 has-[:checked]:border-orange-400 hover:bg-orange-50">
+          <input type="radio" name="wali_option" value="buat" class="accent-[#F97316] w-4 h-4" onchange="toggleWaliOption('buat')">
           <span class="text-sm font-medium text-[#565d6d]">Buat Wali Baru</span>
         </label>
       </div>
@@ -209,38 +209,44 @@
         </div>
       </div>
 
-      <div id="wali-buat-section" class="space-y-4 hidden">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Ayah</label>
-            <input type="text" name="father_name" id="father_name_input" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="Nama Ayah">
+      <div id="wali-buat-section" class="hidden">
+        <div class="bg-orange-50/50 border border-orange-100 rounded-xl p-4 space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Ayah</label>
+              <input type="text" name="father_name" id="father_name_input" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white" placeholder="Nama Ayah">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Ibu</label>
+              <input type="text" name="mother_name" id="mother_name_input" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white" placeholder="Nama Ibu">
+            </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Ibu</label>
-            <input type="text" name="mother_name" id="mother_name_input" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="Nama Ibu">
-          </div>
-        </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-[#565d6d] mb-1">Kontak Ayah (Opsional)</label>
-            <input type="text" name="father_phone" id="father_phone_input" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="08xxxxxxxxxx">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-[#565d6d] mb-1">Kontak Ayah <span class="text-[#9aa0ab] font-normal">(Opsional)</span></label>
+              <input type="text" name="father_phone" id="father_phone_input" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white" placeholder="08xxxxxxxxxx">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-[#565d6d] mb-1">Kontak Ibu <span class="text-[#9aa0ab] font-normal">(Opsional)</span></label>
+              <input type="text" name="mother_phone" id="mother_phone_input" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white" placeholder="08xxxxxxxxxx">
+            </div>
           </div>
+
           <div>
-            <label class="block text-sm font-medium text-[#565d6d] mb-1">Kontak Ibu (Opsional)</label>
-            <input type="text" name="mother_phone" id="mother_phone_input" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="08xxxxxxxxxx">
+            <label class="block text-sm font-medium text-[#565d6d] mb-1">Alamat <span class="text-[#9aa0ab] font-normal">(Opsional)</span></label>
+            <textarea name="address" id="address_input" rows="2" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white resize-none" placeholder="Alamat rumah"></textarea>
           </div>
-        </div>
 
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Alamat</label>
-          <textarea name="address" id="address_input" rows="2" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="Alamat rumah"></textarea>
-        </div>
+          <div>
+            <label class="block text-sm font-medium text-[#565d6d] mb-1">Email Wali <span class="text-[#9aa0ab] font-normal">(Opsional)</span></label>
+            <input type="email" name="parent_email" id="parent_email_input" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none bg-white" placeholder="wali@email.com">
+          </div>
 
-        <div>
-          <label class="block text-sm font-medium text-[#565d6d] mb-1">Email Wali (Opsional)</label>
-          <input type="email" name="parent_email" id="parent_email_input" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="wali@email.com">
-          <p class="mt-1 text-xs text-[#565d6d]">Password default: password123</p>
+          <div class="flex items-center gap-2 rounded-lg bg-white border border-orange-200 px-3 py-2">
+            <iconify-icon icon="lucide:key-round" width="14" class="text-orange-400 shrink-0"></iconify-icon>
+            <p class="text-xs text-[#565d6d]">Password default akun wali: <span class="font-semibold text-[#171a1f]">password123</span></p>
+          </div>
         </div>
       </div>
 
@@ -350,8 +356,11 @@ function openMuridModal(id) {
   const modal = document.getElementById(id);
   modal.classList.remove('hidden');
   modal.classList.add('flex');
-  const pilihRadio = document.querySelector('input[name="wali_option"][value="pilih"]');
-  if (pilihRadio) { pilihRadio.checked = true; toggleWaliOption('pilih'); }
+  if (id === 'modal-tambah-murid') {
+    const pilihRadio = document.querySelector('input[name="wali_option"][value="pilih"]');
+    if (pilihRadio) { pilihRadio.checked = true; }
+    toggleWaliOption('pilih');
+  }
 }
 
 function closeMuridModal(id) {
@@ -362,11 +371,20 @@ function closeMuridModal(id) {
 
 function toggleWaliOption(option) {
   const pilihSection = document.getElementById('wali-pilih-section');
-  const buatSection = document.getElementById('wali-buat-section');
-  
+  const buatSection  = document.getElementById('wali-buat-section');
+  const labelPilih   = document.getElementById('wali-label-pilih');
+  const labelBuat    = document.getElementById('wali-label-buat');
+
+  const activeClasses   = ['bg-orange-50', 'border-orange-400'];
+  const inactiveClasses = ['bg-white', 'border-[#dee1e6]'];
+
   if (option === 'pilih') {
     pilihSection.classList.remove('hidden');
     buatSection.classList.add('hidden');
+    labelPilih.classList.add(...activeClasses);
+    labelPilih.classList.remove(...inactiveClasses);
+    labelBuat.classList.remove(...activeClasses);
+    labelBuat.classList.add(...inactiveClasses);
     // Clear buat fields
     document.getElementById('father_name_input').value = '';
     document.getElementById('mother_name_input').value = '';
@@ -377,6 +395,10 @@ function toggleWaliOption(option) {
   } else {
     pilihSection.classList.add('hidden');
     buatSection.classList.remove('hidden');
+    labelBuat.classList.add(...activeClasses);
+    labelBuat.classList.remove(...inactiveClasses);
+    labelPilih.classList.remove(...activeClasses);
+    labelPilih.classList.add(...inactiveClasses);
     // Clear select
     document.getElementById('parent_id_select').value = '';
   }
