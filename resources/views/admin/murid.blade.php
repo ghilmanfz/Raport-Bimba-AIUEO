@@ -190,21 +190,22 @@
       <div class="flex gap-3 mb-4">
         <label id="wali-label-pilih" class="flex items-center gap-2 px-3 py-2 border rounded-xl cursor-pointer transition-colors has-[:checked]:bg-orange-50 has-[:checked]:border-orange-400 border-orange-400 bg-orange-50 hover:bg-orange-50">
           <input type="radio" name="wali_option" value="pilih" class="accent-[#F97316] w-4 h-4" checked onchange="toggleWaliOption('pilih')">
-          <span class="text-sm font-medium text-[#171a1f]">Pilih Wali yang Ada</span>
+          <span class="text-sm font-medium text-[#171a1f]">Pilih wali yang sudah ada</span>
         </label>
         <label id="wali-label-buat" class="flex items-center gap-2 px-3 py-2 border border-[#dee1e6] rounded-xl cursor-pointer transition-colors has-[:checked]:bg-orange-50 has-[:checked]:border-orange-400 hover:bg-orange-50">
           <input type="radio" name="wali_option" value="buat" class="accent-[#F97316] w-4 h-4" onchange="toggleWaliOption('buat')">
-          <span class="text-sm font-medium text-[#565d6d]">Buat Wali Baru</span>
+          <span class="text-sm font-medium text-[#565d6d]">Buat akun wali baru</span>
         </label>
       </div>
 
       <div id="wali-pilih-section" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Pilih Wali Murid</label>
+          <p class="text-xs text-[#565d6d] mb-2">Cari nama atau email wali</p>
           <select name="parent_id" id="parent_id_select" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
-            <option value="">-- Pilih Wali --</option>
+            <option value="">Tanpa wali dulu</option>
             @foreach($guardians as $guardian)
-              <option value="{{ $guardian->id }}">{{ $guardian->father_name ?: '-' }} & {{ $guardian->mother_name ?: '-' }} | {{ $guardian->address ?: '-' }}</option>
+              <option value="{{ $guardian->id }}">{{ $guardian->name }} ({{ $guardian->students_count }} anak) - {{ $guardian->email }}</option>
             @endforeach
           </select>
         </div>
@@ -246,7 +247,7 @@
 
           <div class="flex items-center gap-2 rounded-lg bg-white border border-orange-200 px-3 py-2">
             <iconify-icon icon="lucide:key-round" width="14" class="text-orange-400 shrink-0"></iconify-icon>
-            <p class="text-xs text-[#565d6d]">Password default akun wali: <span class="font-semibold text-[#171a1f]">password123</span></p>
+            <p class="text-xs text-[#565d6d]">Password default akun wali: <span class="font-semibold text-[#171a1f]">{{ config('app.default_wali_password', 'password123') }}</span></p>
           </div>
         </div>
       </div>
@@ -356,6 +357,8 @@
 @endif
 
 <script>
+const updateMuridUrlTemplate = @json(route('admin.murid.update', ['student' => '__MURID_ID__']));
+
 function openMuridModal(id) {
   const modal = document.getElementById(id);
   modal.classList.remove('hidden');
@@ -407,7 +410,7 @@ function toggleWaliOption(option) {
 }
 
 function openEditMurid(id, name, nis, classroomId, teacherId, joinDate, status, parentId) {
-  document.getElementById('form-edit-murid').action = '/admin/murid/' + id;
+  document.getElementById('form-edit-murid').action = updateMuridUrlTemplate.replace('__MURID_ID__', id);
   document.getElementById('edit-murid-name').value = name;
   document.getElementById('edit-murid-nis').value = nis;
   document.getElementById('edit-murid-classroom').value = classroomId;
@@ -485,7 +488,7 @@ function doDelete() {
     <p class="text-sm text-[#565d6d] mb-6">Anda yakin ingin menghapus <span class="font-semibold text-[#171a1f]" id="del-modal-type"></span> <span class="font-semibold text-[#171a1f]" id="del-modal-name"></span>? Data tidak dapat dipulihkan.</p>
     <div class="flex gap-3">
       <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-      <button type="button" onclick="doDelete()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">Hapus</button>
+      <button type="button" onclick="doDelete()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">OK, Hapus</button>
     </div>
   </div>
 </div>

@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Application Defaults
+    |--------------------------------------------------------------------------
+    |
+    | Runtime defaults used by forms and generated accounts.
+    |
+    */
+
+    'default_wali_password' => env('DEFAULT_WALI_PASSWORD', 'password123'),
+
 ];

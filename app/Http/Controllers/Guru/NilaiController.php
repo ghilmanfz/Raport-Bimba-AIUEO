@@ -22,7 +22,25 @@ class NilaiController extends Controller
 
         $selectedStudentId = $request->input('student_id', $students->first()?->id);
         $selectedSkill     = $request->input('skill', 'baca');
-        $selectedLevel     = $request->input('level', 'Level 1');
+
+        $selectedStudent = $selectedStudentId
+            ? Student::where('teacher_id', $teacher?->id)->with('classroom')->find($selectedStudentId)
+            : null;
+
+        $availableLevels = Material::where('skill_type', $selectedSkill)
+            ->select('level')
+            ->distinct()
+            ->orderBy('level')
+            ->pluck('level')
+            ->values();
+
+        $defaultLevel = $selectedStudent?->classroom?->level
+            ?: ($availableLevels->first() ?? 'Level 1');
+
+        $selectedLevel = $request->input('level', $defaultLevel);
+        if (!$availableLevels->contains($selectedLevel)) {
+            $selectedLevel = $defaultLevel;
+        }
 
         $materials = Material::where('skill_type', $selectedSkill)
             ->where('level', $selectedLevel)
@@ -48,12 +66,8 @@ class NilaiController extends Controller
             }
         }
 
-        $selectedStudent = $selectedStudentId
-            ? Student::where('teacher_id', $teacher?->id)->find($selectedStudentId)
-            : null;
-
         return view('guru.nilai', compact(
-            'students', 'selectedStudent', 'selectedSkill', 'selectedLevel', 'progress'
+            'students', 'selectedStudent', 'selectedSkill', 'selectedLevel', 'availableLevels', 'progress'
         ));
     }
 

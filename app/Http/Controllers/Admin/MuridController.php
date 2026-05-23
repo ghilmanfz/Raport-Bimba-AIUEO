@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class MuridController extends Controller
 {
@@ -39,7 +40,7 @@ class MuridController extends Controller
         $students     = $query->latest()->paginate(10);
         $classrooms   = Classroom::orderBy('name')->get();
         $teachers     = Teacher::with('user')->where('status', 'aktif')->get();
-        $guardians    = User::where('role', 'wali')->orderBy('name')->get();
+        $guardians    = User::where('role', 'wali')->withCount('students')->orderBy('name')->get();
         $nextNis      = Student::generateNextNis();
         $totalMurid   = Student::count();
         $muridAktif   = Student::where('status', 'aktif')->count();
@@ -52,53 +53,76 @@ class MuridController extends Controller
     public function store(Request $request)
     {
         $request->merge([
+            'existing_parent_id' => $request->input('existing_parent_id', $request->input('parent_id')),
+        ]);
+
+        if (!$request->filled('parent_mode')) {
+            $request->merge([
+                'parent_mode' => $request->filled('existing_parent_id')
+                    ? 'existing'
+                    : (($request->filled('parent_name') || $request->filled('parent_email') || $request->filled('father_name') || $request->filled('mother_name')) ? 'new' : 'none'),
+            ]);
+        }
+
+        $request->merge([
             'nis' => $request->filled('nis') ? $request->nis : Student::generateNextNis(),
         ]);
 
-        $request->validate([
+        $validated = $request->validate([
             'name'         => 'required|string|max:255',
             'nis'          => 'required|string|unique:students,nis',
             'classroom_id' => 'required|exists:classrooms,id',
             'teacher_id'   => 'nullable|exists:teachers,id',
             'join_date'    => 'required|date',
             'status'       => 'required|in:aktif,lulus,keluar,cuti',
+            'parent_mode'  => 'required|in:none,existing,new',
+            'existing_parent_id' => [
+                'nullable',
+                'required_if:parent_mode,existing',
+                Rule::exists('users', 'id')->where(fn ($q) => $q->where('role', 'wali')),
+            ],
             'parent_id'    => 'nullable|exists:users,id',
+            'parent_name'  => 'nullable|required_if:parent_mode,new|string|max:255',
+            'parent_password' => 'nullable|required_if:parent_mode,new|string|min:6',
             'father_name'  => 'nullable|string|max:255',
             'mother_name'  => 'nullable|string|max:255',
             'father_phone' => 'nullable|string|max:20',
             'mother_phone' => 'nullable|string|max:20',
             'address'      => 'nullable|string|max:1000',
-            'parent_email' => 'nullable|email',
+            'parent_email' => 'nullable|email|unique:users,email',
         ]);
 
-        if ($request->filled('teacher_id')) {
-            $assignedCount = Student::where('teacher_id', $request->teacher_id)->count();
+        if (!empty($validated['teacher_id'])) {
+            $assignedCount = Student::where('teacher_id', $validated['teacher_id'])->count();
             if ($assignedCount >= 25) {
                 return redirect()->route('admin.murid')->withErrors(['teacher_id' => 'Guru pembimbing sudah mencapai maksimal 25 siswa.'])->withInput();
             }
         }
 
-        if ($request->filled('parent_id') && !User::where('id', $request->parent_id)->where('role', 'wali')->exists()) {
-            return redirect()->route('admin.murid')->withErrors(['parent_id' => 'Data wali murid tidak valid.'])->withInput();
-        }
-
-        // Choose existing wali, otherwise create a new wali from form.
+        // Backward compatible guardian flow:
+        // - none: no guardian
+        // - existing: link selected guardian account
+        // - new: create new guardian account
         $parentId = null;
         $createdParentPassword = null;
-        if ($request->filled('parent_id')) {
-            $parentId = (int) $request->parent_id;
-        } elseif ($request->filled('father_name') || $request->filled('mother_name')) {
-            $defaultParentPassword = 'password123';
+        if ($validated['parent_mode'] === 'existing') {
+            $parentId = (int) $validated['existing_parent_id'];
+        } elseif ($validated['parent_mode'] === 'new') {
+            $defaultParentPassword = $validated['parent_password'] ?? config('app.default_wali_password', 'password123');
             $fallbackEmail = 'wali' . now()->timestamp . rand(100, 999) . '@raportbimba.local';
+            $parentName = $validated['parent_name']
+                ?? trim(($validated['father_name'] ?? '') . ' ' . ($validated['mother_name'] ?? ''))
+                ?: ('Wali ' . $validated['name']);
+
             $parent = User::create([
-                'name'     => trim(($request->father_name ?? '') . ' & ' . ($request->mother_name ?? '')) ?: ('Wali ' . $request->name),
-                'email'    => $request->parent_email ?: $fallbackEmail,
+                'name'     => $parentName,
+                'email'    => $validated['parent_email'] ?: $fallbackEmail,
                 'role'     => 'wali',
-                'father_name' => $request->father_name,
-                'mother_name' => $request->mother_name,
-                'father_phone' => $request->father_phone,
-                'mother_phone' => $request->mother_phone,
-                'address'  => $request->address,
+                'father_name' => $validated['father_name'] ?? null,
+                'mother_name' => $validated['mother_name'] ?? null,
+                'father_phone' => $validated['father_phone'] ?? null,
+                'mother_phone' => $validated['mother_phone'] ?? null,
+                'address'  => $validated['address'] ?? null,
                 'password' => Hash::make($defaultParentPassword),
                 'plain_password' => $defaultParentPassword,
             ]);
@@ -108,18 +132,18 @@ class MuridController extends Controller
         }
 
         $student = Student::create([
-            'name'         => $request->name,
-            'nis'          => $request->nis,
-            'classroom_id' => $request->classroom_id,
-            'teacher_id'   => $request->teacher_id,
+            'name'         => $validated['name'],
+            'nis'          => $validated['nis'],
+            'classroom_id' => $validated['classroom_id'],
+            'teacher_id'   => $validated['teacher_id'] ?? null,
             'parent_id'    => $parentId,
-            'join_date'    => $request->join_date,
-            'status'       => $request->status,
+            'join_date'    => $validated['join_date'],
+            'status'       => $validated['status'],
         ]);
 
         Notification::notifyAdmins(
             'Murid Baru Ditambahkan',
-            'Data murid ' . $request->name . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
+            'Data murid ' . $validated['name'] . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.murid')
@@ -157,7 +181,6 @@ class MuridController extends Controller
 
         $student->update([
             'name'         => $request->name,
-            'nis'          => $request->nis,
             'classroom_id' => $request->classroom_id,
             'teacher_id'   => $request->teacher_id ?: null,
             'join_date'    => $request->join_date,

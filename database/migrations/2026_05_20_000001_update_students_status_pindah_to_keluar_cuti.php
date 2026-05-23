@@ -1,28 +1,64 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        // Step 1: Expand ENUM to include both old ('pindah') and new ('keluar', 'cuti') values
-        DB::statement("ALTER TABLE students MODIFY COLUMN status ENUM('aktif', 'lulus', 'pindah', 'keluar', 'cuti') NOT NULL DEFAULT 'aktif'");
+        // Keep current values before recreating enum column (works for MySQL & SQLite).
+        Schema::table('students', function (Blueprint $table) {
+            $table->string('status_tmp')->nullable()->after('status');
+        });
 
-        // Step 2: Migrate existing 'pindah' rows to 'keluar'
-        DB::table('students')->where('status', 'pindah')->update(['status' => 'keluar']);
+        DB::table('students')->update(['status_tmp' => DB::raw('status')]);
 
-        // Step 3: Remove 'pindah' from the ENUM now that no rows use it
-        DB::statement("ALTER TABLE students MODIFY COLUMN status ENUM('aktif', 'lulus', 'keluar', 'cuti') NOT NULL DEFAULT 'aktif'");
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->enum('status', ['aktif', 'lulus', 'keluar', 'cuti'])->default('aktif')->after('classroom_id');
+        });
+
+        DB::table('students')->where('status_tmp', 'aktif')->update(['status' => 'aktif']);
+        DB::table('students')->where('status_tmp', 'lulus')->update(['status' => 'lulus']);
+        DB::table('students')->where('status_tmp', 'keluar')->update(['status' => 'keluar']);
+        DB::table('students')->where('status_tmp', 'cuti')->update(['status' => 'cuti']);
+        DB::table('students')->where('status_tmp', 'pindah')->update(['status' => 'keluar']);
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('status_tmp');
+        });
     }
 
     public function down(): void
     {
-        // Revert 'keluar' back to 'pindah' (cuti has no old equivalent, will be set to 'pindah')
-        DB::table('students')->where('status', 'keluar')->update(['status' => 'pindah']);
-        DB::table('students')->where('status', 'cuti')->update(['status' => 'pindah']);
+        Schema::table('students', function (Blueprint $table) {
+            $table->string('status_tmp')->nullable()->after('status');
+        });
 
-        DB::statement("ALTER TABLE students MODIFY COLUMN status ENUM('aktif', 'lulus', 'pindah') NOT NULL DEFAULT 'aktif'");
+        DB::table('students')->update(['status_tmp' => DB::raw('status')]);
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->enum('status', ['aktif', 'lulus', 'pindah'])->default('aktif')->after('classroom_id');
+        });
+
+        DB::table('students')->where('status_tmp', 'aktif')->update(['status' => 'aktif']);
+        DB::table('students')->where('status_tmp', 'lulus')->update(['status' => 'lulus']);
+        DB::table('students')->where('status_tmp', 'pindah')->update(['status' => 'pindah']);
+        DB::table('students')->where('status_tmp', 'keluar')->update(['status' => 'pindah']);
+        DB::table('students')->where('status_tmp', 'cuti')->update(['status' => 'pindah']);
+
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropColumn('status_tmp');
+        });
     }
 };

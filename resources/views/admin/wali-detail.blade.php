@@ -261,7 +261,7 @@ function confirmDelete(form) {
     
     <div class="flex gap-3">
       <button type="button" onclick="closeDeleteConfirm()" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-      <button type="button" id="delete-confirm-btn" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">Hapus</button>
+      <button type="button" id="delete-confirm-btn" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">OK, Hapus</button>
     </div>
   </div>
 </div>

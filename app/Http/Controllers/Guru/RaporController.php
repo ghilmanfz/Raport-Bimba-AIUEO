@@ -15,15 +15,16 @@ class RaporController extends Controller
     public function index(Request $request)
     {
         $teacher = Auth::user()->teacher;
+        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
 
-        $students = Student::where('teacher_id', $teacher?->id)
+        $students = Student::whereIn('classroom_id', $classroomIds)
             ->where('status', 'aktif')
             ->orderBy('name')
             ->get();
 
         $selectedStudentId = $request->input('student_id', $students->first()?->id);
         $student = $selectedStudentId
-            ? Student::where('teacher_id', $teacher?->id)->with(['classroom', 'parent', 'progress.material'])->find($selectedStudentId)
+            ? Student::whereIn('classroom_id', $classroomIds)->with(['classroom', 'parent', 'progress.material'])->find($selectedStudentId)
             : null;
 
         $reportData = null;
@@ -76,7 +77,8 @@ class RaporController extends Controller
         ]);
 
         $teacher = Auth::user()->teacher;
-        $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
+        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
+        $student = Student::whereIn('classroom_id', $classroomIds)->find($request->student_id);
         if (!$student) {
             return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
         }

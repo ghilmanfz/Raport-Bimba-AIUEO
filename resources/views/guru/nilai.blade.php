@@ -39,7 +39,7 @@
 <!-- Level Tabs -->
 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
   <div class="bg-[#f3f4f6] p-1 rounded-full flex w-fit">
-    @foreach(['Level 1','Level 2','Level 3','Level 4'] as $lvl)
+    @foreach(($availableLevels ?? collect(['Level 1','Level 2','Level 3','Level 4'])) as $lvl)
     <button type="button" onclick="document.querySelector('#form-filter input[name=level]').value='{{ $lvl }}'; document.getElementById('form-filter').submit();"
       class="px-6 py-1.5 rounded-full text-sm font-medium {{ $selectedLevel === $lvl ? 'bg-[#F97316] text-white shadow-sm' : 'text-[#565d6d] hover:text-[#171a1f]' }}">{{ $lvl }}</button>
     @endforeach

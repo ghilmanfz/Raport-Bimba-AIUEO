@@ -237,6 +237,19 @@
           </select>
         </div>
       </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-2">Kelas/Level yang Diampu</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-44 overflow-y-auto border border-[#dee1e6] rounded-xl p-3 bg-[#fafafb]">
+          @forelse($classrooms as $classroom)
+            <label class="flex items-center gap-2 text-sm text-[#171a1f]">
+              <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="accent-[#F97316] rounded">
+              <span>{{ $classroom->name }} ({{ $classroom->level }})</span>
+            </label>
+          @empty
+            <p class="text-sm text-[#565d6d]">Belum ada data kelas.</p>
+          @endforelse
+        </div>
+      </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-tambah-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
         <button type="submit" class="flex-1 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium hover:bg-orange-600">Simpan</button>
@@ -279,6 +292,19 @@
           <option value="nonaktif">Nonaktif</option>
         </select>
       </div>
+      <div>
+        <label class="block text-sm font-medium text-[#565d6d] mb-2">Kelas/Level yang Diampu</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-44 overflow-y-auto border border-[#dee1e6] rounded-xl p-3 bg-[#fafafb]">
+          @forelse($classrooms as $classroom)
+            <label class="flex items-center gap-2 text-sm text-[#171a1f]">
+              <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="edit-classroom-checkbox accent-[#F97316] rounded">
+              <span>{{ $classroom->name }} ({{ $classroom->level }})</span>
+            </label>
+          @empty
+            <p class="text-sm text-[#565d6d]">Belum ada data kelas.</p>
+          @endforelse
+        </div>
+      </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-edit-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
         <button type="submit" class="flex-1 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium hover:bg-orange-600">Perbarui</button>
@@ -295,7 +321,7 @@ function openEditGuru(id, name, email, nip, status, classroomIds) {
   document.getElementById('edit-nip').value = nip;
   document.getElementById('edit-status').value = status;
   // Update classroom checkboxes if they exist
-  const checkboxes = document.querySelectorAll('#modal-edit-guru input[name="classrooms[]"]');
+  const checkboxes = document.querySelectorAll('#modal-edit-guru input[name="classroom_ids[]"]');
   checkboxes.forEach(cb => { cb.checked = classroomIds && classroomIds.includes(parseInt(cb.value)); });
   document.getElementById('modal-edit-guru').classList.remove('hidden');
 }
@@ -350,7 +376,7 @@ function doDelete() {
     <p class="text-sm text-[#565d6d] mb-6">Anda yakin ingin menghapus <span class="font-semibold text-[#171a1f]" id="del-modal-type"></span> <span class="font-semibold text-[#171a1f]" id="del-modal-name"></span>? Data tidak dapat dipulihkan.</p>
     <div class="flex gap-3">
       <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
-      <button type="button" onclick="doDelete()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">Hapus</button>
+      <button type="button" onclick="doDelete()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700">OK, Hapus</button>
     </div>
   </div>
 </div>
