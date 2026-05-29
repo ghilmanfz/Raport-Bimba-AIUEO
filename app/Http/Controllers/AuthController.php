@@ -55,6 +55,15 @@ class AuthController extends Controller
                 'lucide:log-in'
             );
 
+            if ($user->role === 'wali' && (bool) $user->show_password_change_alert) {
+                $user->forceFill(['show_password_change_alert' => false])->save();
+
+                return redirect()->route('wali.dashboard')->with(
+                    'wali_password_notice',
+                    'Demi keamanan akun, silakan segera ubah password bawaan Anda melalui menu Profil > Ganti Password.'
+                );
+            }
+
             return $this->redirectByRole(Auth::user());
         }
 

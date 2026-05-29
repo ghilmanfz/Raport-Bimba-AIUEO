@@ -57,10 +57,20 @@ class MuridController extends Controller
         ]);
 
         if (!$request->filled('parent_mode')) {
-            $request->merge([
-                'parent_mode' => $request->filled('existing_parent_id')
+            $waliOption = $request->input('wali_option');
+
+            if ($waliOption === 'pilih') {
+                $resolvedParentMode = $request->filled('existing_parent_id') ? 'existing' : 'none';
+            } elseif ($waliOption === 'buat') {
+                $resolvedParentMode = 'new';
+            } else {
+                $resolvedParentMode = $request->filled('existing_parent_id')
                     ? 'existing'
-                    : (($request->filled('parent_name') || $request->filled('parent_email') || $request->filled('father_name') || $request->filled('mother_name')) ? 'new' : 'none'),
+                    : (($request->filled('parent_name') || $request->filled('parent_email') || $request->filled('father_name') || $request->filled('mother_name')) ? 'new' : 'none');
+            }
+
+            $request->merge([
+                'parent_mode' => $resolvedParentMode,
             ]);
         }
 
@@ -82,14 +92,32 @@ class MuridController extends Controller
                 Rule::exists('users', 'id')->where(fn ($q) => $q->where('role', 'wali')),
             ],
             'parent_id'    => 'nullable|exists:users,id',
-            'parent_name'  => 'nullable|required_if:parent_mode,new|string|max:255',
-            'parent_password' => 'nullable|required_if:parent_mode,new|string|min:6',
+            'parent_name'  => 'nullable|string|max:255',
+            'parent_password' => 'nullable|string|min:6',
             'father_name'  => 'nullable|string|max:255',
             'mother_name'  => 'nullable|string|max:255',
             'father_phone' => 'nullable|string|max:20',
             'mother_phone' => 'nullable|string|max:20',
             'address'      => 'nullable|string|max:1000',
             'parent_email' => 'nullable|email|unique:users,email',
+        ], [
+            'name.required' => 'Nama murid wajib diisi.',
+            'nis.required' => 'NIS wajib diisi.',
+            'nis.unique' => 'NIS sudah digunakan.',
+            'classroom_id.required' => 'Tahapan wajib dipilih.',
+            'classroom_id.exists' => 'Tahapan yang dipilih tidak valid.',
+            'teacher_id.exists' => 'Guru pembimbing yang dipilih tidak valid.',
+            'join_date.required' => 'Tanggal bergabung wajib diisi.',
+            'join_date.date' => 'Format tanggal bergabung tidak valid.',
+            'status.required' => 'Status murid wajib dipilih.',
+            'status.in' => 'Status murid yang dipilih tidak valid.',
+            'parent_mode.required' => 'Pilihan data wali wajib dipilih.',
+            'parent_mode.in' => 'Pilihan data wali tidak valid.',
+            'existing_parent_id.required_if' => 'Wali murid wajib dipilih.',
+            'existing_parent_id.exists' => 'Wali murid yang dipilih tidak valid.',
+            'parent_email.email' => 'Format email wali tidak valid.',
+            'parent_email.unique' => 'Email wali sudah digunakan.',
+            'parent_password.min' => 'Password wali minimal 6 karakter.',
         ]);
 
         if (!empty($validated['teacher_id'])) {
@@ -125,6 +153,7 @@ class MuridController extends Controller
                 'address'  => $validated['address'] ?? null,
                 'password' => Hash::make($defaultParentPassword),
                 'plain_password' => $defaultParentPassword,
+                'show_password_change_alert' => true,
             ]);
 
             $parentId = $parent->id;

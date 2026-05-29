@@ -19,6 +19,18 @@
   };
 @endphp
 
+@if(session('wali_password_notice'))
+<div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+  <div class="flex items-start gap-3">
+    <iconify-icon icon="lucide:shield-alert" width="18" class="text-amber-600 mt-0.5"></iconify-icon>
+    <div>
+      <p class="text-sm font-semibold text-amber-900">Penting: Ubah Password Anda</p>
+      <p class="text-sm text-amber-800 mt-0.5">{{ session('wali_password_notice') }}</p>
+    </div>
+  </div>
+</div>
+@endif
+
 <!-- Hero Section -->
 <section class="hero-gradient rounded-3xl p-6 lg:p-8 custom-shadow border border-[#F973161a] flex flex-col lg:flex-row items-center lg:justify-between gap-6 mb-8">
   <div class="flex flex-col lg:flex-row items-center gap-6">

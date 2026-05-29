@@ -25,6 +25,7 @@ class User extends Authenticatable
         'address',
         'password',
         'plain_password',
+        'show_password_change_alert',
     ];
 
     protected $hidden = ['password', 'remember_token'];
