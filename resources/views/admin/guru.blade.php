@@ -1,4 +1,4 @@
-﻿@extends('layouts.admin')
+@extends('layouts.admin')
 
 @section('title', 'Manajemen Data Guru - E-Rapor BiMBA')
 @section('page-title', 'Manajemen Data Guru')
@@ -91,7 +91,6 @@
           <th class="px-6 py-4">NIP</th>
           <th class="px-6 py-4">Nama Guru</th>
           <th class="px-6 py-4">Email</th>
-          <th class="px-6 py-4">Kelas</th>
           <th class="px-6 py-4">Murid Dibimbing</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Aksi</th>
@@ -108,13 +107,6 @@
             </div>
           </td>
           <td class="px-6 py-4 text-sm text-[#565d6d] font-roboto">{{ $teacher->user->email }}</td>
-          <td class="px-6 py-4 text-sm text-[#565d6d]">
-            @if($teacher->classrooms->count())
-              {{ $teacher->classrooms->pluck('name')->join(', ') }}
-            @else
-              <span class="text-[#9095a0]">-</span>
-            @endif
-          </td>
           <td class="px-6 py-4">
             <div class="space-y-1">
               <div class="inline-flex items-center gap-2">
@@ -134,7 +126,7 @@
               <a href="{{ route('admin.guru.show', $teacher) }}" class="p-2 text-[#7c3aed] hover:bg-purple-50 rounded-lg" title="Lihat Detail">
                 <iconify-icon icon="lucide:eye" width="14"></iconify-icon>
               </a>
-              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}', {{ json_encode($teacher->classrooms->pluck('id')) }})" class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg" title="Edit">
+              <button onclick="openEditGuru({{ $teacher->id }}, '{{ addslashes($teacher->user->name) }}', '{{ $teacher->user->email }}', '{{ $teacher->nip }}', '{{ $teacher->status }}')" class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
               <form method="POST" action="{{ route('admin.guru.destroy', $teacher) }}" id="form-del-guru-{{ $teacher->id }}" class="inline">
@@ -148,7 +140,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="5" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
+          <td colspan="6" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data guru.</td>
         </tr>
         @endforelse
       </tbody>
@@ -237,18 +229,8 @@
           </select>
         </div>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-[#565d6d] mb-2">Kelas/Level yang Diampu</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-44 overflow-y-auto border border-[#dee1e6] rounded-xl p-3 bg-[#fafafb]">
-          @forelse($classrooms as $classroom)
-            <label class="flex items-center gap-2 text-sm text-[#171a1f]">
-              <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="accent-[#F97316] rounded">
-              <span>{{ $classroom->name }} ({{ $classroom->level }})</span>
-            </label>
-          @empty
-            <p class="text-sm text-[#565d6d]">Belum ada data kelas.</p>
-          @endforelse
-        </div>
+      <div class="rounded-xl border border-[#dee1e6] bg-[#fafafb] p-4 text-sm text-[#565d6d]">
+        Guru tidak perlu dipilihkan kelas di menu ini. Murid yang dibimbing ditentukan dari menu <strong>Admin → Murid</strong> melalui pilihan <strong>Guru Pembimbing</strong>.
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-tambah-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
@@ -292,18 +274,8 @@
           <option value="nonaktif">Nonaktif</option>
         </select>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-[#565d6d] mb-2">Kelas/Level yang Diampu</label>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-44 overflow-y-auto border border-[#dee1e6] rounded-xl p-3 bg-[#fafafb]">
-          @forelse($classrooms as $classroom)
-            <label class="flex items-center gap-2 text-sm text-[#171a1f]">
-              <input type="checkbox" name="classroom_ids[]" value="{{ $classroom->id }}" class="edit-classroom-checkbox accent-[#F97316] rounded">
-              <span>{{ $classroom->name }} ({{ $classroom->level }})</span>
-            </label>
-          @empty
-            <p class="text-sm text-[#565d6d]">Belum ada data kelas.</p>
-          @endforelse
-        </div>
+      <div class="rounded-xl border border-[#dee1e6] bg-[#fafafb] p-4 text-sm text-[#565d6d]">
+        Guru tidak terikat langsung ke kelas. Data murid dibimbing tetap diatur dari menu <strong>Admin → Murid</strong>.
       </div>
       <div class="flex gap-3 pt-2">
         <button type="button" onclick="document.getElementById('modal-edit-guru').classList.add('hidden')" class="flex-1 py-2.5 border border-[#dee1e6] rounded-xl text-sm font-medium text-[#565d6d] hover:bg-gray-50">Batal</button>
@@ -314,15 +286,12 @@
 </div>
 
 <script>
-function openEditGuru(id, name, email, nip, status, classroomIds) {
+function openEditGuru(id, name, email, nip, status) {
   document.getElementById('form-edit-guru').action = '/admin/guru/' + id;
   document.getElementById('edit-name').value = name;
   document.getElementById('edit-email').value = email;
   document.getElementById('edit-nip').value = nip;
   document.getElementById('edit-status').value = status;
-  // Update classroom checkboxes if they exist
-  const checkboxes = document.querySelectorAll('#modal-edit-guru input[name="classroom_ids[]"]');
-  checkboxes.forEach(cb => { cb.checked = classroomIds && classroomIds.includes(parseInt(cb.value)); });
   document.getElementById('modal-edit-guru').classList.remove('hidden');
 }
 </script>

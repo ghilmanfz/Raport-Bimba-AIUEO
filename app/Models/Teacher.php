@@ -51,6 +51,8 @@ class Teacher extends Model
 
     public function classroomStudents()
     {
-        return Student::whereIn('classroom_id', $this->classrooms()->pluck('classrooms.id'));
+        // Guru tidak lagi terikat langsung ke kelas dari menu Guru.
+        // Murid dibimbing tetap ditentukan oleh kolom students.teacher_id.
+        return $this->students();
     }
 }

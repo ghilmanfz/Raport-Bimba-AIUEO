@@ -43,26 +43,17 @@
       </div>
     </div>
 
-    <!-- Classroom Assignment -->
+    <!-- Guidance Info -->
     <div class="bg-white rounded-2xl border border-[#dee1e6] p-6 main-shadow">
-      <h2 class="text-lg font-semibold text-[#171a1f] mb-4">Kelas yang Diampu</h2>
-      @if($teacher->classrooms->count() > 0)
-        <div class="space-y-2">
-          @foreach($teacher->classrooms as $classroom)
-            <div class="flex items-center justify-between px-4 py-3 border border-[#dee1e6] rounded-lg">
-              <span class="font-medium text-[#171a1f]">{{ $classroom->name }}</span>
-              <span class="text-sm text-[#565d6d]">{{ $teacher->students()->where('classroom_id', $classroom->id)->count() }} murid</span>
-            </div>
-          @endforeach
-        </div>
-      @else
-        <p class="text-sm text-[#565d6d]">Tidak ada kelas yang diampu.</p>
-      @endif
+      <h2 class="text-lg font-semibold text-[#171a1f] mb-4">Murid Dibimbing</h2>
+      <p class="text-sm text-[#565d6d]">
+        Guru tidak terikat langsung ke kelas. Murid dibimbing ditentukan dari menu <strong>Admin → Murid</strong> melalui pilihan <strong>Guru Pembimbing</strong>.
+      </p>
     </div>
 
     <!-- Students -->
     <div class="bg-white rounded-2xl border border-[#dee1e6] p-6 main-shadow">
-      <h2 class="text-lg font-semibold text-[#171a1f] mb-4">Murid Binaan ({{ $teacher->students->count() }})</h2>
+      <h2 class="text-lg font-semibold text-[#171a1f] mb-4">Murid Dibimbing ({{ $teacher->students->count() }})</h2>
       @if($teacher->students->count() > 0)
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
@@ -95,7 +86,7 @@
           </table>
         </div>
       @else
-        <p class="text-sm text-[#565d6d]">Tidak ada murid yang dibimbing.</p>
+        <p class="text-sm text-[#565d6d]">Belum ada murid yang dibimbing oleh guru ini.</p>
       @endif
     </div>
   </div>

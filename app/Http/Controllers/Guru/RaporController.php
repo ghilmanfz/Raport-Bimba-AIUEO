@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\RaporDownloadController;
 use App\Models\Setting;
 use App\Models\Student;
-use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,16 +14,22 @@ class RaporController extends Controller
     public function index(Request $request)
     {
         $teacher = Auth::user()->teacher;
-        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
 
-        $students = Student::whereIn('classroom_id', $classroomIds)
+        if (!$teacher) {
+            return redirect()->route('guru.dashboard')->with('error', 'Guru tidak ditemukan.');
+        }
+
+        $students = Student::where('teacher_id', $teacher->id)
             ->where('status', 'aktif')
+            ->with('classroom')
             ->orderBy('name')
             ->get();
 
         $selectedStudentId = $request->input('student_id', $students->first()?->id);
         $student = $selectedStudentId
-            ? Student::whereIn('classroom_id', $classroomIds)->with(['classroom', 'parent', 'progress.material'])->find($selectedStudentId)
+            ? Student::where('teacher_id', $teacher->id)
+                ->with(['classroom', 'parent', 'progress.material'])
+                ->find($selectedStudentId)
             : null;
 
         $reportData = null;
@@ -77,8 +82,7 @@ class RaporController extends Controller
         ]);
 
         $teacher = Auth::user()->teacher;
-        $classroomIds = $teacher ? $teacher->classrooms()->pluck('classrooms.id') : collect();
-        $student = Student::whereIn('classroom_id', $classroomIds)->find($request->student_id);
+        $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
         if (!$student) {
             return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
         }

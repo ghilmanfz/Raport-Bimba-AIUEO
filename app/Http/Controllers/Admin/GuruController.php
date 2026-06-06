@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use App\Models\Teacher;
 use App\Models\User;
-use App\Models\Classroom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,13 +13,15 @@ class GuruController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Teacher::with(['user', 'classrooms', 'students']);
+        $query = Teacher::with(['user', 'students.classroom']);
 
         if ($search = $request->input('search')) {
-            $query->whereHas('user', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            })->orWhere('nip', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', "%{$search}%")
+                              ->orWhere('email', 'like', "%{$search}%");
+                })->orWhere('nip', 'like', "%{$search}%");
+            });
         }
 
         if ($statusFilter = $request->input('status')) {
@@ -28,13 +29,12 @@ class GuruController extends Controller
         }
 
         $teachers     = $query->latest()->paginate(10);
-        $classrooms   = Classroom::orderBy('name')->get();
         $totalGuru    = Teacher::count();
         $guruAktif    = Teacher::where('status', 'aktif')->count();
         $guruNonaktif = Teacher::where('status', 'nonaktif')->count();
         $guruCuti     = Teacher::where('status', 'cuti')->count();
 
-        return view('admin.guru', compact('teachers', 'classrooms', 'totalGuru', 'guruAktif', 'guruNonaktif', 'guruCuti'));
+        return view('admin.guru', compact('teachers', 'totalGuru', 'guruAktif', 'guruNonaktif', 'guruCuti'));
     }
 
     public function store(Request $request)
@@ -43,12 +43,11 @@ class GuruController extends Controller
             'name'           => 'required|string|max:255',
             'email'          => 'required|email|unique:users,email',
             'password'       => 'nullable|string|min:6',
+            'specialization' => 'nullable|string|max:100',
             'status'         => 'required|in:aktif,cuti,nonaktif',
-            'classroom_ids'  => 'nullable|array',
-            'classroom_ids.*' => 'exists:classrooms,id',
         ]);
 
-        $plainPw = $request->input('password', 'password123');
+        $plainPw = $request->filled('password') ? $request->input('password') : 'password123';
 
         $user = User::create([
             'name'           => $request->name,
@@ -65,9 +64,8 @@ class GuruController extends Controller
             'status'         => $request->status,
         ]);
 
-        if ($request->filled('classroom_ids')) {
-            $teacher->classrooms()->sync($request->classroom_ids);
-        }
+        // Guru tidak lagi dipilihkan kelas dari menu Guru.
+        // Murid yang dibimbing tetap ditentukan dari menu Admin -> Murid melalui kolom students.teacher_id.
 
         Notification::notifyAdmins(
             'Guru Baru Ditambahkan',
@@ -87,16 +85,12 @@ class GuruController extends Controller
             'email'          => 'required|email|unique:users,email,' . $teacher->user_id,
             'specialization' => 'nullable|string|max:100',
             'status'         => 'required|in:aktif,cuti,nonaktif',
-            'classroom_ids'  => 'nullable|array',
-            'classroom_ids.*' => 'exists:classrooms,id',
         ]);
 
         $teacher->user->update($request->only('name', 'email'));
         $teacher->update($request->only('specialization', 'status'));
 
-        if ($request->has('classroom_ids')) {
-            $teacher->classrooms()->sync($request->classroom_ids);
-        }
+        // Tidak ada sync kelas. Guru tidak terikat langsung ke kelas dari menu Guru.
 
         Notification::notifyAdmins(
             'Data Guru Diperbarui',
@@ -127,20 +121,20 @@ class GuruController extends Controller
 
     public function show(Teacher $teacher)
     {
-        $teacher->load(['user', 'classrooms', 'students']);
-        
+        $teacher->load(['user', 'students.classroom']);
+
         return view('admin.guru-detail', compact('teacher'));
     }
 
     public function export()
     {
-        $teachers = Teacher::with(['user', 'classrooms'])->get();
+        $teachers = Teacher::with(['user', 'students'])->get();
 
         $callback = function () use ($teachers) {
             $file = fopen('php://output', 'w');
             // UTF-8 BOM for Excel compatibility
-            fwrite($file, "\xEF\xBB\xBF");
-            fputcsv($file, ['NIP', 'Nama', 'Email', 'Password', 'Status', 'Jumlah Kelas', 'Nama Kelas'], ';');
+            fwrite($file, "ï»¿");
+            fputcsv($file, ['NIP', 'Nama', 'Email', 'Password', 'Status', 'Murid Dibimbing'], ';');
 
             foreach ($teachers as $teacher) {
                 fputcsv($file, [
@@ -149,8 +143,7 @@ class GuruController extends Controller
                     $teacher->user->email,
                     $teacher->user->plain_password ?? '-',
                     ucfirst($teacher->status),
-                    $teacher->classrooms->count(),
-                    $teacher->classrooms->pluck('name')->join(', '),
+                    $teacher->students->count(),
                 ], ';');
             }
 
@@ -187,10 +180,11 @@ class GuruController extends Controller
             if (User::where('email', $email)->exists()) continue;
 
             $user = User::create([
-                'name'     => $name,
-                'email'    => $email,
-                'role'     => 'guru',
-                'password' => Hash::make('password123'),
+                'name'           => $name,
+                'email'          => $email,
+                'role'           => 'guru',
+                'password'       => Hash::make('password123'),
+                'plain_password' => 'password123',
             ]);
 
             Teacher::create([
