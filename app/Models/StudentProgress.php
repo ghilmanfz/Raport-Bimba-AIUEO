@@ -13,13 +13,37 @@ class StudentProgress extends Model
         'start_date', 'understand_date', 'skilled_date', 'status',
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'start_date' => 'date',
+        'understand_date' => 'date',
+        'skilled_date' => 'date',
+    ];
+
+    public function getDisplayStatusAttribute(): string
     {
-        return [
-            'start_date' => 'date',
-            'understand_date' => 'date',
-            'skilled_date' => 'date',
-        ];
+        if ($this->skilled_date) {
+            return 'T';
+        }
+
+        if ($this->understand_date) {
+            return 'P';
+        }
+
+        if ($this->start_date) {
+            return 'K';
+        }
+
+        return '';
+    }
+
+    public function getDisplayStatusLabelAttribute(): string
+    {
+        return match ($this->display_status) {
+            'T' => 'T - Terampil',
+            'P' => 'P - Paham',
+            'K' => 'K - Kenal',
+            default => '',
+        };
     }
 
     public function student()
@@ -42,9 +66,18 @@ class StudentProgress extends Model
      */
     public function calculateStatus(): string
     {
-        if ($this->skilled_date) return 'T';
-        if ($this->understand_date) return 'P';
-        if ($this->start_date) return 'B';
-        return 'K';
+        if ($this->skilled_date) {
+            return 'T';
+        }
+
+        if ($this->understand_date) {
+            return 'P';
+        }
+
+        if ($this->start_date) {
+            return 'K';
+        }
+
+        return '';
     }
 }

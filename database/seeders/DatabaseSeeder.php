@@ -126,6 +126,7 @@ class DatabaseSeeder extends Seeder
             ['BM023', 'Wahyu Satrio',    'aktif', 'aguslina', 1, '2024-03-05'],
             ['BM024', 'Xiomara Valentina','aktif', 'dewijoko', 3, '2024-04-10'],
             ['BM025', 'Yasmin Fathia',   'aktif', 'totoyanti', 2, '2024-05-05'],
+            ['BM026', 'Asep',           'aktif', 'andirina', 0, '2024-01-05'],
         ];
 
         $students = [];
@@ -256,6 +257,10 @@ class DatabaseSeeder extends Seeder
 
         foreach ($students as $student) {
             foreach ($level1Materials as $material) {
+                if ($student->name === 'Asep') {
+                    continue; // Asep gets custom period progress below
+                }
+
                 // Random progress for each material
                 $statusIdx = rand(0, 3);
                 $startDate = $student->join_date->copy()->addDays(rand(0, 30));
@@ -270,6 +275,36 @@ class DatabaseSeeder extends Seeder
                     'understand_date' => $understandDate,
                     'skilled_date'    => $skilledDate,
                     'status'          => $statuses[$statusIdx],
+                ]);
+            }
+        }
+
+        // Custom dummy raport progress untuk Asep dengan beberapa periode nilai
+        $asep = collect($students)->first(fn ($student) => $student->name === 'Asep');
+        if ($asep) {
+            $asepProgress = [
+                ['HV AIUEO',       'baca', '2024-01-10', '2024-02-15', '2024-03-05', 'T'],
+                ['4 HVK',          'baca', '2024-02-20', '2024-03-25', null,         'P'],
+                ['TULIS 1A',       'tulis', '2024-04-01', '2024-05-01', '2024-05-25', 'T'],
+                ['MTK 1A',         'hitung','2024-06-10', '2024-07-20', null,         'P'],
+                ['BACA 12',        'baca',  '2024-08-15', '2024-08-30', '2024-09-10', 'T'],
+                ['TULIS 3',        'tulis', '2024-09-20', null,         null,         'B'],
+            ];
+
+            foreach ($asepProgress as $progressData) {
+                $material = collect($materials)->first(fn ($m) => $m->name === $progressData[0]);
+                if (! $material) {
+                    continue;
+                }
+
+                StudentProgress::create([
+                    'student_id'      => $asep->id,
+                    'material_id'     => $material->id,
+                    'teacher_id'      => $teachers[array_rand($teachers)]->id,
+                    'start_date'      => $progressData[2],
+                    'understand_date' => $progressData[3],
+                    'skilled_date'    => $progressData[4],
+                    'status'          => $progressData[5],
                 ]);
             }
         }

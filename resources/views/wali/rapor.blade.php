@@ -81,7 +81,12 @@
   $focus = array_keys($skills, min($skills))[0];
 
   $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
-  $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => 'Kenal' };
+  $statusLabel = fn($s) => match($s) {
+      'T' => 'Terampil',
+      'P' => 'Paham',
+      'K', 'B' => 'Kenal',
+      default => '',
+  };
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
@@ -173,8 +178,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $statusCode($prog->display_status) }}">{{ $statusCode($prog->display_status) }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach
@@ -192,8 +197,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $statusCode($prog->display_status) }}">{{ $statusCode($prog->display_status) }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach
@@ -211,8 +216,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $statusCode($prog->status) }}">{{ $statusCode($prog->status) }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $statusCode($prog->display_status) }}">{{ $statusCode($prog->display_status) }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach

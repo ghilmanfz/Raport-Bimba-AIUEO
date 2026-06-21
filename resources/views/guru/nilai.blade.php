@@ -108,20 +108,25 @@
           <td class="px-6 py-4">
             <input type="date" name="progress[{{ $i }}][skilled_date]" value="{{ $p['skilled_date'] }}" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#F97316] outline-none">
           </td>
-          <td class="px-6 py-4 text-center">
+          <td class="px-6 py-4 text-center live-status">
             @php
-              $badge = match($p['status']) {
+              $status = $p['status'] ?? '';
+              $badge = match($status) {
                 'T' => 'bg-[#DCFCE7] border border-[#86EFAC] text-[#16A34A]',
                 'P' => 'bg-[#DBEAFE] border border-[#93C5FD] text-[#2563EB]',
-                default => 'bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B]',
+                'K' => 'bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B]',
+                default => '',
               };
-              $label = match($p['status']) {
+              $label = match($status) {
                 'T' => 'T - Terampil',
                 'P' => 'P - Paham',
-                default => 'K - Kenal',
+                'K' => 'K - Kenal',
+                default => '',
               };
             @endphp
+            @if($label)
             <span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase {{ $badge }}">{{ $label }}</span>
+            @endif
           </td>
         </tr>
         @empty
@@ -138,6 +143,54 @@
   </div>
 </div>
 </form>
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('tbody tr');
+
+    function getStatus(start, understand, skilled) {
+      if (skilled) return { status: 'T', label: 'T - Terampil', badge: 'bg-[#DCFCE7] border border-[#86EFAC] text-[#16A34A]' };
+      if (understand) return { status: 'P', label: 'P - Paham', badge: 'bg-[#DBEAFE] border border-[#93C5FD] text-[#2563EB]' };
+      if (start) return { status: 'K', label: 'K - Kenal', badge: 'bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B]' };
+      return { status: '', label: '', badge: '' };
+    }
+
+    rows.forEach(function (row) {
+      const startInput = row.querySelector('input[name$="[start_date]"]');
+      const understandInput = row.querySelector('input[name$="[understand_date]"]');
+      const skilledInput = row.querySelector('input[name$="[skilled_date]"]');
+      const statusCell = row.querySelector('.live-status');
+
+      if (!startInput || !understandInput || !skilledInput || !statusCell) {
+        return;
+      }
+
+      const updateStatus = function () {
+        const startValue = startInput.value.trim();
+        const understandValue = understandInput.value.trim();
+        const skilledValue = skilledInput.value.trim();
+        const status = getStatus(startValue, understandValue, skilledValue);
+
+        if (!status.status) {
+          statusCell.innerHTML = '';
+          return;
+        }
+
+        statusCell.innerHTML = '<span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase ' + status.badge + '">' + status.label + '</span>';
+      };
+
+      ['change', 'input'].forEach(function (eventName) {
+        startInput.addEventListener(eventName, updateStatus);
+        understandInput.addEventListener(eventName, updateStatus);
+        skilledInput.addEventListener(eventName, updateStatus);
+      });
+
+      updateStatus();
+    });
+  });
+</script>
+@endpush
 
 @if(session('success'))
 <div class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium z-50" x-data x-init="setTimeout(() => $el.remove(), 3000)">

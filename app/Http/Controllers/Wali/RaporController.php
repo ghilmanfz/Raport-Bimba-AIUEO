@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Wali;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RaporDownloadController;
+use App\Models\Material;
 use App\Models\Setting;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -171,46 +172,86 @@ class RaporController extends Controller
 
         // Generate report data snapshot at period_end
         foreach (['baca', 'tulis', 'hitung'] as $skill) {
-            // Get all progress for this skill
-            $allProgressForSkill = $student->progress()
-                ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
-                ->with('material')
+            $materials = Material::where('skill_type', $skill)
+                ->orderBy('sort_order')
                 ->get();
 
-            // Filter and determine status at period_end
-            $details = $allProgressForSkill->filter(function($prog) use ($periodEnd) {
-                // Include if any date is before or on period_end
-                if ($prog->status == 'T' && $prog->skilled_date) {
-                    $skilledDate = \Carbon\Carbon::parse($prog->skilled_date);
-                    if ($skilledDate->lte($periodEnd)) return true;
+            $progressByMaterial = $student->progress()
+                ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
+                ->with('material')
+                ->get()
+                ->keyBy('material_id');
+
+            $details = $materials->map(function ($material) use ($progressByMaterial, $periodEnd) {
+                $prog = $progressByMaterial->get($material->id);
+                $status = '';
+                $startDate = '';
+                $understandDate = '';
+                $skilledDate = '';
+
+                if ($prog) {
+                    if ($prog->skilled_date) {
+                        $date = \Carbon\Carbon::parse($prog->skilled_date);
+                        if ($date->lte($periodEnd)) {
+                            $status = 'T';
+                            $skilledDate = $date->format('Y-m-d');
+                        }
+                    }
+                    if (!$status && $prog->understand_date) {
+                        $date = \Carbon\Carbon::parse($prog->understand_date);
+                        if ($date->lte($periodEnd)) {
+                            $status = 'P';
+                            $understandDate = $date->format('Y-m-d');
+                        }
+                    }
+                    if (!$status && $prog->start_date) {
+                        $date = \Carbon\Carbon::parse($prog->start_date);
+                        if ($date->lte($periodEnd)) {
+                            $status = 'K';
+                            $startDate = $date->format('Y-m-d');
+                        }
+                    }
+
+                    // If a later milestone exists before the period but an earlier milestone also exists, preserve the earlier date for raport snapshot
+                    if ($prog->start_date) {
+                        $date = \Carbon\Carbon::parse($prog->start_date);
+                        if ($date->lte($periodEnd)) {
+                            $startDate = $date->format('Y-m-d');
+                        }
+                    }
+                    if ($prog->understand_date) {
+                        $date = \Carbon\Carbon::parse($prog->understand_date);
+                        if ($date->lte($periodEnd)) {
+                            $understandDate = $date->format('Y-m-d');
+                        }
+                    }
+                    if ($prog->skilled_date) {
+                        $date = \Carbon\Carbon::parse($prog->skilled_date);
+                        if ($date->lte($periodEnd)) {
+                            $skilledDate = $date->format('Y-m-d');
+                        }
+                    }
                 }
-                if ($prog->status == 'P' && $prog->understand_date) {
-                    $pahamDate = \Carbon\Carbon::parse($prog->understand_date);
-                    if ($pahamDate->lte($periodEnd)) return true;
-                }
-                if ($prog->status == 'K' && $prog->start_date) {
-                    $startDate = \Carbon\Carbon::parse($prog->start_date);
-                    if ($startDate->lte($periodEnd)) return true;
-                }
-                return false;
+
+                return [
+                    'material' => $material,
+                    'start_date' => $startDate,
+                    'understand_date' => $understandDate,
+                    'skilled_date' => $skilledDate,
+                    'status' => $status,
+                    'display_status' => $status,
+                ];
             });
 
-            $grouped = $details->groupBy(fn ($p) => $p->material->level ?? 'Level 1');
-            
-            // Calculate percentage based on skilled_date <= period_end
-            $total = $allProgressForSkill->count();
-            $skilled = $allProgressForSkill->filter(function($prog) use ($periodEnd) {
-                if ($prog->status == 'T' && $prog->skilled_date) {
-                    $skilledDate = \Carbon\Carbon::parse($prog->skilled_date);
-                    return $skilledDate->lte($periodEnd);
-                }
-                return false;
-            })->count();
-            
+            $grouped = $details->groupBy(fn ($row) => $row['material']->level ?? 'Level 1');
+
+            $total = $materials->count();
+            $skilled = $details->where('status', 'T')->count();
+
             $reportData[$skill] = [
                 'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
-                'details'    => $details,
-                'by_level'   => $grouped,
+                'details' => $details,
+                'by_level' => $grouped,
             ];
         }
 

@@ -53,12 +53,9 @@ class Student extends Model
         });
     }
 
-    protected function casts(): array
-    {
-        return [
-            'join_date' => 'date',
-        ];
-    }
+    protected $casts = [
+        'join_date' => 'date',
+    ];
 
     public function classroom()
     {

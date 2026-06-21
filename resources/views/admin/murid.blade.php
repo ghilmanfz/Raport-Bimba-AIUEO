@@ -71,6 +71,7 @@
           <th class="px-6 py-4">Tahapan</th>
           <th class="px-6 py-4">Guru Pembimbing</th>
           <th class="px-6 py-4">Wali Murid</th>
+          <th class="px-6 py-4">Email Wali</th>
           <th class="px-6 py-4">Status</th>
           <th class="px-6 py-4 text-right">Aksi</th>
         </tr>
@@ -83,6 +84,7 @@
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->classroom?->name ?? '-' }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->teacher?->user->name ?? '-' }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->parent?->father_name && $student->parent?->mother_name ? $student->parent->father_name . ' & ' . $student->parent->mother_name : ($student->parent?->name ?? '-') }}</td>
+          <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->parent?->email ?? '-' }}</td>
           <td class="px-6 py-4 text-sm">
             <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
           </td>
@@ -103,7 +105,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="7" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data murid.</td>
+          <td colspan="8" class="px-6 py-8 text-center text-sm text-[#565d6d]">Belum ada data murid.</td>
         </tr>
         @endforelse
       </tbody>

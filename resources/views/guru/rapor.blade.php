@@ -79,7 +79,7 @@
   $highest = array_keys($skills, max($skills))[0];
   $focus = array_keys($skills, min($skills))[0];
 
-  $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => 'Kenal (Pengenalan)' };
+  $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal (Pengenalan)') };
   $statusValue = fn($s) => match($s) { 'T' => 3, 'P' => 2, default => 1 };
 @endphp
 
@@ -172,8 +172,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $prog->display_status }}">{{ $prog->display_status }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach
@@ -191,8 +191,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $prog->display_status }}">{{ $prog->display_status }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach
@@ -210,8 +210,8 @@
           <td class="text-center">{{ $globalNo }}</td>
           <td>{{ $prog->material->name }}</td>
           <td class="text-center">{{ $prog->material->level }}</td>
-          <td class="text-center status-{{ $prog->status }}">{{ $prog->status }}</td>
-          <td>{{ $statusLabel($prog->status) }}</td>
+          <td class="text-center status-{{ $prog->display_status }}">{{ $prog->display_status }}</td>
+          <td>{{ $statusLabel($prog->display_status) }}</td>
         </tr>
         @endforeach
       @endforeach

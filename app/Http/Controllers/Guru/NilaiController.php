@@ -56,12 +56,23 @@ class NilaiController extends Controller
 
             foreach ($materials as $material) {
                 $p = $existing->get($material->id);
+                $status = '';
+                if ($p) {
+                    if ($p->skilled_date) {
+                        $status = 'T';
+                    } elseif ($p->understand_date) {
+                        $status = 'P';
+                    } elseif ($p->start_date) {
+                        $status = 'K';
+                    }
+                }
+
                 $progress[] = [
                     'material'        => $material,
                     'start_date'      => $p?->start_date?->format('Y-m-d'),
                     'understand_date' => $p?->understand_date?->format('Y-m-d'),
                     'skilled_date'    => $p?->skilled_date?->format('Y-m-d'),
-                    'status'          => $p?->status ?? 'K',
+                    'status'          => $status,
                 ];
             }
         }
