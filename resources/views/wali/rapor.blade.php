@@ -53,7 +53,7 @@
       </div>
       <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 bg-white">
         @foreach($children as $c)
-          <option value="{{ $c->id }}" {{ $student?->id == $c->id ? 'selected' : '' }}>{{ $c->name }} ({{ $c->classroom?->name ?? '-' }})</option>
+          <option value="{{ $c->id }}" {{ $student?->id == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
         @endforeach
       </select>
       <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#565d6d]">
@@ -129,17 +129,17 @@
         <td>Tanggal Lahir</td>
         <td>:</td>
         <td>{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</td>
-        <td>Kelas</td>
+        <td>Level</td>
         <td>:</td>
-        <td>{{ $student->classroom?->name ?? '-' }}</td>
+        <td>{{ $student->classroom?->level ?? '-' }}</td>
       </tr>
       <tr>
         <td>Jenis Kelamin</td>
         <td>:</td>
         <td>{{ $student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
-        <td>Level</td>
-        <td>:</td>
-        <td>{{ $student->classroom?->level ?? '-' }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
       <tr>
         <td></td>
