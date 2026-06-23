@@ -93,7 +93,7 @@
               <a href="{{ route('admin.murid.show', $student) }}" class="p-2 text-[#7c3aed] hover:bg-purple-50 rounded-lg" title="Lihat Detail">
                 <iconify-icon icon="lucide:eye" width="14"></iconify-icon>
               </a>
-              <button onclick="openEditMurid({{ $student->id }}, '{{ addslashes($student->name) }}', '{{ $student->nis }}', '{{ $student->classroom_id }}', '{{ $student->teacher_id }}', '{{ $student->join_date->format('Y-m-d') }}', '{{ $student->status }}', '{{ $student->parent_id ?? '' }}')" class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg" title="Edit">
+              <button onclick="openEditMurid({{ $student->id }}, '{{ addslashes($student->name) }}', '{{ $student->nis }}', '{{ $student->classroom_id }}', '{{ $student->teacher_id }}', '{{ $student->join_date->format('Y-m-d') }}', '{{ $student->status }}', '{{ $student->parent_id ?? '' }}', '{{ $student->gender ?? '' }}', '{{ $student->birth_date?->format('Y-m-d') ?? '' }}')" class="p-2 text-[#F97316] hover:bg-orange-50 rounded-lg" title="Edit">
                 <iconify-icon icon="lucide:pencil" width="14"></iconify-icon>
               </button>
               <form method="POST" action="{{ route('admin.murid.destroy', $student) }}" id="form-del-murid-{{ $student->id }}" class="inline">
@@ -142,13 +142,15 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">NIS</label>
-          <input type="text" name="nis" value="{{ old('nis', $nextNis) }}" readonly required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm bg-[#f9fafb] text-[#565d6d]" placeholder="BM001">
+          <input type="text" name="nis" value="{{ old('nis', $nextNis) }}" readonly class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm bg-gray-50 text-[#565d6d] cursor-not-allowed">
+          <p class="text-xs text-[#565d6d] mt-1">NIS dibuat otomatis</p>
         </div>
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Nama Murid</label>
-          <input type="text" name="name" required value="{{ old('name') }}" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="Nama Lengkap">
+          <input type="text" name="name" value="{{ old('name') }}" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" placeholder="Nama lengkap murid">
         </div>
       </div>
+
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
@@ -161,6 +163,21 @@
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Tgl. Bergabung</label>
           <input type="date" name="join_date" required value="{{ old('join_date', date('Y-m-d')) }}" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Jenis Kelamin</label>
+          <select name="gender" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="L" @selected(old('gender') === 'L')>Laki-laki</option>
+            <option value="P" @selected(old('gender') === 'P')>Perempuan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tanggal Lahir</label>
+          <input type="date" name="birth_date" value="{{ old('birth_date') }}" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
         </div>
       </div>
 
@@ -288,6 +305,20 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Jenis Kelamin</label>
+          <select name="gender" id="edit-murid-gender" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-[#565d6d] mb-1">Tanggal Lahir</label>
+          <input type="date" name="birth_date" id="edit-murid-birth-date" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Tahapan</label>
           <select name="classroom_id" id="edit-murid-classroom" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
             @foreach($classrooms as $classroom)
@@ -295,6 +326,8 @@
             @endforeach
           </select>
         </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Guru Pembimbing</label>
           <select name="teacher_id" id="edit-murid-teacher" class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none" onchange="checkEditTeacherCapacity(this)">
@@ -411,10 +444,12 @@ function toggleWaliOption(option) {
   }
 }
 
-function openEditMurid(id, name, nis, classroomId, teacherId, joinDate, status, parentId) {
+function openEditMurid(id, name, nis, classroomId, teacherId, joinDate, status, parentId, gender, birthDate) {
   document.getElementById('form-edit-murid').action = updateMuridUrlTemplate.replace('__MURID_ID__', id);
   document.getElementById('edit-murid-name').value = name;
   document.getElementById('edit-murid-nis').value = nis;
+  document.getElementById('edit-murid-gender').value = gender || '';
+  document.getElementById('edit-murid-birth-date').value = birthDate || '';
   document.getElementById('edit-murid-classroom').value = classroomId;
   document.getElementById('edit-murid-teacher').value = teacherId || '';
   document.getElementById('edit-murid-joindate').value = joinDate;

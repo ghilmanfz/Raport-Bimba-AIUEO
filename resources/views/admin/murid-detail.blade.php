@@ -27,6 +27,14 @@
           <p class="text-base font-medium text-[#171a1f]">{{ $student->name }}</p>
         </div>
         <div>
+          <p class="text-sm text-[#565d6d] mb-1">Jenis Kelamin</p>
+          <p class="text-base font-medium text-[#171a1f]">{{ $student->gender === 'L' ? 'Laki-laki' : ($student->gender === 'P' ? 'Perempuan' : '-') }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-[#565d6d] mb-1">Tanggal Lahir</p>
+          <p class="text-base font-medium text-[#171a1f]">{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</p>
+        </div>
+        <div>
           <p class="text-sm text-[#565d6d] mb-1">Tahapan</p>
           <p class="text-base font-medium text-[#171a1f]">{{ $student->classroom?->name ?? '-' }}</p>
         </div>

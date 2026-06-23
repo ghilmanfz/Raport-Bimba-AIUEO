@@ -91,22 +91,6 @@
         <form method="POST" action="{{ route('login.post') }}" class="space-y-6">
           @csrf
 
-          <!-- Role Dropdown -->
-          <div class="space-y-2">
-            <label for="role">Login Sebagai</label>
-            <div class="relative">
-              <select id="role" name="role" class="w-full h-12 px-4 bg-white border border-[#dee1e6] rounded-xl appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 focus:border-[#F97316] transition-all cursor-pointer text-sm">
-                <option value="" disabled selected>Pilih Peran Anda</option>
-                <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
-                <option value="wali" {{ old('role') == 'wali' ? 'selected' : '' }}>Orang Tua / Wali</option>
-              </select>
-              <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#565d6d]">
-                <iconify-icon icon="lucide:chevron-down" width="16"></iconify-icon>
-              </div>
-            </div>
-          </div>
-
           <!-- Email/Username Input -->
           <div class="space-y-2">
             <label for="email">Email / NIP</label>

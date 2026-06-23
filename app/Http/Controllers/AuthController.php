@@ -22,26 +22,19 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'role'     => 'required|in:admin,guru,wali',
             'email'    => 'required|string',
             'password' => 'required|string',
         ]);
 
         $identifier = trim($request->email);
-        $userQuery = User::where('role', $request->role);
 
-        if ($request->role === 'guru') {
-            $userQuery->where(function ($query) use ($identifier) {
-                $query->where('email', $identifier)
-                    ->orWhereHas('teacher', function ($teacherQuery) use ($identifier) {
-                        $teacherQuery->where('nip', $identifier);
-                    });
-            });
-        } else {
-            $userQuery->where('email', $identifier);
-        }
-
-        $user = $userQuery->first();
+        // Cari akun otomatis: cocok dari email (admin/guru/wali)
+        // atau dari NIP guru. Peran ditentukan sendiri oleh sistem.
+        $user = User::where('email', $identifier)
+            ->orWhereHas('teacher', function ($teacherQuery) use ($identifier) {
+                $teacherQuery->where('nip', $identifier);
+            })
+            ->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
             Auth::login($user, $request->boolean('remember'));
@@ -69,7 +62,7 @@ class AuthController extends Controller
 
         return back()->withErrors([
             'email' => 'Email, NIP, atau kata sandi salah.',
-        ])->withInput($request->only('email', 'role'));
+        ])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)

@@ -60,10 +60,13 @@ class RaporController extends Controller
             $lastMonthEnd = now()->subMonth()->endOfMonth();
             foreach (['baca', 'tulis', 'hitung'] as $skill) {
                 $progress = $student->progress()
-                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill));
+                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
+                    ->get()
+                    ->filter(fn ($item) => $item->display_status !== '');
+
                 $total = $progress->count();
                 $skilled = $total > 0
-                    ? (clone $progress)->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
+                    ? $progress->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
                     : 0;
                 $prevReportData[$skill] = [
                     'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,

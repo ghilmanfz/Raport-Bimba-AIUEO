@@ -130,7 +130,7 @@
       <tr>
         <td>Jenis Kelamin</td>
         <td>:</td>
-        <td>{{ $student->gender == 'L' ? 'Laki-laki' : 'Perempuan' }}</td>
+        <td>{{ $student->gender === 'L' ? 'Laki-laki' : ($student->gender === 'P' ? 'Perempuan' : '-') }}</td>
         <td>Level</td>
         <td>:</td>
         <td>{{ preg_replace('/ - .*$/', '', $student->classroom?->level ?? '-') }}</td>
