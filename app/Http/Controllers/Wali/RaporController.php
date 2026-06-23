@@ -52,10 +52,13 @@ class RaporController extends Controller
             $lastMonthEnd = now()->subMonth()->endOfMonth();
             foreach (['baca', 'tulis', 'hitung'] as $skill) {
                 $progress = $student->progress()
-                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill));
+                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
+                    ->get()
+                    ->filter(fn ($item) => $item->display_status !== '');
+
                 $total = $progress->count();
                 $skilled = $total > 0
-                    ? (clone $progress)->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
+                    ? $progress->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
                     : 0;
                 $prevReportData[$skill] = [
                     'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
@@ -107,11 +110,13 @@ class RaporController extends Controller
                     // Calculate progress for each skill at this period
                     foreach (['baca', 'tulis', 'hitung'] as $skill) {
                         $progress = $student->progress()
-                            ->whereHas('material', fn ($q) => $q->where('skill_type', $skill));
+                            ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
+                            ->get()
+                            ->filter(fn ($item) => $item->display_status !== '');
                         
                         $total = $progress->count();
                         $skilled = $total > 0
-                            ? (clone $progress)->where('status', 'T')
+                            ? $progress->where('status', 'T')
                                 ->where('skilled_date', '<=', $periodEnd)
                                 ->count()
                             : 0;
@@ -243,9 +248,13 @@ class RaporController extends Controller
                 ];
             });
 
+            // Only show materials that already have a status (K/P/T) at this period.
+            // Materials without any status yet ("kosong") are hidden from the report.
+            $details = $details->filter(fn ($row) => $row['display_status'] !== '')->values();
+
             $grouped = $details->groupBy(fn ($row) => $row['material']->level ?? 'Level 1');
 
-            $total = $materials->count();
+            $total = $details->count();
             $skilled = $details->where('status', 'T')->count();
 
             $reportData[$skill] = [

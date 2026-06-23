@@ -80,6 +80,8 @@ class MuridController extends Controller
 
         $validated = $request->validate([
             'name'         => 'required|string|max:255',
+            'gender'       => 'required|in:L,P',
+            'birth_date'   => 'nullable|date',
             'nis'          => 'required|string|unique:students,nis',
             'classroom_id' => 'required|exists:classrooms,id',
             'teacher_id'   => 'nullable|exists:teachers,id',
@@ -162,6 +164,8 @@ class MuridController extends Controller
 
         $student = Student::create([
             'name'         => $validated['name'],
+            'gender'       => $validated['gender'],
+            'birth_date'   => $validated['birth_date'] ?? null,
             'nis'          => $validated['nis'],
             'classroom_id' => $validated['classroom_id'],
             'teacher_id'   => $validated['teacher_id'] ?? null,
@@ -190,6 +194,8 @@ class MuridController extends Controller
     {
         $request->validate([
             'name'         => 'required|string|max:255',
+            'gender'       => 'required|in:L,P',
+            'birth_date'   => 'nullable|date',
             'classroom_id' => 'required|exists:classrooms,id',
             'teacher_id'   => 'nullable|exists:teachers,id',
             'join_date'    => 'required|date',
@@ -210,6 +216,8 @@ class MuridController extends Controller
 
         $student->update([
             'name'         => $request->name,
+            'gender'       => $request->gender,
+            'birth_date'   => $request->birth_date ?: null,
             'classroom_id' => $request->classroom_id,
             'teacher_id'   => $request->teacher_id ?: null,
             'join_date'    => $request->join_date,
@@ -260,12 +268,14 @@ class MuridController extends Controller
             $file = fopen('php://output', 'w');
             // UTF-8 BOM for Excel compatibility
             fwrite($file, "\xEF\xBB\xBF");
-            fputcsv($file, ['NIS', 'Nama Murid', 'Tahapan', 'Guru Pembimbing', 'Wali Murid', 'Email Wali', 'Tgl. Bergabung', 'Status'], ';');
+            fputcsv($file, ['NIS', 'Nama Murid', 'Jenis Kelamin', 'Tgl. Lahir', 'Tahapan', 'Guru Pembimbing', 'Wali Murid', 'Email Wali', 'Tgl. Bergabung', 'Status'], ';');
 
             foreach ($students as $student) {
                 fputcsv($file, [
                     $student->nis,
                     $student->name,
+                    $student->gender === 'L' ? 'Laki-laki' : ($student->gender === 'P' ? 'Perempuan' : '-'),
+                    $student->birth_date?->format('d/m/Y') ?? '-',
                     $student->classroom?->name ?? '-',
                     $student->teacher?->user->name ?? '-',
                     $student->parent?->name ?? '-',

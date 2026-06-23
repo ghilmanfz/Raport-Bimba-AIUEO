@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Student extends Model
 {
-    protected $fillable = ['nis', 'name', 'classroom_id', 'parent_id', 'teacher_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
+    protected $fillable = ['nis', 'name', 'gender', 'birth_date', 'classroom_id', 'parent_id', 'teacher_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
 
     public static function generateNextNis(): string
     {
@@ -55,6 +55,7 @@ class Student extends Model
 
     protected $casts = [
         'join_date' => 'date',
+        'birth_date' => 'date',
     ];
 
     public function classroom()
@@ -82,18 +83,18 @@ class Student extends Model
         return $this->progress()
             ->whereHas('material', fn ($q) => $q->where('skill_type', $skillType))
             ->with('material')
-            ->get();
+            ->get()
+            ->filter(fn ($progress) => $progress->display_status !== '');
     }
 
     public function skillPercentage(string $skillType): float
     {
-        $progress = $this->progress()
-            ->whereHas('material', fn ($q) => $q->where('skill_type', $skillType));
+        $details = $this->progressBySkill($skillType);
 
-        $total = $progress->count();
+        $total = $details->count();
         if ($total === 0) return 0;
 
-        $skilled = (clone $progress)->where('status', 'T')->count();
+        $skilled = $details->where('status', 'T')->count();
         return round(($skilled / $total) * 100, 1);
     }
 }
