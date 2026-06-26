@@ -7,7 +7,7 @@
   @php
     $institutionName = \App\Models\Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre');
     $logo = \App\Models\Setting::get('institution_logo');
-    $supportWhatsapp = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', '6281234567890'));
+    $supportWhatsapp = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', ''));
     $supportEmail = \App\Models\Setting::get('support_email', 'info@bimba-aiueo.com');
     $landingBadge = \App\Models\Setting::get('landing_badge', 'Masa Depan Belajar Anak');
     $landingTitle = \App\Models\Setting::get('landing_title', 'E-Rapor');

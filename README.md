@@ -22,12 +22,27 @@ Aplikasi **E-Rapor Digital** untuk lembaga pendidikan anak **BiMBA AIUEO** — s
 
 | Teknologi | Keterangan |
 |-----------|-----------|
-| **Laravel 13** | PHP Framework (Backend) |
+| **Laravel 11** | PHP Framework (Backend) |
 | **Blade** | Template engine Laravel |
-| **TailwindCSS** | CSS Framework via CDN |
-| **Iconify (Lucide)** | Icon library |
-| **Google Fonts** | Inter, Roboto, Poppins |
-| **Laragon** | Local development server |
+| **TailwindCSS 4** | CSS Framework — di-*compile* lokal via Vite (tanpa CDN) |
+| **Iconify (Lucide)** | Icon library — data ikon di-*bundle* offline |
+| **@fontsource** | Font self-hosted: Inter, Roboto, Poppins (tanpa Google Fonts) |
+| **Chart.js / Alpine.js** | Grafik & interaktivitas — di-*bundle* lokal via Vite |
+| **DomPDF + simple-qrcode** | Cetak rapor PDF & QR code (server-side, offline) |
+| **Laragon** | Server lokal (PHP + MySQL) |
+
+---
+
+## 🔌 Mode Offline (Tanpa Internet)
+
+Aplikasi ini dirancang berjalan **100% offline** — tidak ada CDN, Google Fonts, maupun API eksternal. Semua aset (CSS, JS, font, ikon) di-*compile* lokal oleh Vite ke `public/build/`, sedangkan PDF rapor dan QR code dibuat sepenuhnya di sisi server.
+
+**Cara menjalankan tanpa internet** — lihat panduan lengkap di **[PANDUAN-OFFLINE.md](PANDUAN-OFFLINE.md)**. Ringkasnya:
+
+1. Pastikan **Laragon** (Apache/Nginx + MySQL) menyala.
+2. Buka `http://raportbimba.test/` atau jalankan `php artisan serve`.
+
+> ⚠️ Saat memindahkan ke komputer lain yang offline, **salin seluruh folder apa adanya** (termasuk `vendor/` dan `public/build/`). Jangan `git clone`, karena kedua folder itu tidak ikut ke repository dan mengisinya kembali (`composer install` / `npm install`) membutuhkan internet.
 
 ---
 

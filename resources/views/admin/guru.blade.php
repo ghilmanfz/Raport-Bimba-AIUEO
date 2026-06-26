@@ -173,10 +173,21 @@
     </div>
     <h4 class="text-base font-bold text-[#171a1f] mb-1">Butuh Bantuan?</h4>
     <p class="text-xs text-[#565d6d] mb-6">Hubungi tim IT Pusat untuk bantuan teknis.</p>
-    <a href="https://wa.me/6281234567890?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor." target="_blank" class="w-full py-2 border border-[#F97316] text-[#C2410C] text-sm font-medium rounded-xl hover:bg-[#F97316]/5 block text-center">
+    @php
+      $supportWa = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', ''));
+      $supportWaUrl = $supportWa ? 'https://wa.me/' . $supportWa . '?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor.' : null;
+    @endphp
+    @if($supportWaUrl)
+    <a href="{{ $supportWaUrl }}" target="_blank" rel="noopener" class="w-full py-2 border border-[#F97316] text-[#C2410C] text-sm font-medium rounded-xl hover:bg-[#F97316]/5 block text-center">
       <iconify-icon icon="lucide:message-circle" width="14" class="inline mr-1"></iconify-icon>
       Pusat Bantuan
     </a>
+    @else
+    <span class="w-full py-2 border border-[#dee1e6] text-[#9ca3af] text-sm font-medium rounded-xl block text-center cursor-not-allowed">
+      <iconify-icon icon="lucide:message-circle" width="14" class="inline mr-1"></iconify-icon>
+      Pusat Bantuan
+    </span>
+    @endif
   </div>
 </div>
 

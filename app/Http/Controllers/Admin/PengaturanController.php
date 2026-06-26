@@ -22,7 +22,7 @@ class PengaturanController extends Controller
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
             'unit_name'           => Setting::get('unit_name', ''),
             'institution_logo'    => Setting::get('institution_logo'),
-            'support_whatsapp'    => Setting::get('support_whatsapp', '6281234567890'),
+            'support_whatsapp'    => Setting::get('support_whatsapp', ''),
             'support_email'       => Setting::get('support_email', 'info@bimba-aiueo.com'),
             'landing_badge'       => Setting::get('landing_badge', 'Masa Depan Belajar Anak'),
             'landing_title'       => Setting::get('landing_title', 'E-Rapor'),

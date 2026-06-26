@@ -34,7 +34,7 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
-        $supportWhatsapp = preg_replace('/\D+/', '', Setting::get('support_whatsapp', '6281234567890'));
+        $supportWhatsapp = preg_replace('/\D+/', '', Setting::get('support_whatsapp', ''));
         $supportWhatsappUrl = $supportWhatsapp
             ? 'https://wa.me/' . $supportWhatsapp . '?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor.'
             : '#';
