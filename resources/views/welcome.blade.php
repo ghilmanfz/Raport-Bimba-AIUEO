@@ -57,7 +57,6 @@
       </div>
       <div class="flex items-center gap-2 sm:gap-4">
         <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-[#171a1f] hover:bg-gray-100 rounded-md">Login</a>
-        <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-medium text-white btn-gradient hover:bg-[#EA580C] rounded-md">Lihat Demo</a>
       </div>
     </div>
   </header>
@@ -83,7 +82,6 @@
           </p>
           <div class="flex flex-wrap gap-4 mb-12">
             <a href="{{ route('login') }}" class="px-10 py-4 btn-gradient text-white font-semibold rounded-full shadow-lg hover:bg-[#EA580C] text-lg">Mulai Sekarang</a>
-            <a href="{{ route('login') }}" class="px-10 py-4 bg-white border-2 border-[#dee1e6] text-[#171a1f] font-semibold rounded-full hover:bg-gray-50 text-lg">Lihat Demo</a>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="glass-card soft-shadow px-5 py-4 rounded-full flex items-center gap-3">

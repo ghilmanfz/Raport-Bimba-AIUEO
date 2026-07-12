@@ -264,10 +264,9 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
     <div class="text-center">
       <p>Mengetahui,</p>
       <p>Orang Tua / Wali Murid</p>
-      @if($qrCodeBase64)
+ @if($qrCodeBase64)
       <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
+        <div>
         </div>
       </div>
       @endif
@@ -279,10 +278,9 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
     <div class="text-center">
       <p>{{ \Carbon\Carbon::parse($periodInfo['end'])->translatedFormat('d F Y') }}</p>
       <p>Guru Pengajar</p>
-      @if($qrCodeBase64)
+ @if($qrCodeBase64)
       <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
+        <div>
         </div>
       </div>
       @endif

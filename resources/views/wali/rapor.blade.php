@@ -267,8 +267,7 @@
       <p>Orang Tua / Wali Murid</p>
       @if($qrCodeBase64)
       <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
+        <div>
         </div>
       </div>
       @endif
@@ -280,10 +279,9 @@
     <div class="text-center">
       <p>{{ now()->translatedFormat('d F Y') }}</p>
       <p>Guru Pengajar</p>
-      @if($qrCodeBase64)
+   @if($qrCodeBase64)
       <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
+        <div>
         </div>
       </div>
       @endif
@@ -294,9 +292,7 @@
   </div>
 
   @if($qrCodeBase64)
-  <div class="text-center mt-4" style="font-size: 11px; color: #64748b;">
-    <p>Scan QR code di atas untuk mengunduh rapor digital dalam format PDF</p>
-  </div>
+  <div class="text-center mt-4" style="font-size: 11px; color: #64748b;">  </div>
   @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
