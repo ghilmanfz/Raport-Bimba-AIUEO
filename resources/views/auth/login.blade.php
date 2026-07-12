@@ -30,7 +30,8 @@
 </head>
 <body class="bg-login-fresh min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative overflow-x-hidden">
   @php
-    $sharedBanner = \App\Models\Setting::get('institution_banner') ? asset('storage/' . \App\Models\Setting::get('institution_banner')) : asset('assets/IMG_2.webp');
+    $loginImage = \App\Models\Setting::get('login_image', \App\Models\Setting::get('hero_image', \App\Models\Setting::get('institution_banner')));
+    $loginImageUrl = $loginImage ? \Illuminate\Support\Facades\Storage::url($loginImage) : asset('assets/IMG_21.webp');
   @endphp
   <a href="{{ url('/') }}" class="absolute left-4 top-4 md:left-8 md:top-8 z-10 inline-flex items-center gap-2 px-4 py-2 bg-white/80 border border-[#dee1e6] rounded-xl text-sm font-semibold text-[#171a1f] hover:bg-white soft-shadow">
     <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>
@@ -163,13 +164,8 @@
 
       <!-- Illustration Card -->
       <div class="relative z-10 photo-card-bg p-6 rounded-2xl shadow-[0px_8.5px_13.75px_0px_#171a1f38,_0px_0px_2px_0px_#171a1f14] mb-10 w-full max-w-[304px]">
-        @php
-          $heroImage = \App\Models\Setting::get('hero_image');
-        @endphp
-        @if($heroImage)
-          <img src="{{ asset('storage/' . $heroImage) }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
-        @elseif($sharedBanner)
-          <img src="{{ $sharedBanner }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
+        @if($loginImage)
+          <img src="{{ $loginImageUrl }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg object-contain">
         @else
           <img src="{{ asset('assets/IMG_21.webp') }}" alt="BiMBA AIUEO School" class="w-full h-auto rounded-lg">
         @endif

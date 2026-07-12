@@ -43,8 +43,9 @@
         .signature-table { width: 100%; border-collapse: collapse; }
         .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 0 20px; }
         .sign-line { width: 180px; border-bottom: 1px solid #1e293b; margin: 0 auto; }
+        .qr-section { margin-top: 20px; text-align: center; font-size: 11px; color: #64748b; }
         .qr-box { margin: 8px auto; }
-        .qr-box img { width: 100px; height: 100px; }
+        .qr-box img { width: 80px; height: 80px; }
     </style>
 </head>
 <body>
@@ -216,15 +217,12 @@
         @endif
     </div>
 
-    <!-- Signature Section with QR Codes -->
+    <!-- Signature Section -->
     <table class="signature-table">
         <tr>
             <td>
                 <p>Mengetahui,</p>
                 <p>Orang Tua / Wali Murid</p>
-                <div class="qr-box">
-                    <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code">
-                </div>
                 <div class="sign-line"></div>
                 @if($student->parent)
                     <p style="margin-top: 4px;"><strong>{{ $student->parent->name }}</strong></p>
@@ -233,9 +231,6 @@
             <td>
                 <p>{{ now()->translatedFormat('d F Y') }}</p>
                 <p>Guru Pengajar</p>
-                <div class="qr-box">
-                    <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code">
-                </div>
                 <div class="sign-line"></div>
                 @if(isset($teacherName))
                     <p style="margin-top: 4px;"><strong>{{ $teacherName }}</strong></p>
@@ -243,6 +238,14 @@
             </td>
         </tr>
     </table>
+
+    @if($qrCodeBase64)
+    <div class="qr-section">
+        <div class="qr-box">
+            <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code">
+        </div>
+    </div>
+    @endif
 
 </div>
 </body>

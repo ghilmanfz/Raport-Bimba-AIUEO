@@ -273,13 +273,6 @@
     <div class="text-center">
       <p>Mengetahui,</p>
       <p>Orang Tua / Wali Murid</p>
-      @if($qrCodeBase64)
-      <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
-        </div>
-      </div>
-      @endif
       <div class="mt-4 mb-1">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
       </div>
@@ -287,13 +280,6 @@
     <div class="text-center">
       <p>{{ now()->translatedFormat('d F Y') }}</p>
       <p>Guru Pengajar</p>
-      @if($qrCodeBase64)
-      <div class="my-3 flex justify-center">
-        <div class="p-2 bg-white border border-[#dee1e6] rounded-lg shadow-sm">
-          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 100px; height: 100px;">
-        </div>
-      </div>
-      @endif
       <div class="mt-4 mb-1">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
         <p class="mt-1"><strong>{{ auth()->user()->name }}</strong></p>
@@ -302,8 +288,12 @@
   </div>
 
   @if($qrCodeBase64)
-  <div class="text-center mt-4" style="font-size: 11px; color: #64748b;">
-    <p>Scan QR code di atas untuk mengunduh rapor digital dalam format PDF</p>
+  <div class="text-center mt-6" style="font-size: 11px; color: #64748b;">
+    <div class="inline-flex flex-col items-center p-3 bg-white border border-[#dee1e6] rounded-xl shadow-sm">
+      <div class="p-2 bg-white rounded-lg">
+        <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 80px; height: 80px;">
+      </div>
+    </div>
   </div>
   @endif
 </div>

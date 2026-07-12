@@ -30,6 +30,8 @@ class PengaturanController extends Controller
             'landing_description' => Setting::get('landing_description', 'Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.'),
             'landing_cta_title'   => Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?'),
             'landing_cta_description' => Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.'),
+            'landing_image'       => Setting::get('landing_image', Setting::get('hero_image', Setting::get('institution_banner'))),
+            'login_image'         => Setting::get('login_image', Setting::get('hero_image', Setting::get('institution_banner'))),
             'hero_image'          => Setting::get('hero_image'),
             'institution_banner'  => Setting::get('institution_banner'),
         ];
@@ -52,6 +54,8 @@ class PengaturanController extends Controller
             'landing_cta_title'   => 'nullable|string|max:180',
             'landing_cta_description' => 'nullable|string|max:500',
             'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'landing_image'       => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+            'login_image'         => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'hero_image'          => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'institution_banner'  => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
         ]);
@@ -76,6 +80,26 @@ class PengaturanController extends Controller
 
             $path = $request->file('institution_logo')->store('logos', 'public');
             Setting::set('institution_logo', $path);
+        }
+
+        if ($request->hasFile('landing_image')) {
+            $oldLandingImage = Setting::get('landing_image');
+            if ($oldLandingImage && Storage::disk('public')->exists($oldLandingImage)) {
+                Storage::disk('public')->delete($oldLandingImage);
+            }
+
+            $path = $request->file('landing_image')->store('landing', 'public');
+            Setting::set('landing_image', $path);
+        }
+
+        if ($request->hasFile('login_image')) {
+            $oldLoginImage = Setting::get('login_image');
+            if ($oldLoginImage && Storage::disk('public')->exists($oldLoginImage)) {
+                Storage::disk('public')->delete($oldLoginImage);
+            }
+
+            $path = $request->file('login_image')->store('login', 'public');
+            Setting::set('login_image', $path);
         }
 
         if ($request->hasFile('hero_image')) {

@@ -70,24 +70,46 @@
             </label>
           </div>
 
-          <div x-data="{ preview: '{{ $settings['institution_banner'] ? asset('storage/' . $settings['institution_banner']) : '' }}' }">
-            <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Beranda & Login</label>
-            <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-white h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#FFF7ED] transition-colors">
-              <input type="file" name="institution_banner" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
-              <template x-if="preview">
-                <img :src="preview" class="max-h-[160px] max-w-full object-cover rounded-lg shadow-sm">
-              </template>
-              <template x-if="!preview">
-                <div class="flex flex-col items-center">
-                  <div class="w-16 h-16 bg-[#FFF7ED] rounded-full flex items-center justify-center mb-4">
-                    <iconify-icon icon="lucide:image-plus" width="28" class="text-[#F97316]"></iconify-icon>
+          <div class="grid grid-cols-1 gap-4">
+            <div x-data="{ preview: '{{ $settings['landing_image'] ? \Illuminate\Support\Facades\Storage::url($settings['landing_image']) : '' }}' }">
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Landing Page</label>
+              <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-white h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#FFF7ED] transition-colors">
+                <input type="file" name="landing_image" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
+                <template x-if="preview">
+                  <img :src="preview" class="max-h-[160px] max-w-full object-cover rounded-lg shadow-sm">
+                </template>
+                <template x-if="!preview">
+                  <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-[#FFF7ED] rounded-full flex items-center justify-center mb-4">
+                      <iconify-icon icon="lucide:image-plus" width="28" class="text-[#F97316]"></iconify-icon>
+                    </div>
+                    <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret foto landing ke sini</p>
+                    <p class="text-xs text-[#565d6d]">PNG, JPG, WEBP up to 4MB</p>
                   </div>
-                  <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret foto ke sini</p>
-                  <p class="text-xs text-[#565d6d]">PNG, JPG, WEBP up to 4MB</p>
-                </div>
-              </template>
-            </label>
-            <p class="text-xs text-[#565d6d] mt-2">Foto ini dipakai bersama di halaman beranda dan login.</p>
+                </template>
+              </label>
+              <p class="text-xs text-[#565d6d] mt-2">Foto ini dipakai di sisi kanan halaman landing page.</p>
+            </div>
+
+            <div x-data="{ preview: '{{ $settings['login_image'] ? \Illuminate\Support\Facades\Storage::url($settings['login_image']) : '' }}' }">
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Login</label>
+              <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-white h-[220px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#FFF7ED] transition-colors">
+                <input type="file" name="login_image" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) preview = URL.createObjectURL($event.target.files[0])">
+                <template x-if="preview">
+                  <img :src="preview" class="max-h-[160px] max-w-full object-cover rounded-lg shadow-sm">
+                </template>
+                <template x-if="!preview">
+                  <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-[#FFF7ED] rounded-full flex items-center justify-center mb-4">
+                      <iconify-icon icon="lucide:image-plus" width="28" class="text-[#F97316]"></iconify-icon>
+                    </div>
+                    <p class="text-sm font-medium text-[#F97316] mb-1">Klik atau seret foto login ke sini</p>
+                    <p class="text-xs text-[#565d6d]">PNG, JPG, WEBP up to 4MB</p>
+                  </div>
+                </template>
+              </label>
+              <p class="text-xs text-[#565d6d] mt-2">Foto ini dipakai di sisi kanan halaman login.</p>
+            </div>
           </div>
         </div>
         <div class="lg:col-span-2 border-t border-[#dee1e6] pt-8">
@@ -97,7 +119,7 @@
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="lg:col-span-2" x-data="{ heroPreview: '{{ $settings['hero_image'] ? asset('storage/' . $settings['hero_image']) : '' }}' }">
-              <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Hero (Landing Page & Login)</label>
+              <label class="block text-sm font-bold text-[#171a1f] mb-2">Foto Pendukung (Opsional)</label>
               <label class="border-2 border-dashed border-[#F97316]/30 rounded-xl bg-[#F97316]/5 h-[180px] flex flex-col items-center justify-center p-6 text-center cursor-pointer hover:bg-[#F97316]/10 transition-colors">
                 <input type="file" name="hero_image" accept="image/png,image/jpeg,image/webp" class="hidden" @change="if($event.target.files[0]) heroPreview = URL.createObjectURL($event.target.files[0])">
                 <template x-if="heroPreview">
@@ -113,7 +135,7 @@
                   </div>
                 </template>
               </label>
-              <p class="text-xs text-[#565d6d] mt-1.5">Foto ini akan ditampilkan di sisi kanan halaman landing page dan login. Jika kosong, foto default akan digunakan.</p>
+              <p class="text-xs text-[#565d6d] mt-1.5">Foto ini bersifat cadangan jika belum ada gambar landing atau login yang diunggah.</p>
             </div>
             <div>
               <label class="block text-sm font-bold text-[#171a1f] mb-2">Badge Hero</label>
