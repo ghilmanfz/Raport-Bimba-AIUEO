@@ -22,7 +22,7 @@ class RaporController extends Controller
         $qrCodeBase64 = null;
 
         if ($selectedChildId) {
-            $student = Student::with(['classroom', 'progress.material'])
+            $student = Student::with(['classroom', 'progress.material', 'teacher.user'])
                 ->where('parent_id', Auth::id())
                 ->find($selectedChildId);
 
@@ -78,7 +78,7 @@ class RaporController extends Controller
         $riwayatData = [];
 
         if ($selectedChildId) {
-            $student = Student::with(['classroom', 'progress.material'])
+            $student = Student::with(['classroom', 'progress.material', 'teacher.user'])
                 ->where('parent_id', Auth::id())
                 ->find($selectedChildId);
 
@@ -155,7 +155,7 @@ class RaporController extends Controller
             'period_number' => 'required|integer',
         ]);
 
-        $student = Student::with(['classroom', 'progress.material'])
+        $student = Student::with(['classroom', 'progress.material', 'teacher.user'])
             ->where('parent_id', Auth::id())
             ->findOrFail($request->student_id);
 

@@ -274,6 +274,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
       <p>Guru Pengajar</p>
       <div class="mt-4 mb-1">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
+        <p class="mt-1"><strong>{{ $student->teacher?->user?->name ?? '-' }}</strong></p>
       </div>
     </div>
   </div>

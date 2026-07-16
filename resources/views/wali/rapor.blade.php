@@ -271,10 +271,11 @@
       </div>
     </div>
     <div class="text-center">
-      <p>{{ \Carbon\Carbon::parse($periodInfo['end'])->translatedFormat('d F Y') }}</p>
+      <p>{{ now()->translatedFormat('d F Y') }}</p>
       <p>Guru Pengajar</p>
       <div class="mt-4 mb-1">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
+        <p class="mt-1"><strong>{{ $student->teacher?->user?->name ?? '-' }}</strong></p>
       </div>
     </div>
   </div>
