@@ -23,6 +23,21 @@
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .rapor-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 40px !important; }
     .rapor-table th, .rapor-table td { padding: 6px 10px; }
+    .keep-together,
+    .no-page-break,
+    .keep-together * {
+      page-break-inside: avoid !important;
+      page-break-before: avoid !important;
+      page-break-after: avoid !important;
+      break-inside: avoid-page !important;
+      break-inside: avoid-column !important;
+      break-before: avoid-page !important;
+      break-after: avoid-page !important;
+    }
+    .keep-together {
+      display: inline-block !important;
+      width: 100% !important;
+    }
     @page { size: A4; margin: 15mm; }
   }
 </style>
@@ -261,34 +276,36 @@
   </div>
 
 <!-- Signature Section -->
-  <div class="grid grid-cols-2 gap-8 mt-10" style="font-size: 13px;">
-    <div class="text-center">
-      <p>Mengetahui,</p>
-      <p>Orang Tua / Wali Murid</p>
-      <div class="mt-6 mb-3" style="min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-        <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
-        <p class="mt-1"><strong>{{ auth()->user()->name }}</strong></p>
+  <div class="keep-together no-page-break" style="font-size: 13px; display: block; width: 100%;">
+    <div style="display:flex; justify-content:space-between; gap: 24px; width:100%;">
+      <div style="width:48%; text-align:center;">
+        <p>Mengetahui,</p>
+        <p>Orang Tua / Wali Murid</p>
+        <div style="margin-top: 24px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+          <div style="width: 180px; border-bottom: 1px solid #1e293b;"></div>
+          <p style="margin-top: 8px;"><strong>{{ auth()->user()->name }}</strong></p>
+        </div>
+      </div>
+      <div style="width:48%; text-align:center;">
+        <p>{{ now()->translatedFormat('d F Y') }}</p>
+        <p>Guru Pengajar</p>
+        <div style="margin-top: 24px; min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
+          <div style="width: 180px; border-bottom: 1px solid #1e293b;"></div>
+          <p style="margin-top: 8px;"><strong>{{ $student->teacher?->user?->name ?? '-' }}</strong></p>
+        </div>
       </div>
     </div>
-    <div class="text-center">
-      <p>{{ now()->translatedFormat('d F Y') }}</p>
-      <p>Guru Pengajar</p>
-      <div class="mt-6 mb-3" style="min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-        <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
-        <p class="mt-1"><strong>{{ $student->teacher?->user?->name ?? '-' }}</strong></p>
-      </div>
-    </div>
-  </div>
 
-  @if($qrCodeBase64)
-  <div class="text-center mt-6" style="font-size: 11px; color: #64748b;">
-    <div class="inline-flex flex-col items-center p-3 bg-white border border-[#dee1e6] rounded-xl shadow-sm">
-      <div class="p-2 bg-white rounded-lg">
-        <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 80px; height: 80px;">
+    @if($qrCodeBase64)
+    <div style="text-align:center; padding-top: 24px; width:100%;">
+      <div style="display: inline-flex; flex-direction: column; align-items: center; padding: 12px; background: white; border: 1px solid #dee1e6; border-radius: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div style="padding: 8px; background: white; border-radius: 12px;">
+          <img src="data:image/svg+xml;base64,{{ $qrCodeBase64 }}" alt="QR Code Rapor" style="width: 80px; height: 80px; display:block;">
+        </div>
       </div>
     </div>
+    @endif
   </div>
-  @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
 
