@@ -41,8 +41,8 @@
         /* Signature */
         .signature-wrapper { width: 100%; margin-top: 30px; }
         .signature-table { width: 100%; border-collapse: collapse; }
-        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 0 20px; }
-        .sign-line { width: 180px; border-bottom: 1px solid #1e293b; margin: 0 auto; }
+        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 24px 20px 40px; min-height: 160px; }
+        .sign-line { width: 180px; border-bottom: 1px solid #1e293b; margin: 24px auto 12px; }
         .qr-section { margin-top: 20px; text-align: center; font-size: 11px; color: #64748b; }
         .qr-box { margin: 8px auto; }
         .qr-box img { width: 80px; height: 80px; }

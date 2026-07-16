@@ -265,7 +265,7 @@
     <div class="text-center">
       <p>Mengetahui,</p>
       <p>Orang Tua / Wali Murid</p>
-      <div class="mt-4 mb-1">
+      <div class="mt-6 mb-3" style="min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
         <p class="mt-1"><strong>{{ auth()->user()->name }}</strong></p>
       </div>
@@ -273,7 +273,7 @@
     <div class="text-center">
       <p>{{ now()->translatedFormat('d F Y') }}</p>
       <p>Guru Pengajar</p>
-      <div class="mt-4 mb-1">
+      <div class="mt-6 mb-3" style="min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
         <p class="mt-1"><strong>{{ $student->teacher?->user?->name ?? '-' }}</strong></p>
       </div>
