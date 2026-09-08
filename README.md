@@ -8,13 +8,23 @@ Aplikasi **E-Rapor Digital** untuk lembaga pendidikan anak **BiMBA AIUEO** — s
 
 - 📊 **Dashboard Admin** — Statistik murid, guru, dan aktivitas terkini
 - 👨‍🎓 **Manajemen Data Murid** — CRUD data murid dengan status aktif/lulus/pindah
+- 🏫 **Manajemen Data Kelas** — Tambah, ubah, pantau kapasitas/jumlah murid, dan hapus kelas kosong
 - 👩‍🏫 **Manajemen Data Guru** — Data motivator/guru, status aktif/nonaktif/cuti, dan plotting siswa bimbingan
 - 👪 **Manajemen Data Wali Murid** — Daftar wali murid, relasi anak, dan status otomatis berbasis data siswa
 - 📝 **Pengolahan Nilai Progres** — Input nilai per aspek (Baca, Tulis, Hitung) dengan skala K/B/P/T
 - 📈 **Grafik Perkembangan** — Visualisasi tren kemajuan level siswa per periode
 - 🖨️ **Cetak Rapor Digital** — Generate dan print laporan perkembangan murid
+- ✅ **Absensi Anak** — Input Hadir/Sakit/Izin/Alpa, rekap harian dan bulanan, riwayat per anak, serta laporan PDF/CSV
 - 👪 **Portal Wali Murid** — Pantau progres dan rapor anak secara online
 - ⚙️ **Pengaturan Sistem** — Konfigurasi institusi, penilaian, role, dan keamanan
+
+---
+
+## ✅ Aturan Absensi
+
+- Input harian hanya memuat murid berstatus **Aktif** dan satu murid hanya memiliki satu catatan per tanggal.
+- Laporan secara default memuat murid aktif; riwayat murid Cuti, Lulus, atau Keluar tersedia melalui filter status.
+- Rasio hadir dihitung dengan rumus **Hadir ÷ total hari yang sudah dicatat (H/S/I/A)**. Hari yang belum dicatat tidak otomatis dianggap Alpa.
 
 ---
 
@@ -50,9 +60,9 @@ Aplikasi ini dirancang berjalan **100% offline** — tidak ada CDN, Google Fonts
 
 | Role | Akses |
 |------|-------|
-| **Admin** | Dashboard, Data Guru, Data Murid, Data Wali Murid |
-| **Guru / Motivator** | Dashboard, Daftar Murid Bimbingan, Pengolahan Nilai, Grafik, Cetak Rapor |
-| **Wali Murid** | Dashboard anak, Laporan Rapor |
+| **Admin** | Dashboard, Data Guru, Data Murid, Data Wali Murid, Absensi, dan Laporan Absensi |
+| **Guru / Motivator** | Dashboard, Daftar Murid Bimbingan, Absensi, Pengolahan Nilai, Grafik, Cetak Rapor |
+| **Wali Murid** | Dashboard anak, Riwayat Kehadiran, Laporan Rapor |
 
 ---
 

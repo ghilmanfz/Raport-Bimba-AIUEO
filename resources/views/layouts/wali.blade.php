@@ -62,6 +62,11 @@
           <iconify-icon icon="lucide:layout-dashboard" width="18"></iconify-icon>
           Dashboard
         </a>
+        <a href="{{ route('wali.absensi.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.absensi*') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:calendar-check" width="18"></iconify-icon>
+          Kehadiran Anak
+        </a>
         <a href="{{ route('wali.rapor') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('wali.rapor') ? 'sidebar-active-item' : 'text-[#565d6d] hover:bg-gray-100' }}">
           <iconify-icon icon="lucide:file-text" width="18"></iconify-icon>

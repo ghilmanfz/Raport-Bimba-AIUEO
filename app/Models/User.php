@@ -72,4 +72,9 @@ class User extends Authenticatable
     {
         return $this->notifications()->whereNull('read_at');
     }
+
+    public function recordedAttendances()
+    {
+        return $this->hasMany(Attendance::class, 'recorded_by');
+    }
 }

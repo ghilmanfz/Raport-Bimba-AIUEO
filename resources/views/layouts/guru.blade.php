@@ -70,6 +70,11 @@
           <iconify-icon icon="lucide:users" width="18"></iconify-icon>
           Daftar Murid Bimbingan
         </a>
+        <a href="{{ route('guru.absensi.index') }}"
+           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.absensi*') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
+          <iconify-icon icon="lucide:clipboard-check" width="18"></iconify-icon>
+          Absensi Anak
+        </a>
         <a href="{{ route('guru.nilai') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.nilai*') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
           <iconify-icon icon="lucide:clipboard-list" width="18"></iconify-icon>

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
 use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\User;
@@ -16,48 +15,47 @@ class PengaturanController extends Controller
 {
     public function index()
     {
-        $classrooms = Classroom::withCount('students')->orderBy('name')->get();
-        $settings   = [
-            'institution_name'    => Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre'),
+        $settings = [
+            'institution_name' => Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre'),
             'institution_address' => Setting::get('institution_address', 'Jl. Pendidikan No. 45, Jakarta Selatan, DKI Jakarta 12345'),
-            'unit_name'           => Setting::get('unit_name', ''),
-            'institution_logo'    => Setting::get('institution_logo'),
-            'support_whatsapp'    => Setting::get('support_whatsapp', ''),
-            'support_email'       => Setting::get('support_email', 'info@bimba-aiueo.com'),
-            'landing_badge'       => Setting::get('landing_badge', 'Masa Depan Belajar Anak'),
-            'landing_title'       => Setting::get('landing_title', 'E-Rapor'),
-            'landing_highlight'   => Setting::get('landing_highlight', 'BiMBA AIUEO'),
+            'unit_name' => Setting::get('unit_name', ''),
+            'institution_logo' => Setting::get('institution_logo'),
+            'support_whatsapp' => Setting::get('support_whatsapp', ''),
+            'support_email' => Setting::get('support_email', 'info@bimba-aiueo.com'),
+            'landing_badge' => Setting::get('landing_badge', 'Masa Depan Belajar Anak'),
+            'landing_title' => Setting::get('landing_title', 'E-Rapor'),
+            'landing_highlight' => Setting::get('landing_highlight', 'BiMBA AIUEO'),
             'landing_description' => Setting::get('landing_description', 'Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.'),
-            'landing_cta_title'   => Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?'),
+            'landing_cta_title' => Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?'),
             'landing_cta_description' => Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.'),
-            'landing_image'       => Setting::get('landing_image', Setting::get('hero_image', Setting::get('institution_banner'))),
-            'login_image'         => Setting::get('login_image', Setting::get('hero_image', Setting::get('institution_banner'))),
-            'hero_image'          => Setting::get('hero_image'),
-            'institution_banner'  => Setting::get('institution_banner'),
+            'landing_image' => Setting::get('landing_image', Setting::get('hero_image', Setting::get('institution_banner'))),
+            'login_image' => Setting::get('login_image', Setting::get('hero_image', Setting::get('institution_banner'))),
+            'hero_image' => Setting::get('hero_image'),
+            'institution_banner' => Setting::get('institution_banner'),
         ];
 
-        return view('admin.pengaturan', compact('classrooms', 'settings'));
+        return view('admin.pengaturan', compact('settings'));
     }
 
     public function updateSettings(Request $request)
     {
         $request->validate([
-            'institution_name'    => 'required|string|max:255',
+            'institution_name' => 'required|string|max:255',
             'institution_address' => 'required|string|max:500',
-            'unit_name'           => 'nullable|string|max:255',
-            'support_whatsapp'    => 'nullable|string|max:30',
-            'support_email'       => 'nullable|email|max:255',
-            'landing_badge'       => 'nullable|string|max:120',
-            'landing_title'       => 'nullable|string|max:120',
-            'landing_highlight'   => 'nullable|string|max:120',
+            'unit_name' => 'nullable|string|max:255',
+            'support_whatsapp' => 'nullable|string|max:30',
+            'support_email' => 'nullable|email|max:255',
+            'landing_badge' => 'nullable|string|max:120',
+            'landing_title' => 'nullable|string|max:120',
+            'landing_highlight' => 'nullable|string|max:120',
             'landing_description' => 'nullable|string|max:500',
-            'landing_cta_title'   => 'nullable|string|max:180',
+            'landing_cta_title' => 'nullable|string|max:180',
             'landing_cta_description' => 'nullable|string|max:500',
-            'institution_logo'    => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
-            'landing_image'       => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
-            'login_image'         => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
-            'hero_image'          => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
-            'institution_banner'  => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
+            'institution_logo' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'landing_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+            'login_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+            'hero_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
+            'institution_banner' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
         ]);
 
         Setting::set('institution_name', $request->institution_name);
@@ -124,7 +122,7 @@ class PengaturanController extends Controller
 
         Notification::notifyAdmins(
             'Pengaturan Diperbarui',
-            'Pengaturan institusi telah diperbarui oleh ' . Auth::user()->name . '.',
+            'Pengaturan institusi telah diperbarui oleh '.Auth::user()->name.'.',
             'info',
             'lucide:settings',
             route('admin.pengaturan')
@@ -137,12 +135,12 @@ class PengaturanController extends Controller
     {
         $request->validate([
             'current_password' => 'required',
-            'password'         => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = Auth::user();
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
         }
 
@@ -160,26 +158,5 @@ class PengaturanController extends Controller
         );
 
         return redirect()->route('admin.pengaturan')->with('success', 'Kata sandi berhasil diperbarui.');
-    }
-
-    public function storeClassroom(Request $request)
-    {
-        $request->validate([
-            'name'     => 'required|string|max:100',
-            'level'    => 'required|string|max:50',
-            'capacity' => 'required|integer|min:1|max:50',
-        ]);
-
-        Classroom::create($request->only('name', 'level', 'capacity'));
-
-        Notification::notifyAdmins(
-            'Kelas Baru Ditambahkan',
-            'Kelas ' . $request->name . ' (' . $request->level . ') berhasil ditambahkan.',
-            'success',
-            'lucide:school',
-            route('admin.pengaturan')
-        );
-
-        return redirect()->route('admin.pengaturan')->with('success', 'Kelas berhasil ditambahkan.');
     }
 }

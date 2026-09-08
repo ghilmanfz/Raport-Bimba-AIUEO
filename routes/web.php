@@ -1,24 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\GuruController as AdminGuruController;
-use App\Http\Controllers\Admin\WaliController as AdminWaliController;
+use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\WaliController as AdminWaliController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Guru\AttendanceController as GuruAttendanceController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
+use App\Http\Controllers\Guru\GrafikController;
 use App\Http\Controllers\Guru\MuridController as GuruMuridController;
 use App\Http\Controllers\Guru\NilaiController;
-use App\Http\Controllers\Guru\GrafikController;
 use App\Http\Controllers\Guru\RaporController as GuruRaporController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RaporDownloadController;
+use App\Http\Controllers\Wali\AttendanceController as WaliAttendanceController;
 use App\Http\Controllers\Wali\DashboardController as WaliDashboardController;
 use App\Http\Controllers\Wali\RaporController as WaliRaporController;
-use App\Http\Controllers\RaporDownloadController;
-
-use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +68,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('/murid/{student}', [MuridController::class, 'update'])->name('murid.update');
     Route::delete('/murid/{student}', [MuridController::class, 'destroy'])->name('murid.destroy');
 
+    Route::get('/kelas', [AdminClassroomController::class, 'index'])->name('kelas.index');
+    Route::post('/kelas', [AdminClassroomController::class, 'store'])->name('kelas.store');
+    Route::put('/kelas/{classroom}', [AdminClassroomController::class, 'update'])->name('kelas.update');
+    Route::delete('/kelas/{classroom}', [AdminClassroomController::class, 'destroy'])->name('kelas.destroy');
+
+    Route::get('/absensi', [AdminAttendanceController::class, 'index'])->name('absensi.index');
+    Route::post('/absensi', [AdminAttendanceController::class, 'store'])->name('absensi.store');
+    Route::get('/absensi/laporan', [AdminAttendanceController::class, 'report'])->name('absensi.report');
+    Route::get('/absensi/laporan/pdf', [AdminAttendanceController::class, 'pdf'])->name('absensi.pdf');
+    Route::get('/absensi/laporan/csv', [AdminAttendanceController::class, 'export'])->name('absensi.export');
+
     Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru');
     Route::get('/guru/{teacher}/detail', [AdminGuruController::class, 'show'])->name('guru.show');
     Route::get('/guru/export', [AdminGuruController::class, 'export'])->name('guru.export');
@@ -88,7 +102,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
     Route::put('/pengaturan', [PengaturanController::class, 'updateSettings'])->name('pengaturan.update');
     Route::put('/pengaturan/password', [PengaturanController::class, 'updatePassword'])->name('pengaturan.password');
-    Route::post('/pengaturan/kelas', [PengaturanController::class, 'storeClassroom'])->name('pengaturan.kelas.store');
 });
 
 /*
@@ -100,6 +113,9 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
     Route::get('/dashboard', [GuruDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/murid', [GuruMuridController::class, 'index'])->name('murid');
+
+    Route::get('/absensi', [GuruAttendanceController::class, 'index'])->name('absensi.index');
+    Route::post('/absensi', [GuruAttendanceController::class, 'store'])->name('absensi.store');
 
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
@@ -117,6 +133,7 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
 */
 Route::prefix('wali')->name('wali.')->middleware(['auth', 'role:wali'])->group(function () {
     Route::get('/dashboard', [WaliDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/absensi', [WaliAttendanceController::class, 'index'])->name('absensi.index');
     Route::get('/rapor', [WaliRaporController::class, 'index'])->name('rapor');
     Route::get('/riwayat', [WaliRaporController::class, 'riwayat'])->name('riwayat');
     Route::get('/rapor-periode', [WaliRaporController::class, 'cetakPeriode'])->name('rapor.periode');

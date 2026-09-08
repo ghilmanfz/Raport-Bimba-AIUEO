@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\Notification;
 use App\Models\Student;
-use App\Models\Classroom;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class MuridController extends Controller
 {
+    public function __construct(private readonly AttendanceService $attendanceService) {}
+
     public function index(Request $request)
     {
         $query = Student::with(['classroom', 'parent', 'teacher']);
@@ -21,7 +24,7 @@ class MuridController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%");
+                    ->orWhere('nis', 'like', "%{$search}%");
             });
         }
 
@@ -37,17 +40,18 @@ class MuridController extends Controller
             $query->where('teacher_id', $teacherFilter);
         }
 
-        $students     = $query->latest()->paginate(10);
-        $classrooms   = Classroom::orderBy('name')->get();
-        $teachers     = Teacher::with('user')->where('status', 'aktif')->get();
-        $guardians    = User::where('role', 'wali')->withCount('students')->orderBy('name')->get();
-        $nextNis      = Student::generateNextNis();
-        $totalMurid   = Student::count();
-        $muridAktif   = Student::where('status', 'aktif')->count();
-        $muridLulus   = Student::where('status', 'lulus')->count();
-        $muridKeluar  = Student::where('status', 'keluar')->count();
+        $students = $query->latest()->paginate(10);
+        $classrooms = Classroom::orderBy('name')->get();
+        $teachers = Teacher::with('user')->where('status', 'aktif')->get();
+        $guardians = User::where('role', 'wali')->withCount('students')->orderBy('name')->get();
+        $nextNis = Student::generateNis();
+        $totalMurid = Student::count();
+        $muridAktif = Student::active()->count();
+        $muridLulus = Student::where('status', 'lulus')->count();
+        $muridKeluar = Student::where('status', 'keluar')->count();
+        $muridCuti = Student::where('status', 'cuti')->count();
 
-        return view('admin.murid', compact('students', 'classrooms', 'teachers', 'guardians', 'nextNis', 'totalMurid', 'muridAktif', 'muridLulus', 'muridKeluar'));
+        return view('admin.murid', compact('students', 'classrooms', 'teachers', 'guardians', 'nextNis', 'totalMurid', 'muridAktif', 'muridLulus', 'muridKeluar', 'muridCuti'));
     }
 
     public function store(Request $request)
@@ -56,7 +60,7 @@ class MuridController extends Controller
             'existing_parent_id' => $request->input('existing_parent_id', $request->input('parent_id')),
         ]);
 
-        if (!$request->filled('parent_mode')) {
+        if (! $request->filled('parent_mode')) {
             $waliOption = $request->input('wali_option');
 
             if ($waliOption === 'pilih') {
@@ -75,32 +79,32 @@ class MuridController extends Controller
         }
 
         $request->merge([
-            'nis' => $request->filled('nis') ? $request->nis : Student::generateNextNis(),
+            'nis' => $request->filled('nis') ? $request->nis : Student::generateNis(),
         ]);
 
         $validated = $request->validate([
-            'name'         => 'required|string|max:255',
-            'gender'       => 'required|in:L,P',
-            'birth_date'   => 'nullable|date',
-            'nis'          => 'required|string|unique:students,nis',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:L,P',
+            'birth_date' => 'nullable|date',
+            'nis' => 'required|string|unique:students,nis',
             'classroom_id' => 'required|exists:classrooms,id',
-            'teacher_id'   => 'nullable|exists:teachers,id',
-            'join_date'    => 'required|date',
-            'status'       => 'required|in:aktif,lulus,keluar,cuti',
-            'parent_mode'  => 'required|in:none,existing,new',
+            'teacher_id' => 'nullable|exists:teachers,id',
+            'join_date' => 'required|date',
+            'status' => ['required', Rule::in(array_keys(Student::STATUS_LABELS))],
+            'parent_mode' => 'required|in:none,existing,new',
             'existing_parent_id' => [
                 'nullable',
                 'required_if:parent_mode,existing',
                 Rule::exists('users', 'id')->where(fn ($q) => $q->where('role', 'wali')),
             ],
-            'parent_id'    => 'nullable|exists:users,id',
-            'parent_name'  => 'nullable|string|max:255',
+            'parent_id' => 'nullable|exists:users,id',
+            'parent_name' => 'nullable|string|max:255',
             'parent_password' => 'nullable|string|min:6',
-            'father_name'  => 'nullable|string|max:255',
-            'mother_name'  => 'nullable|string|max:255',
+            'father_name' => 'nullable|string|max:255',
+            'mother_name' => 'nullable|string|max:255',
             'father_phone' => 'nullable|string|max:20',
             'mother_phone' => 'nullable|string|max:20',
-            'address'      => 'nullable|string|max:1000',
+            'address' => 'nullable|string|max:1000',
             'parent_email' => 'nullable|email|unique:users,email',
         ], [
             'name.required' => 'Nama murid wajib diisi.',
@@ -122,8 +126,8 @@ class MuridController extends Controller
             'parent_password.min' => 'Password wali minimal 6 karakter.',
         ]);
 
-        if (!empty($validated['teacher_id'])) {
-            $assignedCount = Student::where('teacher_id', $validated['teacher_id'])->count();
+        if (! empty($validated['teacher_id']) && $validated['status'] === 'aktif') {
+            $assignedCount = Student::where('teacher_id', $validated['teacher_id'])->active()->count();
             if ($assignedCount >= 25) {
                 return redirect()->route('admin.murid')->withErrors(['teacher_id' => 'Guru pembimbing sudah mencapai maksimal 25 siswa.'])->withInput();
             }
@@ -139,20 +143,20 @@ class MuridController extends Controller
             $parentId = (int) $validated['existing_parent_id'];
         } elseif ($validated['parent_mode'] === 'new') {
             $defaultParentPassword = $validated['parent_password'] ?? config('app.default_wali_password', 'password123');
-            $fallbackEmail = 'wali' . now()->timestamp . rand(100, 999) . '@raportbimba.local';
+            $fallbackEmail = 'wali'.now()->timestamp.rand(100, 999).'@raportbimba.local';
             $parentName = $validated['parent_name']
-                ?? trim(($validated['father_name'] ?? '') . ' ' . ($validated['mother_name'] ?? ''))
-                ?: ('Wali ' . $validated['name']);
+                ?? trim(($validated['father_name'] ?? '').' '.($validated['mother_name'] ?? ''))
+                ?: ('Wali '.$validated['name']);
 
             $parent = User::create([
-                'name'     => $parentName,
-                'email'    => $validated['parent_email'] ?: $fallbackEmail,
-                'role'     => 'wali',
+                'name' => $parentName,
+                'email' => $validated['parent_email'] ?: $fallbackEmail,
+                'role' => 'wali',
                 'father_name' => $validated['father_name'] ?? null,
                 'mother_name' => $validated['mother_name'] ?? null,
                 'father_phone' => $validated['father_phone'] ?? null,
                 'mother_phone' => $validated['mother_phone'] ?? null,
-                'address'  => $validated['address'] ?? null,
+                'address' => $validated['address'] ?? null,
                 'password' => Hash::make($defaultParentPassword),
                 'plain_password' => $defaultParentPassword,
                 'show_password_change_alert' => true,
@@ -163,20 +167,20 @@ class MuridController extends Controller
         }
 
         $student = Student::create([
-            'name'         => $validated['name'],
-            'gender'       => $validated['gender'],
-            'birth_date'   => $validated['birth_date'] ?? null,
-            'nis'          => $validated['nis'],
+            'name' => $validated['name'],
+            'gender' => $validated['gender'],
+            'birth_date' => $validated['birth_date'] ?? null,
+            'nis' => $validated['nis'],
             'classroom_id' => $validated['classroom_id'],
-            'teacher_id'   => $validated['teacher_id'] ?? null,
-            'parent_id'    => $parentId,
-            'join_date'    => $validated['join_date'],
-            'status'       => $validated['status'],
+            'teacher_id' => $validated['teacher_id'] ?? null,
+            'parent_id' => $parentId,
+            'join_date' => $validated['join_date'],
+            'status' => $validated['status'],
         ]);
 
         Notification::notifyAdmins(
             'Murid Baru Ditambahkan',
-            'Data murid ' . $validated['name'] . ' ('. $student->nis .') berhasil ditambahkan ke sistem.',
+            'Data murid '.$validated['name'].' ('.$student->nis.') berhasil ditambahkan ke sistem.',
             'success',
             'lucide:user-plus',
             route('admin.murid')
@@ -184,7 +188,7 @@ class MuridController extends Controller
 
         $successMessage = 'Murid berhasil ditambahkan.';
         if ($createdParentPassword) {
-            $successMessage .= ' Akun wali baru dibuat dengan password default: ' . $createdParentPassword;
+            $successMessage .= ' Akun wali baru dibuat dengan password default: '.$createdParentPassword;
         }
 
         return redirect()->route('admin.murid')->with('success', $successMessage);
@@ -193,41 +197,45 @@ class MuridController extends Controller
     public function update(Request $request, Student $student)
     {
         $request->validate([
-            'name'         => 'required|string|max:255',
-            'gender'       => 'required|in:L,P',
-            'birth_date'   => 'nullable|date',
+            'name' => 'required|string|max:255',
+            'gender' => 'required|in:L,P',
+            'birth_date' => 'nullable|date',
             'classroom_id' => 'required|exists:classrooms,id',
-            'teacher_id'   => 'nullable|exists:teachers,id',
-            'join_date'    => 'required|date',
-            'status'       => 'required|in:aktif,lulus,keluar,cuti',
-            'parent_id'    => 'nullable|exists:users,id',
+            'teacher_id' => 'nullable|exists:teachers,id',
+            'join_date' => 'required|date',
+            'status' => ['required', Rule::in(array_keys(Student::STATUS_LABELS))],
+            'parent_id' => 'nullable|exists:users,id',
         ]);
 
-        if ($request->filled('teacher_id') && (int) $request->teacher_id !== (int) $student->teacher_id) {
-            $assignedCount = Student::where('teacher_id', $request->teacher_id)->count();
+        $newTeacherAddsActiveStudent = $request->filled('teacher_id')
+            && $request->status === 'aktif'
+            && ($student->status !== 'aktif' || (int) $request->teacher_id !== (int) $student->teacher_id);
+
+        if ($newTeacherAddsActiveStudent) {
+            $assignedCount = Student::where('teacher_id', $request->teacher_id)->active()->count();
             if ($assignedCount >= 25) {
                 return redirect()->route('admin.murid')->withErrors(['teacher_id' => 'Guru pembimbing sudah mencapai maksimal 25 siswa.'])->withInput();
             }
         }
 
-        if ($request->filled('parent_id') && !User::where('id', $request->parent_id)->where('role', 'wali')->exists()) {
+        if ($request->filled('parent_id') && ! User::where('id', $request->parent_id)->where('role', 'wali')->exists()) {
             return redirect()->route('admin.murid')->withErrors(['parent_id' => 'Data wali murid tidak valid.'])->withInput();
         }
 
         $student->update([
-            'name'         => $request->name,
-            'gender'       => $request->gender,
-            'birth_date'   => $request->birth_date ?: null,
+            'name' => $request->name,
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date ?: null,
             'classroom_id' => $request->classroom_id,
-            'teacher_id'   => $request->teacher_id ?: null,
-            'join_date'    => $request->join_date,
-            'status'       => $request->status,
-            'parent_id'    => $request->filled('parent_id') ? (int) $request->parent_id : null,
+            'teacher_id' => $request->teacher_id ?: null,
+            'join_date' => $request->join_date,
+            'status' => $request->status,
+            'parent_id' => $request->filled('parent_id') ? (int) $request->parent_id : null,
         ]);
 
         Notification::notifyAdmins(
             'Data Murid Diperbarui',
-            'Data murid ' . $student->name . ' telah diperbarui.',
+            'Data murid '.$student->name.' telah diperbarui.',
             'info',
             'lucide:pencil',
             route('admin.murid')
@@ -243,7 +251,7 @@ class MuridController extends Controller
 
         Notification::notifyAdmins(
             'Data Murid Dihapus',
-            'Data murid ' . $name . ' telah dihapus dari sistem.',
+            'Data murid '.$name.' telah dihapus dari sistem.',
             'warning',
             'lucide:trash-2',
             route('admin.murid')
@@ -256,8 +264,19 @@ class MuridController extends Controller
     {
         $student->load(['classroom', 'parent', 'teacher.user', 'teacher.classrooms']);
         $studentProgress = $student->progress()->orderBy('created_at', 'desc')->get();
-        
-        return view('admin.murid-detail', compact('student', 'studentProgress'));
+        $attendanceHistory = $student->attendances()
+            ->with(['classroom', 'recorder'])
+            ->orderByDesc('attendance_date')
+            ->take(12)
+            ->get();
+        $monthAttendances = $student->attendances()
+            ->inMonth(now()->format('Y-m'))
+            ->get();
+        $attendanceSummary = $this->attendanceService->summarize($monthAttendances);
+
+        return view('admin.murid-detail', compact(
+            'student', 'studentProgress', 'attendanceHistory', 'attendanceSummary'
+        ));
     }
 
     public function export()
@@ -289,8 +308,8 @@ class MuridController extends Controller
         };
 
         return response()->stream($callback, 200, [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="data-murid-' . date('Y-m-d') . '.csv"',
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="data-murid-'.date('Y-m-d').'.csv"',
         ]);
     }
 }

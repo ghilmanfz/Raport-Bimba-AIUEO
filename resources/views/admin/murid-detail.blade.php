@@ -94,6 +94,37 @@
       @endif
     </div>
 
+    <!-- Attendance History -->
+    <div class="bg-white rounded-2xl border border-[#dee1e6] p-6 main-shadow">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-lg font-semibold text-[#171a1f]">Riwayat Kehadiran</h2>
+          <p class="text-xs text-[#565d6d]">Ringkasan bulan {{ now()->locale('id')->translatedFormat('F Y') }}</p>
+        </div>
+        <a href="{{ route('admin.absensi.report', ['month' => now()->format('Y-m'), 'student_id' => $student->id, 'student_status' => 'semua']) }}" class="inline-flex items-center gap-2 px-3 py-2 bg-orange-50 border border-orange-200 text-[#C2410C] rounded-xl text-xs font-semibold hover:bg-orange-100">
+          <iconify-icon icon="lucide:bar-chart-3" width="15"></iconify-icon> Laporan Lengkap
+        </a>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-5">
+        <div class="rounded-xl bg-green-50 p-3"><p class="text-xs text-green-700">Hadir</p><p class="text-xl font-bold text-green-700">{{ $attendanceSummary['hadir'] }}</p></div>
+        <div class="rounded-xl bg-blue-50 p-3"><p class="text-xs text-blue-700">Sakit</p><p class="text-xl font-bold text-blue-700">{{ $attendanceSummary['sakit'] }}</p></div>
+        <div class="rounded-xl bg-amber-50 p-3"><p class="text-xs text-amber-700">Izin</p><p class="text-xl font-bold text-amber-700">{{ $attendanceSummary['izin'] }}</p></div>
+        <div class="rounded-xl bg-red-50 p-3"><p class="text-xs text-red-700">Alpa</p><p class="text-xl font-bold text-red-700">{{ $attendanceSummary['alpa'] }}</p></div>
+        <div class="rounded-xl bg-purple-50 p-3"><p class="text-xs text-purple-700">Hadir/Tercatat</p><p class="text-xl font-bold text-purple-700">{{ $attendanceSummary['percentage'] === null ? '—' : $attendanceSummary['percentage'].'%' }}</p></div>
+      </div>
+      <div class="space-y-2">
+        @forelse($attendanceHistory as $attendance)
+          @php $badge = match($attendance->status) { 'hadir' => 'bg-green-100 text-green-700', 'sakit' => 'bg-blue-100 text-blue-700', 'izin' => 'bg-amber-100 text-amber-700', default => 'bg-red-100 text-red-700' }; @endphp
+          <div class="border border-[#edf0f3] rounded-xl px-4 py-3 flex items-center justify-between gap-4">
+            <div><p class="text-sm font-semibold">{{ $attendance->attendance_date->locale('id')->translatedFormat('d F Y') }}</p><p class="text-xs text-[#565d6d]">{{ $attendance->notes ?: 'Tanpa catatan' }}</p></div>
+            <span class="px-3 py-1 rounded-full text-xs font-bold {{ $badge }}">{{ $attendance->status_code }} · {{ $attendance->status_label }}</span>
+          </div>
+        @empty
+          <p class="text-sm text-[#565d6d] py-4">Belum ada riwayat kehadiran.</p>
+        @endforelse
+      </div>
+    </div>
+
     <!-- Student Progress -->
     <div class="bg-white rounded-2xl border border-[#dee1e6] p-6 main-shadow">
       <h2 class="text-lg font-semibold text-[#171a1f] mb-4">Perkembangan Murid</h2>

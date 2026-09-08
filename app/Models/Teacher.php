@@ -26,7 +26,7 @@ class Teacher extends Model
 
         $nextNum = $lastNumber + 1;
 
-        return 'T-' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+        return 'T-'.str_pad($nextNum, 3, '0', STR_PAD_LEFT);
     }
 
     public function user()
@@ -47,12 +47,5 @@ class Teacher extends Model
     public function students()
     {
         return $this->hasMany(Student::class);
-    }
-
-    public function classroomStudents()
-    {
-        // Guru tidak lagi terikat langsung ke kelas dari menu Guru.
-        // Murid dibimbing tetap ditentukan oleh kolom students.teacher_id.
-        return $this->students();
     }
 }

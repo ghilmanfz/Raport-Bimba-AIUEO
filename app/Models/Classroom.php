@@ -18,8 +18,8 @@ class Classroom extends Model
         return $this->belongsToMany(Teacher::class, 'classroom_teacher');
     }
 
-    public function activeStudentsCount(): int
+    public function attendances()
     {
-        return $this->students()->where('status', 'aktif')->count();
+        return $this->hasMany(Attendance::class);
     }
 }

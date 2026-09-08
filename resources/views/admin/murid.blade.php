@@ -21,7 +21,7 @@
   </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
   <div class="bg-white border border-[#dee1e6] rounded-xl p-6 main-shadow">
     <p class="text-sm font-medium text-[#565d6d]">Total Murid</p>
     <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $totalMurid }}</h3>
@@ -29,6 +29,10 @@
   <div class="bg-white border border-[#dee1e6] rounded-xl p-6 main-shadow">
     <p class="text-sm font-medium text-[#565d6d]">Murid Aktif</p>
     <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridAktif }}</h3>
+  </div>
+  <div class="bg-white border border-[#dee1e6] rounded-xl p-6 main-shadow">
+    <p class="text-sm font-medium text-[#565d6d]">Murid Cuti</p>
+    <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridCuti }}</h3>
   </div>
   <div class="bg-white border border-[#dee1e6] rounded-xl p-6 main-shadow">
     <p class="text-sm font-medium text-[#565d6d]">Murid Lulus</p>
@@ -47,10 +51,9 @@
       <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama/NIS" class="px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
       <select name="status" class="px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
         <option value="">Semua Status</option>
-        <option value="aktif" {{ request('status') === 'aktif' ? 'selected' : '' }}>Aktif</option>
-        <option value="lulus" {{ request('status') === 'lulus' ? 'selected' : '' }}>Lulus</option>
-        <option value="keluar" {{ request('status') === 'keluar' ? 'selected' : '' }}>Keluar</option>
-        <option value="cuti" {{ request('status') === 'cuti' ? 'selected' : '' }}>Cuti</option>
+        @foreach(\App\Models\Student::STATUS_LABELS as $value => $label)
+          <option value="{{ $value }}" @selected(request('status') === $value)>{{ $label }}</option>
+        @endforeach
       </select>
       <select name="teacher_id" class="px-4 py-2 bg-white border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
         <option value="">Semua Guru Pembimbing</option>
@@ -86,7 +89,7 @@
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->parent?->father_name && $student->parent?->mother_name ? $student->parent->father_name . ' & ' . $student->parent->mother_name : ($student->parent?->name ?? '-') }}</td>
           <td class="px-6 py-4 text-sm text-[#565d6d]">{{ $student->parent?->email ?? '-' }}</td>
           <td class="px-6 py-4 text-sm">
-            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ ucfirst($student->status) }}</span>
+            <span class="status-pill {{ $student->status === 'aktif' ? 'status-active' : ($student->status === 'lulus' ? 'status-lulus' : ($student->status === 'cuti' ? 'status-cuti' : 'status-keluar')) }}">{{ $student->status_label }}</span>
           </td>
           <td class="px-6 py-4 text-right">
             <div class="flex items-center justify-end gap-1">
@@ -195,10 +198,9 @@
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
           <select name="status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm focus:ring-2 focus:ring-[#F97316]/20 focus:outline-none">
-            <option value="aktif" @selected(old('status', 'aktif') === 'aktif')>Aktif</option>
-            <option value="lulus" @selected(old('status') === 'lulus')>Lulus</option>
-            <option value="keluar" @selected(old('status') === 'keluar')>Keluar</option>
-            <option value="cuti" @selected(old('status') === 'cuti')>Cuti</option>
+            @foreach(\App\Models\Student::STATUS_LABELS as $value => $label)
+              <option value="{{ $value }}" @selected(old('status', 'aktif') === $value)>{{ $label }}</option>
+            @endforeach
           </select>
         </div>
       </div>
@@ -348,10 +350,9 @@
         <div>
           <label class="block text-sm font-medium text-[#565d6d] mb-1">Status</label>
           <select name="status" id="edit-murid-status" required class="w-full px-4 py-2 border border-[#dee1e6] rounded-xl text-sm">
-            <option value="aktif">Aktif</option>
-            <option value="lulus">Lulus</option>
-            <option value="keluar">Keluar</option>
-            <option value="cuti">Cuti</option>
+            @foreach(\App\Models\Student::STATUS_LABELS as $value => $label)
+              <option value="{{ $value }}">{{ $label }}</option>
+            @endforeach
           </select>
         </div>
       </div>

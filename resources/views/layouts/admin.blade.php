@@ -67,6 +67,16 @@
         <iconify-icon icon="lucide:users" width="18"></iconify-icon>
         Data Murid
       </a>
+      <a href="{{ route('admin.kelas.index') }}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.kelas*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
+        <iconify-icon icon="lucide:school" width="18"></iconify-icon>
+        Data Kelas
+      </a>
+      <a href="{{ route('admin.absensi.index') }}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.absensi*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
+        <iconify-icon icon="lucide:clipboard-check" width="18"></iconify-icon>
+        Absensi
+      </a>
       <a href="{{ route('admin.guru') }}"
          class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.guru*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
         <iconify-icon icon="lucide:user-check" width="18"></iconify-icon>

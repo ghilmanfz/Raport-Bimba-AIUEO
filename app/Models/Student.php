@@ -2,23 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Student extends Model
 {
+    public const STATUS_LABELS = [
+        'aktif' => 'Aktif',
+        'cuti' => 'Cuti',
+        'lulus' => 'Lulus',
+        'keluar' => 'Keluar',
+    ];
+
     protected $fillable = ['nis', 'name', 'gender', 'birth_date', 'classroom_id', 'parent_id', 'teacher_id', 'join_date', 'status', 'photo', 'report_token', 'development_notes'];
-
-    public static function generateNextNis(): string
-    {
-        $lastNis = static::where('nis', 'like', 'BM%')
-            ->orderByRaw("CAST(SUBSTR(nis, 3) AS UNSIGNED) DESC")
-            ->value('nis');
-
-        $nextNumber = $lastNis ? ((int) substr($lastNis, 2)) + 1 : 1;
-
-        return 'BM' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
-    }
 
     /**
      * Generate the next sequential NIS (BM001, BM002, ...).
@@ -38,7 +35,7 @@ class Student extends Model
 
         $nextNum = $lastNumber + 1;
 
-        return 'BM' . str_pad($nextNum, 3, '0', STR_PAD_LEFT);
+        return 'BM'.str_pad($nextNum, 3, '0', STR_PAD_LEFT);
     }
 
     protected static function booted(): void
@@ -78,6 +75,21 @@ class Student extends Model
         return $this->hasMany(StudentProgress::class);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'aktif');
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUS_LABELS[$this->status] ?? ucfirst($this->status);
+    }
+
     public function progressBySkill(string $skillType)
     {
         return $this->progress()
@@ -92,9 +104,12 @@ class Student extends Model
         $details = $this->progressBySkill($skillType);
 
         $total = $details->count();
-        if ($total === 0) return 0;
+        if ($total === 0) {
+            return 0;
+        }
 
         $skilled = $details->where('status', 'T')->count();
+
         return round(($skilled / $total) * 100, 1);
     }
 }
