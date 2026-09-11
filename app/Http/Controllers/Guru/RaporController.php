@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\RaporDownloadController;
 use App\Models\Setting;
 use App\Models\Student;
+use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -74,7 +75,9 @@ class RaporController extends Controller
             }
         }
 
-        return view('guru.rapor', compact('students', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64'));
+        $attendanceReport = $student ? app(AttendanceService::class)->forReport($student) : null;
+
+        return view('guru.rapor', compact('students', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport'));
     }
 
     public function saveNotes(Request $request)

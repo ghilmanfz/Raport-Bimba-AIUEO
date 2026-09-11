@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
 use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Student;
@@ -20,7 +19,6 @@ class DashboardController extends Controller
         $stats = [
             'total_murid'   => Student::count(),
             'total_guru'    => $totalGuru,
-            'total_kelas'   => Classroom::count(),
             'murid_aktif'   => Student::where('status', 'aktif')->count(),
             'murid_baru'    => Student::where('join_date', '>=', now()->startOfMonth())->count(),
             'pencapaian'    => $this->calculateAchievement(),
@@ -34,10 +32,7 @@ class DashboardController extends Controller
             ->latest()
             ->take(5)
             ->get();
-        $supportWhatsapp = preg_replace('/\D+/', '', Setting::get('support_whatsapp', ''));
-        $supportWhatsappUrl = $supportWhatsapp
-            ? 'https://wa.me/' . $supportWhatsapp . '?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor.'
-            : '#';
+        $supportWhatsappUrl = Setting::supportWhatsappUrl();
 
         return view('admin.dashboard', compact('stats', 'students', 'recentActivities', 'supportWhatsappUrl'));
     }

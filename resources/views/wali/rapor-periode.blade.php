@@ -59,15 +59,6 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 </div>
 
 @php
-  $bacaPct = $reportData['baca']['percentage'] ?? 0;
-  $tulisPct = $reportData['tulis']['percentage'] ?? 0;
-  $hitungPct = $reportData['hitung']['percentage'] ?? 0;
-  $avgPct = round(($bacaPct + $tulisPct + $hitungPct) / 3);
-
-  $skills = ['Membaca' => $bacaPct, 'Menulis' => $tulisPct, 'Berhitung' => $hitungPct];
-  $highest = array_keys($skills, max($skills))[0] ?? 'Membaca';
-  $focus = array_keys($skills, min($skills))[0] ?? 'Membaca';
-
   $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
   $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal') };
 @endphp
@@ -152,8 +143,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 
       {{-- MEMBACA --}}
       <tr class="group-header">
-        <td colspan="4"><strong>Membaca</strong></td>
-        <td class="text-center"><strong>{{ round($bacaPct) }}%</strong></td>
+        <td colspan="5"><strong>Membaca</strong></td>
       </tr>
       @if($reportData['baca']['by_level'] && $reportData['baca']['by_level']->count() > 0)
         @foreach($reportData['baca']['by_level']->sortKeys() as $level => $progresses)
@@ -177,8 +167,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
       {{-- MENULIS --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Menulis</strong></td>
-        <td class="text-center"><strong>{{ round($tulisPct) }}%</strong></td>
+        <td colspan="5"><strong>Menulis</strong></td>
       </tr>
       @if($reportData['tulis']['by_level'] && $reportData['tulis']['by_level']->count() > 0)
         @foreach($reportData['tulis']['by_level']->sortKeys() as $level => $progresses)
@@ -202,8 +191,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
       {{-- BERHITUNG --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Berhitung</strong></td>
-        <td class="text-center"><strong>{{ round($hitungPct) }}%</strong></td>
+        <td colspan="5"><strong>Berhitung</strong></td>
       </tr>
       @if($reportData['hitung']['by_level'] && $reportData['hitung']['by_level']->count() > 0)
         @foreach($reportData['hitung']['by_level']->sortKeys() as $level => $progresses)
@@ -224,11 +212,6 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
         </tr>
       @endif
 
-      {{-- RATA-RATA --}}
-      <tr style="background: #e2e8f0;">
-        <td colspan="4" class="text-center"><strong>Rata-Rata Penguasaan</strong></td>
-        <td class="text-center"><strong>{{ $avgPct }}%</strong></td>
-      </tr>
     </tbody>
   </table>
 
@@ -240,17 +223,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
     <span>T = Terampil (Pembiasaan)</span>
   </div>
 
-  <!-- Analysis Section -->
-  <div class="border border-[#1e293b] rounded p-4 mb-6" style="font-size: 13px;">
-    <strong>Catatan Perkembangan Periode {{ $periodInfo['number'] }}:</strong>
-    <p class="mt-1" style="line-height: 1.6;">
-      <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
-      @if($avgPct >= 70) sangat positif @elseif($avgPct >= 40) cukup baik @else perlu ditingkatkan @endif
-      dengan rata-rata penguasaan <strong>{{ $avgPct }}%</strong>.
-      Aspek terkuat pada bidang <strong>{{ $highest }}</strong> ({{ $skills[$highest] }}%)
-      dan fokus pengembangan pada bidang <strong>{{ $focus }}</strong> ({{ $skills[$focus] }}%).
-    </p>
-  </div>
+  @include('rapor.attendance')
 
   <!-- Radar Chart -->
   <div class="flex justify-center mb-6">

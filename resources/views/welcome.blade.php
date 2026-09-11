@@ -7,7 +7,7 @@
   @php
     $institutionName = \App\Models\Setting::get('institution_name', 'BiMBA AIUEO Smart Education Centre');
     $logo = \App\Models\Setting::get('institution_logo');
-    $supportWhatsapp = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', ''));
+    $supportWhatsapp = \App\Models\Setting::normalizeWhatsapp(\App\Models\Setting::get('support_whatsapp', ''));
     $supportEmail = \App\Models\Setting::get('support_email', 'info@bimba-aiueo.com');
     $landingBadge = \App\Models\Setting::get('landing_badge', 'Masa Depan Belajar Anak');
     $landingTitle = \App\Models\Setting::get('landing_title', 'E-Rapor');
@@ -15,7 +15,7 @@
     $landingDescription = \App\Models\Setting::get('landing_description', 'Pantau Perkembangan Belajar Anak Secara Digital. Solusi cerdas untuk pendidikan masa kini yang lebih transparan dan efisien.');
     $landingCtaTitle = \App\Models\Setting::get('landing_cta_title', 'Siap Mencoba Era Baru Pelaporan Pendidikan?');
     $landingCtaDescription = \App\Models\Setting::get('landing_cta_description', 'Bergabunglah dengan orang tua dan guru yang telah menggunakan E-Rapor BiMBA AIUEO untuk masa depan pendidikan yang lebih baik.');
-    $supportWhatsappUrl = $supportWhatsapp ? 'https://wa.me/' . $supportWhatsapp . '?text=Halo%20BiMBA%2C%20saya%20ingin%20bertanya.' : '#';
+    $supportWhatsappUrl = \App\Models\Setting::supportWhatsappUrl('Halo BiMBA, saya ingin bertanya.');
   @endphp
   <title>{{ $landingTitle }} {{ $landingHighlight }} - Digital Learning Progress</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -275,8 +275,9 @@
           <h4 class="text-base font-bold mb-6">Hubungi Kami</h4>
           <ul class="space-y-3 text-sm text-[#565d6d]">
             <li><a href="mailto:{{ $supportEmail }}" class="hover:text-[#F97316]">{{ $supportEmail }}</a></li>
-            <li><a href="{{ $supportWhatsappUrl }}" target="_blank" class="hover:text-[#F97316]">Support Center (WhatsApp)</a></li>
-            <li><a href="{{ $supportWhatsappUrl }}" target="_blank" class="hover:text-[#F97316]">{{ $supportWhatsapp }}</a></li>
+            @if($supportWhatsappUrl)
+              <li><a href="{{ $supportWhatsappUrl }}" target="_blank" rel="noopener noreferrer" class="hover:text-[#F97316]">Pusat Bantuan (WhatsApp): {{ $supportWhatsapp }}</a></li>
+            @endif
           </ul>
         </div>
       </div>

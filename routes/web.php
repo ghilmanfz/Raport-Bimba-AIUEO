@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
-use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GuruController as AdminGuruController;
 use App\Http\Controllers\Admin\MuridController;
@@ -67,11 +66,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('/murid', [MuridController::class, 'store'])->name('murid.store');
     Route::put('/murid/{student}', [MuridController::class, 'update'])->name('murid.update');
     Route::delete('/murid/{student}', [MuridController::class, 'destroy'])->name('murid.destroy');
-
-    Route::get('/kelas', [AdminClassroomController::class, 'index'])->name('kelas.index');
-    Route::post('/kelas', [AdminClassroomController::class, 'store'])->name('kelas.store');
-    Route::put('/kelas/{classroom}', [AdminClassroomController::class, 'update'])->name('kelas.update');
-    Route::delete('/kelas/{classroom}', [AdminClassroomController::class, 'destroy'])->name('kelas.destroy');
 
     Route::get('/absensi', [AdminAttendanceController::class, 'index'])->name('absensi.index');
     Route::post('/absensi', [AdminAttendanceController::class, 'store'])->name('absensi.store');

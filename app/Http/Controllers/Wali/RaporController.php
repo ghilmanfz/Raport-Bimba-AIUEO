@@ -7,6 +7,8 @@ use App\Http\Controllers\RaporDownloadController;
 use App\Models\Material;
 use App\Models\Setting;
 use App\Models\Student;
+use App\Services\AttendanceService;
+use App\Services\ReportPeriodService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,7 +68,9 @@ class RaporController extends Controller
             }
         }
 
-        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64'));
+        $attendanceReport = $student ? app(AttendanceService::class)->forReport($student) : null;
+
+        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport'));
     }
 
     public function riwayat(Request $request)
@@ -82,29 +86,21 @@ class RaporController extends Controller
                 ->where('parent_id', Auth::id())
                 ->find($selectedChildId);
 
-            if ($student && $student->join_date) {
-                $joinDate = \Carbon\Carbon::parse($student->join_date);
-                $today = now();
-                
-                // Calculate 3-month intervals from join date
-                $currentDate = clone $joinDate;
-                $periodNumber = 0;
+            if ($student && ($student->join_date ?? $student->created_at)->copy()->startOfDay()->lte(today())) {
+                $periods = app(ReportPeriodService::class);
+                $currentPeriod = $periods->current($student);
 
-                while ($currentDate->lte($today)) {
-                    $periodNumber++;
-                    $periodEnd = (clone $currentDate)->addMonths(3)->subDay();
-                    
-                    // Don't go beyond today
-                    if ($periodEnd->gt($today)) {
-                        $periodEnd = clone $today;
-                    }
+                for ($periodNumber = 1; $periodNumber <= $currentPeriod['number']; $periodNumber++) {
+                    $period = $periods->forNumber($student, $periodNumber);
+                    $currentDate = $period['start'];
+                    $periodEnd = $period['cutoff'];
 
                     $periodData = [
                         'period' => $periodNumber,
                         'start_date' => $currentDate->format('d M Y'),
                         'end_date' => $periodEnd->format('d M Y'),
                         'end_date_raw' => $periodEnd->format('Y-m-d'),
-                        'is_current' => $periodEnd->gte($today),
+                        'is_current' => $periodNumber === $currentPeriod['number'],
                     ];
 
                     // Calculate progress for each skill at this period
@@ -137,9 +133,7 @@ class RaporController extends Controller
                     $periodData['average'] = $avgPercentage;
 
                     $riwayatData[] = $periodData;
-                    
-                    // Move to next 3-month period
-                    $currentDate->addMonths(3);
+
                 }
             }
         }
@@ -151,26 +145,24 @@ class RaporController extends Controller
     {
         $request->validate([
             'student_id' => 'required|exists:students,id',
-            'period_end' => 'required|date',
-            'period_number' => 'required|integer',
+            'period_end' => 'required|date|before_or_equal:today',
+            'period_number' => 'required|integer|min:1',
         ]);
 
         $student = Student::with(['classroom', 'progress.material', 'teacher.user'])
             ->where('parent_id', Auth::id())
             ->findOrFail($request->student_id);
 
-        $periodEnd = \Carbon\Carbon::parse($request->period_end);
-        $periodNumber = $request->period_number;
-
-        // Calculate period start (3 months before period_end + 1 day)
-        $periodStart = (clone $periodEnd)->subMonths(3)->addDay();
-        if ($student->join_date) {
-            $joinDate = \Carbon\Carbon::parse($student->join_date);
-            $calculatedStart = (clone $joinDate)->addMonths(($periodNumber - 1) * 3);
-            if ($calculatedStart->format('Y-m-d') !== $periodStart->format('Y-m-d')) {
-                $periodStart = $calculatedStart;
-            }
-        }
+        $periods = app(ReportPeriodService::class);
+        $periodNumber = (int) $request->period_number;
+        abort_if($periodNumber > $periods->current($student)['number'], 404);
+        $period = $periods->forNumber($student, $periodNumber);
+        $periodStart = $period['start'];
+        $requestedEnd = \Carbon\CarbonImmutable::parse($request->period_end)->startOfDay();
+        abort_if($requestedEnd->lt($periodStart) || $requestedEnd->gt($period['cutoff']), 422);
+        $periodEnd = $requestedEnd;
+        $period['cutoff'] = $periodEnd;
+        $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
 
         $reportData = [];
         $qrCodeBase64 = null;
@@ -288,7 +280,8 @@ class RaporController extends Controller
             'institutionAddress', 
             'unitName', 
             'qrCodeBase64',
-            'periodInfo'
+            'periodInfo',
+            'attendanceReport'
         ));
     }
 }

@@ -41,12 +41,12 @@
   <div class="bg-white p-6 rounded-xl main-shadow border border-gray-50">
     <div class="flex justify-between items-start mb-6">
       <div class="w-10 h-10 bg-[#22C55E]/10 rounded-lg flex items-center justify-center">
-        <iconify-icon icon="lucide:school" width="22" class="text-[#22C55E]"></iconify-icon>
+        <iconify-icon icon="lucide:users-round" width="22" class="text-[#22C55E]"></iconify-icon>
       </div>
     </div>
-    <p class="text-sm font-medium text-[#565d6d] mb-1">Total Kelas</p>
-    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ $stats['total_kelas'] }}</h3>
-    <p class="text-xs text-[#565d6d] font-roboto">Kelas aktif dalam sistem</p>
+    <p class="text-sm font-medium text-[#565d6d] mb-1">Murid Aktif</p>
+    <h3 class="text-3xl font-bold text-[#171a1f] mb-2">{{ $stats['murid_aktif'] }}</h3>
+    <p class="text-xs text-[#565d6d] font-roboto">Murid yang mengikuti pembelajaran</p>
   </div>
 </section>
 
@@ -92,10 +92,10 @@
         <iconify-icon icon="lucide:graduation-cap" width="112" class="text-white"></iconify-icon>
       </div>
       <h2 class="text-lg font-bold mb-2 relative z-10 text-white" style="color: white;">Pusat Bantuan BiMBA</h2>
-      <p class="text-sm text-white/80 font-roboto mb-6 relative z-10 leading-relaxed">Butuh bantuan dalam mengelola data atau sistem rapor? Tim teknis kami siap membantu 24/7.</p>
-      <a href="{{ $supportWhatsappUrl ?? '#' }}" target="_blank" class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10 block text-center">
+      <p class="text-sm text-white/80 font-roboto mb-6 relative z-10 leading-relaxed">{{ $supportWhatsappUrl ? 'Butuh bantuan dalam mengelola data atau sistem rapor? Hubungi kontak bantuan melalui WhatsApp.' : 'Nomor WhatsApp bantuan belum diatur. Masukkan nomor tujuan melalui Pengaturan.' }}</p>
+      <a href="{{ $supportWhatsappUrl ?? route('admin.pengaturan').'#support_whatsapp' }}" @if($supportWhatsappUrl) target="_blank" rel="noopener noreferrer" @endif class="w-full py-2.5 bg-white text-[#1e2128] rounded-lg text-sm font-semibold hover:bg-gray-100 relative z-10 block text-center">
         <iconify-icon icon="lucide:message-circle" width="16" class="inline mr-1"></iconify-icon>
-        Hubungi Support via WhatsApp
+        {{ $supportWhatsappUrl ? 'Hubungi Support via WhatsApp' : 'Atur Nomor WhatsApp' }}
       </a>
     </div>
   </div>

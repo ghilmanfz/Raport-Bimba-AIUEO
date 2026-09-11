@@ -70,17 +70,7 @@
 
 @if($student && $reportData)
 @php
-  $bacaPct = $reportData['baca']['percentage'];
-  $tulisPct = $reportData['tulis']['percentage'];
-  $hitungPct = $reportData['hitung']['percentage'];
-  $avgPct = round(($bacaPct + $tulisPct + $hitungPct) / 3);
-
-  $skills = ['Membaca' => $bacaPct, 'Menulis' => $tulisPct, 'Berhitung' => $hitungPct];
-  $highest = array_keys($skills, max($skills))[0];
-  $focus = array_keys($skills, min($skills))[0];
-
   $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal (Pengenalan)') };
-  $statusValue = fn($s) => match($s) { 'T' => 3, 'P' => 2, default => 1 };
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
@@ -141,7 +131,7 @@
         <td></td>
         <td>Periode</td>
         <td>:</td>
-        <td>{{ now()->translatedFormat('F Y') }}</td>
+        <td>{{ $attendanceReport['period']['start']->translatedFormat('d M Y') }} - {{ $attendanceReport['period']['end']->translatedFormat('d M Y') }}</td>
       </tr>
     </tbody>
   </table>
@@ -162,8 +152,7 @@
 
       {{-- MEMBACA --}}
       <tr class="group-header">
-        <td colspan="4"><strong>Membaca</strong></td>
-        <td class="text-center"><strong>{{ round($bacaPct) }}%</strong></td>
+        <td colspan="5"><strong>Membaca</strong></td>
       </tr>
       @foreach($reportData['baca']['by_level']->sortKeys() as $level => $progresses)
         @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -181,8 +170,7 @@
       {{-- MENULIS --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Menulis</strong></td>
-        <td class="text-center"><strong>{{ round($tulisPct) }}%</strong></td>
+        <td colspan="5"><strong>Menulis</strong></td>
       </tr>
       @foreach($reportData['tulis']['by_level']->sortKeys() as $level => $progresses)
         @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -200,8 +188,7 @@
       {{-- BERHITUNG --}}
       @php $globalNo = 0; @endphp
       <tr class="group-header">
-        <td colspan="4"><strong>Berhitung</strong></td>
-        <td class="text-center"><strong>{{ round($hitungPct) }}%</strong></td>
+        <td colspan="5"><strong>Berhitung</strong></td>
       </tr>
       @foreach($reportData['hitung']['by_level']->sortKeys() as $level => $progresses)
         @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -216,11 +203,6 @@
         @endforeach
       @endforeach
 
-      {{-- RATA-RATA --}}
-      <tr style="background: #e2e8f0;">
-        <td colspan="4" class="text-center"><strong>Rata-Rata Penguasaan</strong></td>
-        <td class="text-center"><strong>{{ $avgPct }}%</strong></td>
-      </tr>
     </tbody>
   </table>
 
@@ -232,20 +214,11 @@
     <span>T = Terampil (Pembiasaan)</span>
   </div>
 
-  <!-- Analysis Section -->
-  <div class="border border-[#1e293b] rounded p-4 mb-6" style="font-size: 13px;">
-    <strong>Catatan Perkembangan:</strong>
-    <p class="mt-1" style="line-height: 1.6;">
-      <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
-      @if($avgPct >= 70) sangat positif @elseif($avgPct >= 40) cukup baik @else perlu ditingkatkan @endif
-      dengan rata-rata penguasaan <strong>{{ $avgPct }}%</strong>.
-      Aspek terkuat pada bidang <strong>{{ $highest }}</strong> ({{ $skills[$highest] }}%)
-      dan fokus pengembangan pada bidang <strong>{{ $focus }}</strong> ({{ $skills[$focus] }}%).
-    </p>
-    @if($student->development_notes)
-    <p class="mt-2" style="line-height: 1.6;"><strong>Catatan Guru:</strong> {{ $student->development_notes }}</p>
-    @endif
-  </div>
+  @include('rapor.attendance')
+
+  @if($student->development_notes)
+    <div class="border border-[#1e293b] rounded p-4 mb-6" style="font-size: 13px; line-height: 1.6;"><strong>Catatan Guru:</strong> {{ $student->development_notes }}</div>
+  @endif
 
   <!-- Manual Notes Form (no-print) -->
   <div class="no-print border border-[#dee1e6] rounded-lg p-4 mb-6">

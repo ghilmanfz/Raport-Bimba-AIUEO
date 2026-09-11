@@ -3,11 +3,42 @@
 namespace App\Services;
 
 use App\Models\Attendance;
+use App\Models\Student;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AttendanceService
 {
+    public function forReport(Student $student, ?array $period = null): array
+    {
+        $period ??= app(ReportPeriodService::class)->current($student);
+        $attendances = $student->attendances()
+            ->whereDate('attendance_date', '>=', $period['start']->toDateString())
+            ->whereDate('attendance_date', '<=', $period['cutoff']->toDateString())
+            ->get();
+        $byMonth = $attendances->groupBy(fn ($attendance) => $attendance->attendance_date->format('Y-m'));
+        $months = [];
+
+        // Calendar-month rows are clipped to the student's three-month reporting cycle.
+        for ($month = $period['start']->startOfMonth(); $month->lte($period['end']); $month = $month->addMonth()) {
+            $start = $month->max($period['start']);
+            $end = $month->endOfMonth()->startOfDay()->min($period['end']);
+            $months[] = [
+                'label' => $month->locale('id')->translatedFormat('F Y'),
+                'start' => $start,
+                'end' => $end,
+                'future' => $start->gt($period['cutoff']),
+                'summary' => $this->summarize($byMonth->get($month->format('Y-m'), collect())),
+            ];
+        }
+
+        return [
+            'period' => $period,
+            'months' => $months,
+            'summary' => $this->summarize($attendances),
+        ];
+    }
+
     public function saveDaily(Collection $students, array $entries, string $date, int $recorderId): void
     {
         DB::transaction(function () use ($students, $entries, $date, $recorderId) {

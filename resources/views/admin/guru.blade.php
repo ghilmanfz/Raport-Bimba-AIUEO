@@ -174,8 +174,7 @@
     <h4 class="text-base font-bold text-[#171a1f] mb-1">Butuh Bantuan?</h4>
     <p class="text-xs text-[#565d6d] mb-6">Hubungi tim IT Pusat untuk bantuan teknis.</p>
     @php
-      $supportWa = preg_replace('/\D+/', '', \App\Models\Setting::get('support_whatsapp', ''));
-      $supportWaUrl = $supportWa ? 'https://wa.me/' . $supportWa . '?text=Halo%20Admin%20BiMBA%2C%20saya%20butuh%20bantuan%20terkait%20sistem%20E-Rapor.' : null;
+      $supportWaUrl = \App\Models\Setting::supportWhatsappUrl();
     @endphp
     @if($supportWaUrl)
     <a href="{{ $supportWaUrl }}" target="_blank" rel="noopener" class="w-full py-2 border border-[#F97316] text-[#C2410C] text-sm font-medium rounded-xl hover:bg-[#F97316]/5 block text-center">

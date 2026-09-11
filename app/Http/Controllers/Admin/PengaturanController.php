@@ -39,11 +39,16 @@ class PengaturanController extends Controller
 
     public function updateSettings(Request $request)
     {
+        $whatsappInput = $request->input('support_whatsapp');
+        if (is_string($whatsappInput) && preg_match('/^[+0-9\s().-]*$/', $whatsappInput)) {
+            $request->merge(['support_whatsapp' => Setting::normalizeWhatsapp($whatsappInput)]);
+        }
+
         $request->validate([
             'institution_name' => 'required|string|max:255',
             'institution_address' => 'required|string|max:500',
             'unit_name' => 'nullable|string|max:255',
-            'support_whatsapp' => 'nullable|string|max:30',
+            'support_whatsapp' => ['nullable', 'string', 'regex:/^[1-9][0-9]{7,14}$/'],
             'support_email' => 'nullable|email|max:255',
             'landing_badge' => 'nullable|string|max:120',
             'landing_title' => 'nullable|string|max:120',
@@ -56,12 +61,14 @@ class PengaturanController extends Controller
             'login_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'hero_image' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:5120',
             'institution_banner' => 'nullable|image|mimes:png,jpg,jpeg,webp|max:4096',
+        ], [
+            'support_whatsapp.regex' => 'Masukkan nomor WhatsApp yang valid, misalnya 081234567890 atau +6281234567890.',
         ]);
 
         Setting::set('institution_name', $request->institution_name);
         Setting::set('institution_address', $request->institution_address);
         Setting::set('unit_name', $request->unit_name ?? '');
-        Setting::set('support_whatsapp', preg_replace('/\D+/', '', $request->support_whatsapp ?? ''));
+        Setting::set('support_whatsapp', $request->support_whatsapp ?? '');
         Setting::set('support_email', $request->support_email ?? '');
         Setting::set('landing_badge', $request->landing_badge ?? '');
         Setting::set('landing_title', $request->landing_title ?? '');

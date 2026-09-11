@@ -41,8 +41,10 @@
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-bold text-[#171a1f] mb-2">WhatsApp Support</label>
-              <input type="text" name="support_whatsapp" value="{{ $settings['support_whatsapp'] }}" placeholder="6281234567890" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+              <label for="support_whatsapp" class="block text-sm font-bold text-[#171a1f] mb-2">Nomor WhatsApp Pusat Bantuan</label>
+              <input type="tel" id="support_whatsapp" name="support_whatsapp" value="{{ old('support_whatsapp', $settings['support_whatsapp']) }}" placeholder="081234567890 / +6281234567890" maxlength="30" aria-describedby="support_whatsapp_help" class="w-full px-4 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+              <p id="support_whatsapp_help" class="mt-2 text-xs text-[#565d6d]">Nomor tujuan tombol Pusat Bantuan. Awalan 08 otomatis diubah menjadi 628. Kosongkan jika belum tersedia.</p>
+              @error('support_whatsapp')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
               <label class="block text-sm font-bold text-[#171a1f] mb-2">Email Support</label>

@@ -30,7 +30,6 @@
         .status-P { background: #dbeafe; color: #1e40af; font-weight: 700; }
         .status-B { background: #f1f5f9; color: #475569; font-weight: 700; }
         .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
-        .avg-row td { background: #e2e8f0; }
 
         /* Legend */
         .legend { font-size: 11px; color: #475569; margin: 8px 0 16px; }
@@ -41,9 +40,10 @@
         /* Signature */
         .signature-wrapper { width: 100%; margin-top: 30px; }
         .signature-table { width: 100%; border-collapse: collapse; }
-        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 24px 20px 40px; min-height: 160px; }
+        .signature-block { page-break-inside: avoid; }
+        .signature-table td { width: 50%; text-align: center; vertical-align: top; padding: 16px 20px; }
         .sign-line { width: 180px; border-bottom: 1px solid #1e293b; margin: 24px auto 12px; }
-        .qr-section { margin-top: 20px; text-align: center; font-size: 11px; color: #64748b; }
+        .qr-section { margin-top: 8px; text-align: center; font-size: 11px; color: #64748b; }
         .qr-box { margin: 8px auto; }
         .qr-box img { width: 80px; height: 80px; }
     </style>
@@ -105,7 +105,7 @@
             <td></td>
             <td>Periode</td>
             <td>:</td>
-            <td>{{ now()->translatedFormat('F Y') }}</td>
+            <td>{{ $attendanceReport['period']['start']->translatedFormat('d M Y') }} - {{ $attendanceReport['period']['end']->translatedFormat('d M Y') }}</td>
         </tr>
     </table>
 
@@ -113,14 +113,6 @@
     @php
         $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
         $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal') };
-        $bacaPct   = $reportData['baca']['percentage'];
-        $tulisPct  = $reportData['tulis']['percentage'];
-        $hitungPct = $reportData['hitung']['percentage'];
-        $avgPct    = round(($bacaPct + $tulisPct + $hitungPct) / 3);
-
-        $skills  = ['Membaca' => $bacaPct, 'Menulis' => $tulisPct, 'Berhitung' => $hitungPct];
-        $highest = array_keys($skills, max($skills))[0];
-        $focus   = array_keys($skills, min($skills))[0];
     @endphp
 
     <table class="rapor-table">
@@ -137,8 +129,7 @@
             {{-- MEMBACA --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Membaca</strong></td>
-                <td class="text-center"><strong>{{ round($bacaPct) }}%</strong></td>
+                <td colspan="5"><strong>Membaca</strong></td>
             </tr>
             @foreach($reportData['baca']['by_level']->sortKeys() as $level => $progresses)
                 @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -156,8 +147,7 @@
             {{-- MENULIS --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Menulis</strong></td>
-                <td class="text-center"><strong>{{ round($tulisPct) }}%</strong></td>
+                <td colspan="5"><strong>Menulis</strong></td>
             </tr>
             @foreach($reportData['tulis']['by_level']->sortKeys() as $level => $progresses)
                 @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -175,8 +165,7 @@
             {{-- BERHITUNG --}}
             @php $no = 0; @endphp
             <tr class="group-header">
-                <td colspan="4"><strong>Berhitung</strong></td>
-                <td class="text-center"><strong>{{ round($hitungPct) }}%</strong></td>
+                <td colspan="5"><strong>Berhitung</strong></td>
             </tr>
             @foreach($reportData['hitung']['by_level']->sortKeys() as $level => $progresses)
                 @foreach($progresses->sortBy('material.sort_order') as $prog)
@@ -191,10 +180,6 @@
                 @endforeach
             @endforeach
 
-            <tr class="avg-row">
-                <td colspan="4" class="text-center"><strong>Rata-Rata Penguasaan</strong></td>
-                <td class="text-center"><strong>{{ $avgPct }}%</strong></td>
-            </tr>
         </tbody>
     </table>
 
@@ -204,20 +189,14 @@
         K = Kenal &nbsp;|&nbsp; P = Paham &nbsp;|&nbsp; T = Terampil
     </div>
 
-    <!-- Notes -->
-    <div class="notes">
-        <strong>Catatan Perkembangan:</strong><br>
-        <strong>{{ $student->name }}</strong> menunjukkan perkembangan yang
-        @if($avgPct >= 70) sangat positif @elseif($avgPct >= 40) cukup baik @else perlu ditingkatkan @endif
-        dengan rata-rata penguasaan <strong>{{ $avgPct }}%</strong>.
-        Aspek terkuat pada bidang <strong>{{ $highest }}</strong> ({{ $skills[$highest] }}%)
-        dan fokus pengembangan pada bidang <strong>{{ $focus }}</strong> ({{ $skills[$focus] }}%).
-        @if($student->development_notes)
-        <br><br><strong>Catatan Guru:</strong> {{ $student->development_notes }}
-        @endif
-    </div>
+    @include('rapor.attendance')
+
+    @if($student->development_notes)
+        <div class="notes"><strong>Catatan Guru:</strong> {{ $student->development_notes }}</div>
+    @endif
 
     <!-- Signature Section -->
+    <div class="signature-block">
     <table class="signature-table">
         <tr>
             <td>
@@ -246,7 +225,7 @@
         </div>
     </div>
     @endif
-
+    </div>
 </div>
 </body>
 </html>

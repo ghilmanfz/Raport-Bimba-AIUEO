@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use App\Models\Student;
+use App\Services\AttendanceService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -41,9 +42,11 @@ class RaporDownloadController extends Controller
             ->filter()
             ->first()?->user?->name ?? '';
 
+        $attendanceReport = app(AttendanceService::class)->forReport($student);
+
         $pdf = Pdf::loadView('rapor.pdf', compact(
             'student', 'reportData', 'institutionName', 'institutionAddress', 'unitName',
-            'qrCodeBase64', 'teacherName'
+            'qrCodeBase64', 'teacherName', 'attendanceReport'
         ))->setPaper('a4', 'portrait');
 
         $filename = 'Rapor_' . str_replace(' ', '_', $student->name) . '_' . now()->format('Y-m') . '.pdf';
