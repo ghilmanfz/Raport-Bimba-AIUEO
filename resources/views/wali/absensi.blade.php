@@ -6,15 +6,20 @@
 @push('head')
 <style>
 @media print {
+  @page { size: A4; margin: 12mm; }
+  .min-h-screen { min-height: 0 !important; }
   .attendance-filter, .attendance-actions { display:none !important; }
-  .attendance-card { box-shadow:none !important; border:0 !important; }
+  .attendance-card { box-shadow:none !important; border:0 !important; overflow:visible !important; }
+  .attendance-card .overflow-x-auto { overflow:visible !important; }
+  .attendance-card table { min-width:0 !important; }
+  .attendance-identity, .attendance-card tr { break-inside:avoid; }
 }
 </style>
 @endpush
 
 @section('content')
 <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-  <div><h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Kehadiran Anak</h1><p class="text-sm text-[#565d6d] mt-1">Pantau riwayat serta rasio hadir dari hari yang sudah dicatat.</p></div>
+  <div><h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Kehadiran Anak</h1><p class="text-sm text-[#565d6d] mt-1">Pantau rekap dan riwayat kehadiran anak.</p></div>
   @if($student)<button onclick="window.print()" class="attendance-actions inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-semibold hover:bg-[#EA580C]"><iconify-icon icon="lucide:printer" width="17"></iconify-icon>Cetak Riwayat</button>@endif
 </div>
 
@@ -26,16 +31,16 @@
 
 @if($student)
 <div class="attendance-card bg-white rounded-2xl border border-[#dee1e6] custom-shadow overflow-hidden">
-  <div class="hero-gradient px-6 py-6 border-b border-[#dee1e6] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div><p class="text-xs font-bold uppercase tracking-wider text-[#F97316]">Riwayat {{ $monthLabel }}</p><h2 class="text-2xl font-bold mt-1">{{ $student->name }}</h2><p class="text-sm text-[#565d6d]">{{ $student->nis }} · {{ $student->status_label }} · {{ $student->classroom?->name ?? '-' }}</p></div>
-    <div class="bg-white rounded-2xl border border-green-200 px-5 py-3 text-center min-w-36"><p class="text-xs text-[#565d6d]">Hadir dari Tercatat</p><p class="text-3xl font-black text-green-600">{{ $summary['percentage'] === null ? '—' : $summary['percentage'].'%' }}</p></div>
-  </div>
+  <header class="attendance-identity px-6 py-4 border-b border-[#dee1e6] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <div><h2 class="text-base font-semibold">{{ $student->name }}</h2><p class="text-xs text-[#565d6d]">NIS: {{ $student->nis }}</p></div>
+    <p class="text-sm text-[#565d6d]">Periode: <span class="font-semibold">{{ $monthLabel }}</span></p>
+  </header>
 
   @php $cards=[['Hadir',$summary['hadir'],'lucide:check-circle','#16A34A','#DCFCE7'],['Sakit',$summary['sakit'],'lucide:heart-pulse','#2563EB','#DBEAFE'],['Izin',$summary['izin'],'lucide:file-clock','#D97706','#FEF3C7'],['Alpa',$summary['alpa'],'lucide:x-circle','#DC2626','#FEE2E2']]; @endphp
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 p-6 border-b border-[#dee1e6]">@foreach($cards as $card)<div class="rounded-2xl p-4 flex items-center gap-3" style="background:{{ $card[4] }}"><div class="w-9 h-9 rounded-full bg-white flex items-center justify-center" style="color:{{ $card[3] }}"><iconify-icon icon="{{ $card[2] }}" width="17"></iconify-icon></div><div><p class="text-xs text-[#565d6d]">{{ $card[0] }}</p><p class="text-2xl font-bold" style="color:{{ $card[3] }}">{{ $card[1] }}</p></div></div>@endforeach</div>
 
   <div class="p-6">
-    <div class="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-xs text-blue-800">Rasio hadir hanya dihitung dari {{ $summary['total'] }} hari yang sudah dicatat. Hari tanpa catatan tidak otomatis dianggap Alpa.</div>
+    <div class="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-xs text-blue-800">Rekap hanya mencakup hari yang sudah dicatat. Hari tanpa catatan tidak otomatis dianggap Alpa.</div>
     <div class="flex items-center justify-between mb-4"><h3 class="text-lg font-bold">Riwayat Kehadiran</h3><span class="text-xs text-[#565d6d]">{{ $summary['total'] }} hari tercatat</span></div>
     <div class="overflow-x-auto"><table class="w-full text-left min-w-[650px]"><thead class="bg-[#fafafb] border-y border-[#dee1e6] text-xs uppercase text-[#565d6d]"><tr><th class="px-4 py-3">Tanggal</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Kelas</th><th class="px-4 py-3">Catatan</th></tr></thead><tbody class="divide-y divide-[#edf0f3]">
       @forelse($attendances as $attendance)

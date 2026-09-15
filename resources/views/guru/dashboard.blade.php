@@ -27,7 +27,7 @@
       </div>
     </div>
     <h3 class="text-3xl font-bold text-[#171a1f]">{{ $stats['total_murid'] }}</h3>
-    <p class="text-sm font-medium text-[#171a1f] mt-1">Total Murid</p>
+    <p class="text-sm font-medium text-[#171a1f] mt-1">Total Siswa</p>
     <p class="text-xs text-[#565d6d] mt-1">Siswa aktif di kelas Anda</p>
   </div>
 </div>
@@ -38,7 +38,7 @@
     <div class="flex justify-between items-start mb-6">
       <div>
         <h2 class="text-lg font-bold text-[#171a1f]">Distribusi Nilai Modul</h2>
-        <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada murid bimbingan aktif.</p>
+        <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada siswa bimbingan aktif.</p>
       </div>
       <a href="{{ route('guru.grafik') }}" class="text-[#F97316] text-sm font-medium flex items-center gap-1 hover:underline">
         Detail Lengkap
@@ -89,20 +89,20 @@
       </div>
       <h2 class="text-lg font-bold text-[#171a1f]">Jadwal Otomatis Pembagian Rapor</h2>
     </div>
-    <p class="text-sm text-[#565d6d] ml-11">Dihitung otomatis per 3 bulan dari tanggal masuk murid di kelas Anda.</p>
+    <p class="text-sm text-[#565d6d] ml-11">Dihitung otomatis per 3 bulan dari tanggal masuk siswa bimbingan Anda.</p>
   </div>
 
   @if($nextRaporSchedules->isEmpty())
     <div class="text-center py-8 text-[#565d6d]">
       <iconify-icon icon="lucide:calendar-x" width="40" class="mx-auto mb-3 text-[#dee1e6]"></iconify-icon>
-      <p class="text-sm">Belum ada murid dengan tanggal masuk terdaftar.</p>
+      <p class="text-sm">Belum ada siswa dengan tanggal masuk terdaftar.</p>
     </div>
   @else
   <div class="overflow-x-auto">
     <table class="min-w-full text-sm">
       <thead>
         <tr class="text-left border-b border-[#dee1e6]">
-          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Nama Murid</th>
+          <th class="py-2 pr-4 text-[#565d6d] font-semibold">Nama Siswa</th>
           <th class="py-2 pr-4 text-[#565d6d] font-semibold">Kelas</th>
           <th class="py-2 pr-4 text-[#565d6d] font-semibold">Tanggal Masuk</th>
           <th class="py-2 pr-4 text-[#565d6d] font-semibold">Jadwal Bagi Rapor Berikutnya</th>

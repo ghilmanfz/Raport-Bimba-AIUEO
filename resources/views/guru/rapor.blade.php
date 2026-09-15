@@ -32,7 +32,7 @@
 <div class="no-print flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
   <div>
     <h1 class="text-2xl font-bold text-[#171a1f] font-poppins">Cetak Rapor Digital</h1>
-    <p class="text-sm text-[#565d6d]">Laporan perkembangan belajar murid BiMBA AIUEO</p>
+    <p class="text-sm text-[#565d6d]">Laporan perkembangan belajar siswa BiMBA AIUEO</p>
   </div>
   <div class="flex flex-wrap gap-2">
     <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
@@ -45,14 +45,14 @@
 <!-- Student Selector (no-print) -->
 <form method="GET" action="{{ route('guru.rapor') }}" class="no-print bg-white rounded-2xl border border-[#dee1e6] main-shadow p-5 mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
   <div class="md:col-span-8 space-y-1.5">
-    <label class="text-xs font-semibold text-[#565d6d] uppercase tracking-wider">Pilih Murid</label>
+    <label class="text-xs font-semibold text-[#565d6d] uppercase tracking-wider">Pilih Siswa</label>
     <div class="relative">
       <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
         <iconify-icon icon="lucide:user" width="16"></iconify-icon>
       </div>
       <select name="student_id" class="w-full pl-9 pr-10 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 bg-white">
         @foreach($students as $s)
-          <option value="{{ $s->id }}" {{ $student?->id == $s->id ? 'selected' : '' }}>{{ $s->name }} ({{ $s->classroom?->name ?? '-' }})</option>
+          <option value="{{ $s->id }}" {{ $student?->id == $s->id ? 'selected' : '' }}>{{ $s->name }} (NIS: {{ $s->nis }})</option>
         @endforeach
       </select>
       <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#565d6d]">
@@ -79,7 +79,7 @@
 
   <!-- Report Title -->
   <div class="text-center mb-6">
-    <h1 class="text-xl font-bold uppercase tracking-wide" style="letter-spacing: 2px;">Ringkasan Laporan Hasil Belajar Murid</h1>
+    <h1 class="text-xl font-bold uppercase tracking-wide" style="letter-spacing: 2px;">Ringkasan Laporan Hasil Belajar Siswa</h1>
     <div class="w-24 h-1 bg-[#1e293b] mx-auto mt-2"></div>
   </div>
 
@@ -114,17 +114,17 @@
         <td>Tanggal Lahir</td>
         <td>:</td>
         <td>{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</td>
-        <td>Kelas</td>
+        <td>Level</td>
         <td>:</td>
-        <td>{{ $student->classroom?->name ?? '-' }}</td>
+        <td>{{ $student->classroom?->level ?? '-' }}</td>
       </tr>
       <tr>
         <td>Jenis Kelamin</td>
         <td>:</td>
         <td>{{ $student->gender === 'L' ? 'Laki-laki' : ($student->gender === 'P' ? 'Perempuan' : '-') }}</td>
-        <td>Level</td>
-        <td>:</td>
-        <td>{{ preg_replace('/ - .*$/', '', $student->classroom?->level ?? '-') }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
       <tr>
         <td></td>
@@ -228,7 +228,7 @@
       <input type="hidden" name="student_id" value="{{ $student->id }}">
       <input type="hidden" name="period_number" value="{{ $attendanceReport['period']['number'] }}">
       <label class="block text-sm font-bold text-[#171a1f] mb-2">Catatan Perkembangan Manual</label>
-      <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#F97316] outline-none" placeholder="Tulis catatan perkembangan murid di sini...">{{ $student->development_notes }}</textarea>
+      <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#F97316] outline-none" placeholder="Tulis catatan perkembangan siswa di sini...">{{ $student->development_notes }}</textarea>
       <button type="submit" class="mt-2 px-4 py-2 bg-[#F97316] text-white rounded-lg text-sm font-medium hover:bg-orange-600">
         <iconify-icon icon="lucide:save" width="14" class="inline mr-1"></iconify-icon>
         Simpan Catatan
@@ -337,7 +337,7 @@
     </div>
     <div>
       <p class="text-sm font-semibold text-[#171a1f]">Lihat Grafik Lengkap</p>
-      <p class="text-xs text-[#565d6d]">Visualisasi perkembangan semua murid</p>
+      <p class="text-xs text-[#565d6d]">Visualisasi perkembangan semua siswa</p>
     </div>
     <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#F97316]"></iconify-icon>
   </a>
@@ -347,7 +347,7 @@
     </div>
     <div>
       <p class="text-sm font-semibold text-[#171a1f]">Update Nilai Baru</p>
-      <p class="text-xs text-[#565d6d]">Input progres materi terbaru murid</p>
+      <p class="text-xs text-[#565d6d]">Input progres materi terbaru siswa</p>
     </div>
     <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#C2410C]"></iconify-icon>
   </a>
@@ -355,8 +355,8 @@
 @else
 <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow p-12 text-center">
   <iconify-icon icon="lucide:file-text" width="48" class="text-[#dee1e6] mx-auto mb-4"></iconify-icon>
-  <h3 class="text-lg font-bold text-[#171a1f] mb-2">Pilih Murid</h3>
-  <p class="text-sm text-[#565d6d]">Silakan pilih murid di atas untuk menampilkan rapor.</p>
+  <h3 class="text-lg font-bold text-[#171a1f] mb-2">Pilih Siswa</h3>
+  <p class="text-sm text-[#565d6d]">Silakan pilih siswa di atas untuk menampilkan rapor.</p>
 </div>
 @endif
 @endsection

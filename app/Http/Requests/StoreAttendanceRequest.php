@@ -17,7 +17,7 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'attendance_date' => ['required', 'date', 'before_or_equal:today'],
-            'classroom_id' => ['nullable', 'exists:classrooms,id'],
+            'classroom_id' => [Rule::excludeIf(fn () => $this->user()?->role === 'guru'), 'nullable', 'exists:classrooms,id'],
             'search' => ['nullable', 'string', 'max:100'],
             'attendances' => ['required', 'array', 'min:1'],
             'attendances.*.student_id' => ['required', 'integer', 'distinct', 'exists:students,id'],
@@ -30,7 +30,9 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'attendance_date.before_or_equal' => 'Tanggal absensi tidak boleh melewati hari ini.',
-            'attendances.required' => 'Daftar murid yang akan diabsen tidak ditemukan.',
+            'attendances.required' => $this->user()?->role === 'guru'
+                ? 'Daftar siswa yang akan diabsen tidak ditemukan.'
+                : 'Daftar murid yang akan diabsen tidak ditemukan.',
             'attendances.*.status.in' => 'Status kehadiran yang dipilih tidak valid.',
         ];
     }

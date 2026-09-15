@@ -6,29 +6,15 @@
 @section('content')
 <!-- Filter Section -->
 <form method="GET" action="{{ route('guru.grafik') }}" class="bg-white rounded-2xl p-5 border border-[#dee1e6] main-shadow mb-6">
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-end">
-    <div>
-      <label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Kelas</label>
-      <div class="relative">
-        <select name="classroom_id" class="w-full pl-3 pr-8 py-2.5 border border-[#dee1e6] rounded-xl text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-[#F97316]/20 bg-white">
-          <option value="">Semua Kelas</option>
-          @foreach($classrooms as $c)
-            <option value="{{ $c->id }}" {{ $selectedClassroom == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>
-          @endforeach
-        </select>
-        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#565d6d]">
-          <iconify-icon icon="lucide:chevron-down" width="14"></iconify-icon>
-        </div>
-      </div>
-    </div>
-    <div>
-      <label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Cari Murid</label>
-      <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Ketik nama murid..." class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+    <div class="sm:col-span-2">
+      <label for="graph-search" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Cari Siswa</label>
+      <input id="graph-search" type="text" name="search" value="{{ $search ?? '' }}" placeholder="Nama atau NIS" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
     </div>
     <div>
       <button type="submit" class="w-full px-5 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-medium shadow-md hover:bg-orange-600 flex items-center justify-center gap-2">
         <iconify-icon icon="lucide:filter" width="16"></iconify-icon>
-        Filter
+        Tampilkan
       </button>
     </div>
   </div>
@@ -40,10 +26,10 @@
   <div class="xl:col-span-2 bg-white rounded-2xl border border-[#dee1e6] main-shadow overflow-hidden">
     <div class="p-6 border-b border-[#dee1e6]">
       <h2 class="text-lg font-semibold text-[#171a1f]">Distribusi Nilai Modul</h2>
-      <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada murid sesuai filter. Modul yang belum dinilai tidak dihitung sebagai Kenal.</p>
+      <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada siswa bimbingan aktif sesuai pencarian. Modul yang belum dinilai tidak dihitung sebagai Kenal.</p>
     </div>
     <div class="p-6">
-      @if($totalProgress === 0)<p class="mb-4 rounded-lg bg-slate-50 p-3 text-sm text-[#565d6d]">Belum ada modul yang dinilai untuk murid sesuai filter.</p>@endif
+      @if($totalProgress === 0)<p class="mb-4 rounded-lg bg-slate-50 p-3 text-sm text-[#565d6d]">Belum ada modul yang dinilai untuk siswa sesuai pencarian.</p>@endif
       <div class="h-[350px]">
         <canvas id="grafikTrenChart"></canvas>
       </div>
@@ -87,7 +73,7 @@
     <!-- Mini Stat Cards -->
     <div class="grid grid-cols-1 gap-3">
       <div class="bg-white rounded-xl border border-[#dee1e6] p-4 text-center main-shadow">
-        <p class="text-[10px] font-semibold text-[#565d6d] uppercase tracking-wider mb-1">Total Murid</p>
+        <p class="text-[10px] font-semibold text-[#565d6d] uppercase tracking-wider mb-1">Total Siswa</p>
         <p class="text-2xl font-black text-[#171a1f]">{{ $students->count() }}</p>
       </div>
     </div>
@@ -97,16 +83,15 @@
 <!-- Student Table Card -->
 <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow overflow-hidden mb-6">
   <div class="p-6 border-b border-[#dee1e6]">
-    <h2 class="text-lg font-semibold text-[#171a1f]">Daftar Murid & Progres</h2>
-    <p class="text-sm text-[#565d6d]">Detail perkembangan setiap murid</p>
+    <h2 class="text-lg font-semibold text-[#171a1f]">Daftar Siswa & Progres</h2>
+    <p class="text-sm text-[#565d6d]">Detail perkembangan setiap siswa</p>
   </div>
 
   <div class="overflow-x-auto">
     <table class="w-full text-left border-collapse">
       <thead>
         <tr class="bg-[#f3f4f6]/50 border-b border-[#dee1e6] text-sm font-semibold text-[#171a1f]">
-          <th class="px-6 py-4">Nama Murid</th>
-          <th class="px-6 py-4">Kelas</th>
+          <th class="px-6 py-4">Nama Siswa</th>
           <th class="px-6 py-4 min-w-[220px]">Progres Terampil</th>
           <th class="px-6 py-4">Status Modul Terakhir Dinilai</th>
           <th class="px-6 py-4 text-right">Aksi</th>
@@ -132,10 +117,9 @@
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0" style="background-color: {{ $color }}">{{ $initials }}</div>
-              <div><p class="text-sm font-semibold text-[#171a1f]">{{ $s->name }}</p><p class="text-xs text-[#565d6d] font-roboto">{{ preg_replace('/ - .*$/', '', $s->classroom?->level ?? '-') }}</p></div>
+              <div><p class="text-sm font-semibold text-[#171a1f]">{{ $s->name }}</p><p class="text-xs text-[#565d6d] font-roboto">NIS: {{ $s->nis }}</p><p class="text-xs text-[#565d6d]">{{ $s->classroom?->level ?? 'Level belum ditentukan' }}</p></div>
             </div>
           </td>
-          <td class="px-6 py-4"><span class="px-3 py-1 bg-[#f3f4f6] rounded-full text-xs font-bold">{{ $s->classroom?->level ?? '-' }}</span></td>
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               <div class="flex-1 h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
@@ -158,7 +142,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="5" class="px-6 py-8 text-center text-sm text-[#565d6d]">Tidak ada murid ditemukan.</td>
+          <td colspan="4" class="px-6 py-8 text-center text-sm text-[#565d6d]">Tidak ada siswa ditemukan.</td>
         </tr>
         @endforelse
       </tbody>
@@ -166,7 +150,7 @@
   </div>
 
   <div class="p-4 bg-[#f3f4f6]/30 border-t border-[#dee1e6]">
-    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-semibold text-[#171a1f]">{{ count($studentStats) }}</span> murid aktif</p>
+    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-semibold text-[#171a1f]">{{ count($studentStats) }}</span> siswa aktif</p>
   </div>
 </div>
 

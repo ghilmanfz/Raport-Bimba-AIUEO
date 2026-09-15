@@ -90,7 +90,7 @@ class NilaiController extends Controller
         abort_unless($teacher, 403);
         $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
         if (! $student) {
-            return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
+            return redirect()->back()->withErrors(['student_id' => 'Siswa tidak termasuk bimbingan Anda.']);
         }
 
         DB::transaction(function () use ($request, $teacher, $student) {
@@ -124,7 +124,7 @@ class NilaiController extends Controller
         Notification::send(
             Auth::id(),
             'Nilai Disimpan',
-            'Nilai untuk murid '.($student->name ?? '').' berhasil disimpan.',
+            'Nilai untuk siswa '.($student->name ?? '').' berhasil disimpan.',
             'success',
             'lucide:check-circle',
             route('guru.nilai')

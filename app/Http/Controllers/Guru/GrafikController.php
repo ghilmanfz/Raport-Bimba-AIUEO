@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
 use App\Models\Student;
 use App\Services\ProgressReportService;
 use Illuminate\Http\Request;
@@ -19,28 +18,17 @@ class GrafikController extends Controller
             return redirect()->route('guru.dashboard')->with('error', 'Guru tidak ditemukan.');
         }
 
-        $guidedClassroomIds = Student::where('teacher_id', $teacher->id)
-            ->active()
-            ->whereNotNull('classroom_id')
-            ->distinct()
-            ->pluck('classroom_id');
-
-        $classrooms = Classroom::whereIn('id', $guidedClassroomIds)
-            ->orderBy('name')
-            ->get();
-
-        $selectedClassroom = $request->input('classroom_id');
+        $validated = $request->validate(['search' => 'nullable|string|max:100']);
 
         $query = Student::where('teacher_id', $teacher->id)
             ->where('status', 'aktif');
 
-        if ($selectedClassroom) {
-            $query->where('classroom_id', $selectedClassroom);
-        }
-
-        $search = $request->input('search');
-        if ($search) {
-            $query->where('name', 'like', '%'.$search.'%');
+        $search = trim($validated['search'] ?? '');
+        if ($search !== '') {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('nis', 'like', '%'.$search.'%');
+            });
         }
         $students = $query->with(['classroom', 'progress'])->orderBy('name')->get();
 
@@ -68,6 +56,6 @@ class GrafikController extends Controller
             ];
         }
 
-        return view('guru.grafik', compact('students', 'classrooms', 'selectedClassroom', 'statusCounts', 'statusPercent', 'totalProgress', 'studentStats', 'search'));
+        return view('guru.grafik', compact('students', 'statusCounts', 'statusPercent', 'totalProgress', 'studentStats', 'search'));
     }
 }

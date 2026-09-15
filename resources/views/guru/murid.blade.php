@@ -1,13 +1,13 @@
 @extends('layouts.guru')
 
-@section('title', 'Daftar Murid Bimbingan - E-Rapor BiMBA')
-@section('page-title', 'Daftar Murid Bimbingan')
+@section('title', 'Daftar Siswa Bimbingan - E-Rapor BiMBA')
+@section('page-title', 'Daftar Siswa Bimbingan')
 
 @section('content')
 <!-- Page Title -->
 <div class="mb-8">
-  <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Daftar Murid Bimbingan</h1>
-  <p class="text-[#565d6d] mt-1 font-roboto">Lihat daftar murid yang menjadi bimbingan Anda.</p>
+  <h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Daftar Siswa Bimbingan</h1>
+  <p class="text-[#565d6d] mt-1 font-roboto">Lihat daftar siswa yang menjadi bimbingan Anda.</p>
 </div>
 
 <!-- Stats Cards -->
@@ -15,19 +15,19 @@
   <div class="bg-[#F1F6FE] border border-[#3d8af5]/20 rounded-xl p-6 main-shadow">
     <div class="flex justify-between items-start">
       <div>
-        <p class="text-sm font-medium text-[#565d6d]">Total Murid</p>
+        <p class="text-sm font-medium text-[#565d6d]">Total Siswa</p>
         <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $totalMurid }}</h3>
       </div>
       <div class="w-12 h-12 bg-[#3d8af5]/20 rounded-2xl flex items-center justify-center">
         <iconify-icon icon="lucide:users" width="24" class="text-[#3d8af5]"></iconify-icon>
       </div>
     </div>
-    <p class="mt-4 text-xs text-[#565d6d] font-roboto">Murid bimbingan Anda</p>
+    <p class="mt-4 text-xs text-[#565d6d] font-roboto">Siswa bimbingan Anda</p>
   </div>
   <div class="bg-[#EDFDF1] border border-[#63e98f]/20 rounded-xl p-6 main-shadow">
     <div class="flex justify-between items-start">
       <div>
-        <p class="text-sm font-medium text-[#565d6d]">Murid Aktif</p>
+        <p class="text-sm font-medium text-[#565d6d]">Siswa Aktif</p>
         <h3 class="text-3xl font-bold mt-2 text-[#171a1f]">{{ $muridAktif }}</h3>
       </div>
       <div class="w-12 h-12 bg-[#63e98f]/20 rounded-2xl flex items-center justify-center">
@@ -53,7 +53,7 @@
 <!-- Table Section -->
 <div class="bg-white rounded-2xl border border-[#dee1e6] overflow-hidden main-shadow">
   <div class="p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-[#dee1e6]">
-    <h2 class="text-xl font-semibold tracking-tight">Daftar Murid Bimbingan</h2>
+    <h2 class="text-xl font-semibold tracking-tight">Daftar Siswa Bimbingan</h2>
     <div class="flex flex-wrap items-center gap-3">
       <form method="GET" action="{{ route('guru.murid') }}" class="relative w-full sm:w-64">
         <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#565d6d]">
@@ -76,7 +76,7 @@
       <thead>
         <tr class="bg-[#f3f4f6]/30 text-[#565d6d] text-sm font-semibold border-b border-[#dee1e6]">
           <th class="px-6 py-4">NIS</th>
-          <th class="px-6 py-4">Nama Murid</th>
+          <th class="px-6 py-4">Nama Siswa</th>
           <th class="px-6 py-4">Tahapan</th>
           <th class="px-6 py-4">Wali Murid</th>
           <th class="px-6 py-4">Tgl. Bergabung</th>
@@ -104,7 +104,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="6" class="px-6 py-8 text-center text-sm text-[#565d6d]">Anda belum memiliki murid bimbingan.</td>
+          <td colspan="6" class="px-6 py-8 text-center text-sm text-[#565d6d]">Anda belum memiliki siswa bimbingan.</td>
         </tr>
         @endforelse
       </tbody>
@@ -113,7 +113,7 @@
 
   <!-- Pagination -->
   <div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#dee1e6]">
-    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-medium">{{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span> dari <span class="font-medium">{{ $students->total() }}</span> murid</p>
+    <p class="text-sm text-[#565d6d] font-roboto">Menampilkan <span class="font-medium">{{ $students->firstItem() ?? 0 }}-{{ $students->lastItem() ?? 0 }}</span> dari <span class="font-medium">{{ $students->total() }}</span> siswa</p>
     {{ $students->links() }}
   </div>
 </div>
@@ -127,7 +127,7 @@
     <div>
       <h4 class="text-base font-semibold text-[#0C2D6B] mb-1">Catatan</h4>
       <p class="text-sm text-[#0C2D6B]/80 leading-relaxed">
-        Daftar murid di atas adalah murid yang menjadi bimbingan Anda. Anda dapat melihat informasi kontak wali murid untuk memudahkan komunikasi tentang perkembangan belajar anak.
+        Daftar siswa di atas adalah siswa yang menjadi bimbingan Anda. Anda dapat melihat informasi kontak wali murid untuk memudahkan komunikasi tentang perkembangan belajar siswa.
       </p>
     </div>
   </div>

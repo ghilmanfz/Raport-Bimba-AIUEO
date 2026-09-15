@@ -71,7 +71,7 @@ class RaporController extends Controller
         abort_unless($teacher, 403);
         $student = Student::where('teacher_id', $teacher->id)->find($request->student_id);
         if (! $student) {
-            return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
+            return redirect()->back()->withErrors(['student_id' => 'Siswa tidak termasuk bimbingan Anda.']);
         }
         $period = app(ReportPeriodService::class)->select($student, $request->only('period_number'));
         $student->update(['development_notes' => $request->development_notes]);

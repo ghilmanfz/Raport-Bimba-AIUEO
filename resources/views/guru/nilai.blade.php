@@ -12,7 +12,7 @@
     </div>
     <div>
       <h1 class="text-2xl font-bold text-[#171a1f]">Pengolahan Nilai Progres</h1>
-      <p class="text-sm text-[#565d6d]">Input hasil belajar harian dan evaluasi materi murid.</p>
+      <p class="text-sm text-[#565d6d]">Input hasil belajar harian dan evaluasi materi siswa.</p>
     </div>
   </div>
   <div class="flex flex-col sm:flex-row items-center gap-3">
@@ -131,7 +131,7 @@
         </tr>
         @empty
         <tr>
-          <td colspan="5" class="px-6 py-8 text-center text-sm text-[#565d6d]">Pilih murid untuk melihat progres materi.</td>
+          <td colspan="5" class="px-6 py-8 text-center text-sm text-[#565d6d]">Pilih siswa untuk melihat progres materi.</td>
         </tr>
         @endforelse
       </tbody>
@@ -198,17 +198,17 @@
   <div class="bg-[#FFF7ED] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#F97316] mb-1">K</h3>
     <p class="text-xs font-bold text-[#F97316]/70 tracking-widest uppercase mb-2">Kenal (Pengenalan)</p>
-    <p class="text-sm text-[#F97316]/60">Murid baru mengenal materi</p>
+    <p class="text-sm text-[#F97316]/60">Siswa baru mengenal materi</p>
   </div>
   <div class="bg-[#E1F4FE] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">P</h3>
     <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Paham (Pemahaman)</p>
-    <p class="text-sm text-[#171a1f]/60">Murid memahami materi</p>
+    <p class="text-sm text-[#171a1f]/60">Siswa memahami materi</p>
   </div>
   <div class="bg-[#FFEDD5] p-6 rounded-xl border border-[#dee1e6]/30 text-center">
     <h3 class="text-2xl font-bold text-[#171a1f] mb-1">T</h3>
     <p class="text-xs font-bold text-[#171a1f]/70 tracking-widest uppercase mb-2">Terampil</p>
-    <p class="text-sm text-[#171a1f]/60">Murid terampil mengaplikasikan</p>
+    <p class="text-sm text-[#171a1f]/60">Siswa terampil mengaplikasikan</p>
   </div>
 </div>
 @endsection

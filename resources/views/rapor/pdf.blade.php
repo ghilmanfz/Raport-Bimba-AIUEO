@@ -87,17 +87,17 @@
             <td>Tanggal Lahir</td>
             <td>:</td>
             <td>{{ $student->birth_date?->translatedFormat('d F Y') ?? '-' }}</td>
-            <td>Kelas</td>
+            <td>Level</td>
             <td>:</td>
-            <td>{{ $student->classroom?->name ?? '-' }}</td>
+            <td>{{ $student->classroom?->level ?? '-' }}</td>
         </tr>
         <tr>
             <td>Jenis Kelamin</td>
             <td>:</td>
             <td>{{ $student->gender === 'L' ? 'Laki-laki' : ($student->gender === 'P' ? 'Perempuan' : '-') }}</td>
-            <td>Level</td>
-            <td>:</td>
-            <td>{{ $student->classroom?->level ?? '-' }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td></td>
