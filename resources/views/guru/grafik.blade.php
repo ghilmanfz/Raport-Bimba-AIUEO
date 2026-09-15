@@ -39,10 +39,11 @@
   <!-- Chart Area -->
   <div class="xl:col-span-2 bg-white rounded-2xl border border-[#dee1e6] main-shadow overflow-hidden">
     <div class="p-6 border-b border-[#dee1e6]">
-      <h2 class="text-lg font-semibold text-[#171a1f]">Distribusi Status Progres</h2>
-      <p class="text-sm text-[#565d6d]">Visualisasi status K/B/P/T semua murid</p>
+      <h2 class="text-lg font-semibold text-[#171a1f]">Distribusi Nilai Modul</h2>
+      <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada murid sesuai filter. Modul yang belum dinilai tidak dihitung sebagai Kenal.</p>
     </div>
     <div class="p-6">
+      @if($totalProgress === 0)<p class="mb-4 rounded-lg bg-slate-50 p-3 text-sm text-[#565d6d]">Belum ada modul yang dinilai untuk murid sesuai filter.</p>@endif
       <div class="h-[350px]">
         <canvas id="grafikTrenChart"></canvas>
       </div>
@@ -58,12 +59,12 @@
   <div class="flex flex-col gap-6">
     <!-- Donut Chart -->
     <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow p-6">
-      <h3 class="text-base font-semibold text-[#171a1f] mb-4">Distribusi Status Kelas</h3>
+      <h3 class="text-base font-semibold text-[#171a1f] mb-4">Persentase Nilai Modul</h3>
       <div class="flex items-center justify-center mb-5">
         <div class="relative w-28 h-28">
           <canvas id="grafikDonutChart"></canvas>
           <div class="absolute inset-0 flex items-center justify-center">
-            <span class="text-xs font-bold text-[#171a1f] text-center leading-tight">{{ $students->count() }}<br><span class="text-[10px] text-[#565d6d]">Murid</span></span>
+            <span class="text-xs font-bold text-[#171a1f] text-center leading-tight">{{ $totalProgress }}<br><span class="text-[10px] text-[#565d6d]">Penilaian</span></span>
           </div>
         </div>
       </div>
@@ -107,7 +108,7 @@
           <th class="px-6 py-4">Nama Murid</th>
           <th class="px-6 py-4">Kelas</th>
           <th class="px-6 py-4 min-w-[220px]">Progres Terampil</th>
-          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4">Status Modul Terakhir Dinilai</th>
           <th class="px-6 py-4 text-right">Aksi</th>
         </tr>
       </thead>
@@ -138,12 +139,12 @@
           <td class="px-6 py-4">
             <div class="flex items-center gap-3">
               <div class="flex-1 h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-                <div class="h-full rounded-full" style="width: {{ $pct }}%; background-color: {{ $barColor }}"></div>
+                <div class="h-full rounded-full" style="width: {{ $pct ?? 0 }}%; background-color: {{ $barColor }}"></div>
               </div>
-              <span class="text-xs font-bold text-[#171a1f] font-roboto w-9">{{ $pct }}%</span>
+              <span class="text-xs font-bold text-[#171a1f] font-roboto w-9">{{ $pct === null ? '-' : $pct.'%' }}</span>
             </div>
           </td>
-          <td class="px-6 py-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $badge }}">{{ $latestStatus }}</span></td>
+          <td class="px-6 py-4"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold {{ $badge }}">{{ $latestStatus ?? 'Belum Dinilai' }}</span></td>
           <td class="px-6 py-4 text-right">
             <div class="flex justify-end gap-1">
               <a href="{{ route('guru.nilai', ['student_id' => $s->id]) }}" class="p-1.5 hover:bg-gray-100 rounded text-[#F97316]" title="Input Nilai">
@@ -209,7 +210,7 @@ new Chart(ctx2, {
   data: {
     labels: ['Terampil', 'Paham', 'Kenal'],
     datasets: [{
-      data: [{{ $statusPercent['T'] }}, {{ $statusPercent['P'] }}, {{ $statusPercent['K'] }}],
+      data: [{{ $statusCounts['T'] }}, {{ $statusCounts['P'] }}, {{ $statusCounts['K'] }}],
       backgroundColor: ['#22C55E', '#3B82F6', '#E2E8F0'],
       borderWidth: 0,
       hoverOffset: 4

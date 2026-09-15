@@ -7,6 +7,8 @@ use App\Http\Controllers\RaporDownloadController;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Services\AttendanceService;
+use App\Services\ProgressReportService;
+use App\Services\ReportPeriodService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +18,7 @@ class RaporController extends Controller
     {
         $teacher = Auth::user()->teacher;
 
-        if (!$teacher) {
+        if (! $teacher) {
             return redirect()->route('guru.dashboard')->with('error', 'Guru tidak ditemukan.');
         }
 
@@ -35,66 +37,46 @@ class RaporController extends Controller
 
         $reportData = null;
         $qrCodeBase64 = null;
+        $attendanceReport = null;
+        $periodOptions = [];
+        $prevReportData = null;
         if ($student) {
-            foreach (['baca', 'tulis', 'hitung'] as $skill) {
-                $details = $student->progressBySkill($skill);
-                // Group by level
-                $grouped = $details->groupBy(fn ($p) => $p->material->level ?? 'Level 1');
-                $reportData[$skill] = [
-                    'percentage' => $student->skillPercentage($skill),
-                    'details'    => $details,
-                    'by_level'   => $grouped,
-                ];
+            $periods = app(ReportPeriodService::class);
+            $period = $periods->select($student, $request->only('period_number', 'period_end'));
+            $periodOptions = $periods->options($student);
+            $reportData = app(ProgressReportService::class)->reportData($student, $period['cutoff']);
+            $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
+            $qrCodeBase64 = RaporDownloadController::generateQrBase64($student, $period);
+            if ($period['number'] === $periods->current($student)['number']) {
+                $prevReportData = app(ProgressReportService::class)->reportData($student, now()->startOfMonth()->subDay());
             }
-
-            // Generate unique QR code for this student's report
-            $qrCodeBase64 = RaporDownloadController::generateQrBase64($student);
         }
 
         $institutionName = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
         $unitName = Setting::get('unit_name', '');
 
-        // Previous period report data (last month snapshot)
-        $prevReportData = null;
-        if ($student) {
-            $lastMonthEnd = now()->subMonth()->endOfMonth();
-            foreach (['baca', 'tulis', 'hitung'] as $skill) {
-                $progress = $student->progress()
-                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
-                    ->get()
-                    ->filter(fn ($item) => $item->display_status !== '');
-
-                $total = $progress->count();
-                $skilled = $total > 0
-                    ? $progress->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
-                    : 0;
-                $prevReportData[$skill] = [
-                    'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
-                ];
-            }
-        }
-
-        $attendanceReport = $student ? app(AttendanceService::class)->forReport($student) : null;
-
-        return view('guru.rapor', compact('students', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport'));
+        return view('guru.rapor', compact('students', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
     }
 
     public function saveNotes(Request $request)
     {
         $request->validate([
-            'student_id'        => 'required|exists:students,id',
+            'student_id' => 'required|exists:students,id',
             'development_notes' => 'nullable|string|max:2000',
+            'period_number' => 'nullable|integer|min:1',
         ]);
 
         $teacher = Auth::user()->teacher;
-        $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
-        if (!$student) {
+        abort_unless($teacher, 403);
+        $student = Student::where('teacher_id', $teacher->id)->find($request->student_id);
+        if (! $student) {
             return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
         }
+        $period = app(ReportPeriodService::class)->select($student, $request->only('period_number'));
         $student->update(['development_notes' => $request->development_notes]);
 
-        return redirect()->route('guru.rapor', ['student_id' => $student->id])
+        return redirect()->route('guru.rapor', ['student_id' => $student->id, 'period_number' => $period['number']])
             ->with('success', 'Catatan perkembangan berhasil disimpan.');
     }
 }

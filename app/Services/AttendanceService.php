@@ -16,19 +16,18 @@ class AttendanceService
             ->whereDate('attendance_date', '>=', $period['start']->toDateString())
             ->whereDate('attendance_date', '<=', $period['cutoff']->toDateString())
             ->get();
-        $byMonth = $attendances->groupBy(fn ($attendance) => $attendance->attendance_date->format('Y-m'));
         $months = [];
 
-        // Calendar-month rows are clipped to the student's three-month reporting cycle.
-        for ($month = $period['start']->startOfMonth(); $month->lte($period['end']); $month = $month->addMonth()) {
-            $start = $month->max($period['start']);
-            $end = $month->endOfMonth()->startOfDay()->min($period['end']);
+        foreach ($period['months'] as $month) {
+            $start = $month['start'];
+            $end = $month['end'];
             $months[] = [
-                'label' => $month->locale('id')->translatedFormat('F Y'),
+                'label' => $month['label'],
                 'start' => $start,
                 'end' => $end,
                 'future' => $start->gt($period['cutoff']),
-                'summary' => $this->summarize($byMonth->get($month->format('Y-m'), collect())),
+                'summary' => $this->summarize($attendances->filter(fn ($attendance) => $attendance->attendance_date->gte($start) && $attendance->attendance_date->lte($end)
+                )),
             ];
         }
 

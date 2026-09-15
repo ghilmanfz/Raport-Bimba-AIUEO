@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Wali;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\RaporDownloadController;
-use App\Models\Material;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Services\AttendanceService;
+use App\Services\ProgressReportService;
 use App\Services\ReportPeriodService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,28 +19,23 @@ class RaporController extends Controller
         $children = Auth::user()->students()->with('classroom')->get();
         $selectedChildId = $request->input('student_id', $children->first()?->id);
 
-        $student = null;
+        $student = $selectedChildId
+            ? Student::with(['classroom', 'progress.material', 'teacher.user'])->where('parent_id', Auth::id())->find($selectedChildId)
+            : null;
         $reportData = null;
         $qrCodeBase64 = null;
-
-        if ($selectedChildId) {
-            $student = Student::with(['classroom', 'progress.material', 'teacher.user'])
-                ->where('parent_id', Auth::id())
-                ->find($selectedChildId);
-
-            if ($student) {
-                foreach (['baca', 'tulis', 'hitung'] as $skill) {
-                    $details = $student->progressBySkill($skill);
-                    $grouped = $details->groupBy(fn ($p) => $p->material->level ?? 'Level 1');
-                    $reportData[$skill] = [
-                        'percentage' => $student->skillPercentage($skill),
-                        'details'    => $details,
-                        'by_level'   => $grouped,
-                    ];
-                }
-
-                // Generate unique QR code for this student's report
-                $qrCodeBase64 = RaporDownloadController::generateQrBase64($student);
+        $attendanceReport = null;
+        $periodOptions = [];
+        $prevReportData = null;
+        if ($student) {
+            $periods = app(ReportPeriodService::class);
+            $period = $periods->select($student, $request->only('period_number', 'period_end'));
+            $periodOptions = $periods->options($student);
+            $reportData = app(ProgressReportService::class)->reportData($student, $period['cutoff']);
+            $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
+            $qrCodeBase64 = RaporDownloadController::generateQrBase64($student, $period);
+            if ($period['number'] === $periods->current($student)['number']) {
+                $prevReportData = app(ProgressReportService::class)->reportData($student, now()->startOfMonth()->subDay());
             }
         }
 
@@ -48,29 +43,7 @@ class RaporController extends Controller
         $institutionAddress = Setting::get('institution_address', '');
         $unitName = Setting::get('unit_name', '');
 
-        // Previous period report data (last month snapshot)
-        $prevReportData = null;
-        if ($student) {
-            $lastMonthEnd = now()->subMonth()->endOfMonth();
-            foreach (['baca', 'tulis', 'hitung'] as $skill) {
-                $progress = $student->progress()
-                    ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
-                    ->get()
-                    ->filter(fn ($item) => $item->display_status !== '');
-
-                $total = $progress->count();
-                $skilled = $total > 0
-                    ? $progress->where('status', 'T')->where('skilled_date', '<=', $lastMonthEnd)->count()
-                    : 0;
-                $prevReportData[$skill] = [
-                    'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
-                ];
-            }
-        }
-
-        $attendanceReport = $student ? app(AttendanceService::class)->forReport($student) : null;
-
-        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport'));
+        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
     }
 
     public function riwayat(Request $request)
@@ -103,24 +76,12 @@ class RaporController extends Controller
                         'is_current' => $periodNumber === $currentPeriod['number'],
                     ];
 
-                    // Calculate progress for each skill at this period
-                    foreach (['baca', 'tulis', 'hitung'] as $skill) {
-                        $progress = $student->progress()
-                            ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
-                            ->get()
-                            ->filter(fn ($item) => $item->display_status !== '');
-                        
-                        $total = $progress->count();
-                        $skilled = $total > 0
-                            ? $progress->where('status', 'T')
-                                ->where('skilled_date', '<=', $periodEnd)
-                                ->count()
-                            : 0;
-                        
+                    $snapshot = app(ProgressReportService::class)->reportData($student, $periodEnd);
+                    foreach ($snapshot as $skill => $data) {
                         $periodData['skills'][$skill] = [
-                            'total' => $total,
-                            'skilled' => $skilled,
-                            'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
+                            'total' => $data['details']->count(),
+                            'skilled' => $data['details']->where('display_status', 'T')->count(),
+                            'percentage' => $data['percentage'],
                         ];
                     }
 
@@ -153,111 +114,13 @@ class RaporController extends Controller
             ->where('parent_id', Auth::id())
             ->findOrFail($request->student_id);
 
-        $periods = app(ReportPeriodService::class);
-        $periodNumber = (int) $request->period_number;
-        abort_if($periodNumber > $periods->current($student)['number'], 404);
-        $period = $periods->forNumber($student, $periodNumber);
+        $period = app(ReportPeriodService::class)->select($student, $request->only('period_number', 'period_end'));
+        $periodNumber = $period['number'];
         $periodStart = $period['start'];
-        $requestedEnd = \Carbon\CarbonImmutable::parse($request->period_end)->startOfDay();
-        abort_if($requestedEnd->lt($periodStart) || $requestedEnd->gt($period['cutoff']), 422);
-        $periodEnd = $requestedEnd;
-        $period['cutoff'] = $periodEnd;
+        $periodEnd = $period['cutoff'];
         $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
-
-        $reportData = [];
-        $qrCodeBase64 = null;
-
-        // Generate report data snapshot at period_end
-        foreach (['baca', 'tulis', 'hitung'] as $skill) {
-            $materials = Material::where('skill_type', $skill)
-                ->orderBy('sort_order')
-                ->get();
-
-            $progressByMaterial = $student->progress()
-                ->whereHas('material', fn ($q) => $q->where('skill_type', $skill))
-                ->with('material')
-                ->get()
-                ->keyBy('material_id');
-
-            $details = $materials->map(function ($material) use ($progressByMaterial, $periodEnd) {
-                $prog = $progressByMaterial->get($material->id);
-                $status = '';
-                $startDate = '';
-                $understandDate = '';
-                $skilledDate = '';
-
-                if ($prog) {
-                    if ($prog->skilled_date) {
-                        $date = \Carbon\Carbon::parse($prog->skilled_date);
-                        if ($date->lte($periodEnd)) {
-                            $status = 'T';
-                            $skilledDate = $date->format('Y-m-d');
-                        }
-                    }
-                    if (!$status && $prog->understand_date) {
-                        $date = \Carbon\Carbon::parse($prog->understand_date);
-                        if ($date->lte($periodEnd)) {
-                            $status = 'P';
-                            $understandDate = $date->format('Y-m-d');
-                        }
-                    }
-                    if (!$status && $prog->start_date) {
-                        $date = \Carbon\Carbon::parse($prog->start_date);
-                        if ($date->lte($periodEnd)) {
-                            $status = 'K';
-                            $startDate = $date->format('Y-m-d');
-                        }
-                    }
-
-                    // If a later milestone exists before the period but an earlier milestone also exists, preserve the earlier date for raport snapshot
-                    if ($prog->start_date) {
-                        $date = \Carbon\Carbon::parse($prog->start_date);
-                        if ($date->lte($periodEnd)) {
-                            $startDate = $date->format('Y-m-d');
-                        }
-                    }
-                    if ($prog->understand_date) {
-                        $date = \Carbon\Carbon::parse($prog->understand_date);
-                        if ($date->lte($periodEnd)) {
-                            $understandDate = $date->format('Y-m-d');
-                        }
-                    }
-                    if ($prog->skilled_date) {
-                        $date = \Carbon\Carbon::parse($prog->skilled_date);
-                        if ($date->lte($periodEnd)) {
-                            $skilledDate = $date->format('Y-m-d');
-                        }
-                    }
-                }
-
-                return [
-                    'material' => $material,
-                    'start_date' => $startDate,
-                    'understand_date' => $understandDate,
-                    'skilled_date' => $skilledDate,
-                    'status' => $status,
-                    'display_status' => $status,
-                ];
-            });
-
-            // Only show materials that already have a status (K/P/T) at this period.
-            // Materials without any status yet ("kosong") are hidden from the report.
-            $details = $details->filter(fn ($row) => $row['display_status'] !== '')->values();
-
-            $grouped = $details->groupBy(fn ($row) => $row['material']->level ?? 'Level 1');
-
-            $total = $details->count();
-            $skilled = $details->where('status', 'T')->count();
-
-            $reportData[$skill] = [
-                'percentage' => $total > 0 ? round(($skilled / $total) * 100, 1) : 0,
-                'details' => $details,
-                'by_level' => $grouped,
-            ];
-        }
-
-        // Generate QR code
-        $qrCodeBase64 = RaporDownloadController::generateQrBase64($student);
+        $reportData = app(ProgressReportService::class)->reportData($student, $periodEnd);
+        $qrCodeBase64 = RaporDownloadController::generateQrBase64($student, $period);
 
         $institutionName = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
@@ -273,12 +136,12 @@ class RaporController extends Controller
         ];
 
         return view('wali.rapor-periode', compact(
-            'student', 
-            'reportData', 
-            'prevReportData', 
-            'institutionName', 
-            'institutionAddress', 
-            'unitName', 
+            'student',
+            'reportData',
+            'prevReportData',
+            'institutionName',
+            'institutionAddress',
+            'unitName',
             'qrCodeBase64',
             'periodInfo',
             'attendanceReport'

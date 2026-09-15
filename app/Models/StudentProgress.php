@@ -62,22 +62,10 @@ class StudentProgress extends Model
     }
 
     /**
-     * Auto-calculate K/B/P/T status based on dates.
+     * Dates are authoritative; a row without dates is not an assessment.
      */
     public function calculateStatus(): string
     {
-        if ($this->skilled_date) {
-            return 'T';
-        }
-
-        if ($this->understand_date) {
-            return 'P';
-        }
-
-        if ($this->start_date) {
-            return 'K';
-        }
-
-        return '';
+        return $this->display_status;
     }
 }

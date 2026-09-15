@@ -115,13 +115,13 @@
                 'T' => 'bg-[#DCFCE7] border border-[#86EFAC] text-[#16A34A]',
                 'P' => 'bg-[#DBEAFE] border border-[#93C5FD] text-[#2563EB]',
                 'K' => 'bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B]',
-                default => '',
+                default => 'bg-[#F1F5F9] text-[#64748B]',
               };
               $label = match($status) {
                 'T' => 'T - Terampil',
                 'P' => 'P - Paham',
                 'K' => 'K - Kenal',
-                default => '',
+                default => 'Belum Dinilai',
               };
             @endphp
             @if($label)
@@ -153,7 +153,7 @@
       if (skilled) return { status: 'T', label: 'T - Terampil', badge: 'bg-[#DCFCE7] border border-[#86EFAC] text-[#16A34A]' };
       if (understand) return { status: 'P', label: 'P - Paham', badge: 'bg-[#DBEAFE] border border-[#93C5FD] text-[#2563EB]' };
       if (start) return { status: 'K', label: 'K - Kenal', badge: 'bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B]' };
-      return { status: '', label: '', badge: '' };
+      return { status: '', label: 'Belum Dinilai', badge: 'bg-[#F1F5F9] text-[#64748B]' };
     }
 
     rows.forEach(function (row) {
@@ -171,11 +171,6 @@
         const understandValue = understandInput.value.trim();
         const skilledValue = skilledInput.value.trim();
         const status = getStatus(startValue, understandValue, skilledValue);
-
-        if (!status.status) {
-          statusCell.innerHTML = '';
-          return;
-        }
 
         statusCell.innerHTML = '<span class="inline-flex items-center px-3 py-0.5 rounded-full text-[10px] font-bold uppercase ' + status.badge + '">' + status.label + '</span>';
       };

@@ -85,6 +85,7 @@
 </form>
 
 @if($student && $reportData)
+@include('rapor.period-filter', ['action' => route('wali.rapor')])
 @php
   $statusCode = fn($s) => $s === 'B' ? 'K' : $s;
   $statusLabel = fn($s) => match($s) {

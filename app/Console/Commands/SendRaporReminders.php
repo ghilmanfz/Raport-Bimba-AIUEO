@@ -4,84 +4,74 @@ namespace App\Console\Commands;
 
 use App\Models\Notification;
 use App\Models\Student;
-use Carbon\Carbon;
+use App\Models\User;
+use App\Services\ReportPeriodService;
+use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class SendRaporReminders extends Command
 {
-    protected $signature = 'rapor:remind';
-    protected $description = 'Send automatic rapor reminder notifications every 3 months based on student join date';
+    protected $signature = 'rapor:remind {--dry-run : Show due reminders without sending notifications}';
 
-    public function handle()
+    protected $description = 'Pengingat rapor setiap tiga bulan sejak tanggal masuk murid';
+
+    public function handle(ReportPeriodService $periods): int
     {
-        $today = Carbon::today();
-        
-        // Get all active students
-        $students = Student::where('status', 'aktif')
-            ->whereNotNull('join_date')
-            ->with(['parent', 'classroom'])
-            ->get();
+        $today = CarbonImmutable::today('Asia/Jakarta');
+        $admins = User::where('role', 'admin')->pluck('id');
+        $sent = 0;
+        $due = 0;
 
-        $sentCount = 0;
+        Student::active()->whereNotNull('join_date')->with(['teacher', 'classroom'])->chunkById(100, function ($students) use ($periods, $today, $admins, &$sent, &$due) {
+            foreach ($students as $student) {
+                $period = $periods->nextDistribution($student);
+                if (! $period['due_date']->isSameDay($today)) {
+                    continue;
+                }
 
-        foreach ($students as $student) {
-            $joinDate = Carbon::parse($student->join_date);
-            
-            // Calculate months difference
-            $monthsDiff = $joinDate->diffInMonths($today);
-            
-            // Check if it's exactly a multiple of 3 months (3, 6, 9, 12, etc.)
-            // and it's the join date anniversary (same day of month)
-            if ($monthsDiff > 0 && $monthsDiff % 3 === 0 && $joinDate->day === $today->day) {
-                
-                // Send notification to parent
+                $due++;
+                if ($this->option('dry-run')) {
+                    $this->line("Murid #{$student->id}: periode {$period['number']}, ".$period['due_date']->toDateString());
+
+                    continue;
+                }
+
+                $params = ['student_id' => $student->id, 'period_number' => $period['number'], 'period_end' => $period['end']->toDateString()];
+                $recipients = [];
                 if ($student->parent_id) {
-                    Notification::send(
-                        $student->parent_id,
-                        'Pengingat: Pembagian Rapor',
-                        'Sudah saatnya untuk pembagian rapor ' . $student->name . ' (periode ' . $monthsDiff . ' bulan). Silakan hubungi guru untuk jadwal pembagian rapor.',
-                        'info',
-                        'lucide:calendar-check',
-                        route('wali.dashboard')
-                    );
+                    $recipients[$student->parent_id] = route('wali.rapor.periode', $params);
+                }
+                if ($student->teacher?->user_id) {
+                    $recipients[$student->teacher->user_id] = route('guru.rapor', $params);
+                }
+                foreach ($admins as $adminId) {
+                    $recipients[$adminId] = route('admin.murid');
                 }
 
-                // Send notification to teacher (if assigned)
-                if ($student->classroom && $student->classroom->teachers) {
-                    foreach ($student->classroom->teachers as $teacher) {
-                        if ($teacher->user_id) {
-                            Notification::send(
-                                $teacher->user_id,
-                                'Reminder: Pembagian Rapor',
-                                'Jadwal pembagian rapor untuk murid ' . $student->name . ' (' . $student->classroom->name . ') - Periode ' . $monthsDiff . ' bulan sejak bergabung.',
-                                'info',
-                                'lucide:calendar-check',
-                                route('guru.rapor', ['student_id' => $student->id])
-                            );
-                        }
+                $sent += DB::transaction(function () use ($student, $period, $recipients) {
+                    $created = 0;
+                    foreach ($recipients as $userId => $link) {
+                        $notification = Notification::firstOrCreate([
+                            'deduplication_key' => 'rapor:'.$student->id.':'.$period['end']->toDateString().':'.$userId,
+                        ], [
+                            'user_id' => $userId,
+                            'type' => 'info',
+                            'icon' => 'lucide:calendar-check',
+                            'title' => 'Pengingat: Pembagian Rapor',
+                            'message' => 'Jadwal pembagian rapor '.$student->name.' untuk periode '.$period['number'].' ('.$period['start']->translatedFormat('d M Y').' - '.$period['end']->translatedFormat('d M Y').').',
+                            'link' => $link,
+                        ]);
+                        $created += (int) $notification->wasRecentlyCreated;
                     }
-                }
 
-                // Notify admins
-                Notification::notifyAdmins(
-                    'Jadwal Pembagian Rapor',
-                    'Pengingat pembagian rapor untuk murid ' . $student->name . ' (' . $student->classroom?->name . ') - Periode ' . $monthsDiff . ' bulan.',
-                    'info',
-                    'lucide:calendar-check',
-                    route('admin.murid')
-                );
-
-                $sentCount++;
-                $this->info("✓ Reminder sent for: {$student->name} ({$monthsDiff} months)");
+                    return $created;
+                });
             }
-        }
+        });
 
-        if ($sentCount === 0) {
-            $this->info('No rapor reminders to send today.');
-        } else {
-            $this->info("\nTotal reminders sent: {$sentCount}");
-        }
+        $this->info($this->option('dry-run') ? "{$due} murid memiliki jadwal hari ini; tidak ada notifikasi dikirim." : "{$sent} notifikasi baru untuk {$due} murid dengan jadwal hari ini.");
 
-        return Command::SUCCESS;
+        return self::SUCCESS;
     }
 }

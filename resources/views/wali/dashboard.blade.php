@@ -132,7 +132,7 @@
         <div class="w-12 h-12 {{ $visual['bg'] }} rounded-2xl flex items-center justify-center">
           <iconify-icon icon="{{ $visual['icon'] }}" width="24" class="{{ $visual['text'] }}"></iconify-icon>
         </div>
-        <span class="{{ $badgeClass }} text-[10px] font-bold px-3 py-1 rounded-full">Status: {{ $card['status'] }}</span>
+        <span class="{{ $badgeClass }} text-[10px] font-bold px-3 py-1 rounded-full">{{ $card['status'] ? 'Status: '.$card['status'] : 'Belum Dinilai' }}</span>
       </div>
       <h3 class="text-lg font-bold text-[#171a1f] mb-2">{{ $card['label'] }}</h3>
       <p class="text-sm text-[#565d6d] mb-6 flex-1">{{ $card['description'] }}</p>
@@ -230,7 +230,7 @@
         @forelse($recentProgress as $progress)
           @php
             $progressDate = $progress->updated_at ?? $progress->created_at;
-            $statusClass = match($progress->status) {
+            $statusClass = match($progress->display_status) {
               'T' => 'bg-[#FFEDD5] border-[#FCA5A5] text-[#C2410C]',
               'P' => 'bg-[#FFF7ED] border-[#FDE047] text-[#C2410C]',
               default => 'bg-[#f3f4f6] border-[#dee1e6] text-[#475569]',
@@ -244,7 +244,7 @@
               </div>
               <p class="text-sm font-medium text-[#171a1f]">{{ $progress->material?->name ?? 'Materi belum tersedia' }}</p>
             </div>
-            <div class="w-6 h-6 border rounded-full flex items-center justify-center text-[10px] font-bold {{ $statusClass }}">{{ $progress->status }}</div>
+            <div class="w-6 h-6 border rounded-full flex items-center justify-center text-[10px] font-bold {{ $statusClass }}">{{ $progress->display_status }}</div>
           </div>
         @empty
           <div class="px-5 py-8 text-center">

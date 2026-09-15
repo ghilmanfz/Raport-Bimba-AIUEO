@@ -69,6 +69,7 @@
 </form>
 
 @if($student && $reportData)
+@include('rapor.period-filter', ['action' => route('guru.rapor')])
 @php
   $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal (Pengenalan)') };
 @endphp
@@ -225,6 +226,7 @@
     <form method="POST" action="{{ route('guru.rapor.notes') }}">
       @csrf
       <input type="hidden" name="student_id" value="{{ $student->id }}">
+      <input type="hidden" name="period_number" value="{{ $attendanceReport['period']['number'] }}">
       <label class="block text-sm font-bold text-[#171a1f] mb-2">Catatan Perkembangan Manual</label>
       <textarea name="development_notes" rows="3" class="w-full px-3 py-2 border border-[#dee1e6] rounded-lg text-sm focus:ring-1 focus:ring-[#F97316] outline-none" placeholder="Tulis catatan perkembangan murid di sini...">{{ $student->development_notes }}</textarea>
       <button type="submit" class="mt-2 px-4 py-2 bg-[#F97316] text-white rounded-lg text-sm font-medium hover:bg-orange-600">

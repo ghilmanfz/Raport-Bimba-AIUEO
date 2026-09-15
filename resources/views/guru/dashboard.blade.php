@@ -37,8 +37,8 @@
   <div class="xl:col-span-2 bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
     <div class="flex justify-between items-start mb-6">
       <div>
-        <h2 class="text-lg font-bold text-[#171a1f]">Distribusi Status Progres</h2>
-        <p class="text-sm text-[#565d6d]">Ringkasan status K/B/P/T semua murid</p>
+        <h2 class="text-lg font-bold text-[#171a1f]">Distribusi Nilai Modul</h2>
+        <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada murid bimbingan aktif.</p>
       </div>
       <a href="{{ route('guru.grafik') }}" class="text-[#F97316] text-sm font-medium flex items-center gap-1 hover:underline">
         Detail Lengkap
@@ -53,11 +53,11 @@
   <!-- Status Kompetensi Donut -->
   <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
     <h2 class="text-lg font-bold text-[#171a1f]">Status Kompetensi</h2>
-    <p class="text-sm text-[#565d6d] mb-6">Berdasarkan penilaian terbaru (K, B, P, T)</p>
+    <p class="text-sm text-[#565d6d] mb-6">Berdasarkan modul yang sudah dinilai (K, P, T). Modul kosong tidak dihitung.</p>
     <div class="relative w-40 h-40 mx-auto mb-6">
       <canvas id="dashboardDonutChart"></canvas>
       <div class="absolute inset-0 flex items-center justify-center">
-        <div class="text-center"><p class="text-lg font-bold text-[#171a1f]">{{ $stats['total_murid'] }}</p><p class="text-xs text-[#565d6d]">murid</p></div>
+        <div class="text-center"><p class="text-lg font-bold text-[#171a1f]">{{ $stats['total_assessed'] ?? 0 }}</p><p class="text-xs text-[#565d6d]">penilaian modul</p></div>
       </div>
     </div>
     <div class="grid grid-cols-2 gap-y-3 gap-x-2">
@@ -166,7 +166,7 @@ new Chart(ctxDonut, {
   data: {
     labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
     datasets: [{
-      data: [{{ $stats['status_percent']['T'] ?? 0 }}, {{ $stats['status_percent']['P'] ?? 0 }}, {{ $stats['status_percent']['K'] ?? 0 }}],
+      data: [{{ $stats['status_counts']['T'] ?? 0 }}, {{ $stats['status_counts']['P'] ?? 0 }}, {{ $stats['status_counts']['K'] ?? 0 }}],
       backgroundColor: ['#22C55E', '#3B82F6', '#E2E8F0'],
       borderWidth: 0,
       hoverOffset: 6

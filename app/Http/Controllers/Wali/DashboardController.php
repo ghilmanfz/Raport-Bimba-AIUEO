@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Wali;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Models\StudentProgress;
+use App\Services\ProgressReportService;
+use App\Services\ReportPeriodService;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -20,11 +22,11 @@ class DashboardController extends Controller
 
         $childrenData = $children->map(function ($child) {
             return [
-                'student'    => $child,
-                'baca'       => $child->skillPercentage('baca'),
-                'tulis'      => $child->skillPercentage('tulis'),
-                'hitung'     => $child->skillPercentage('hitung'),
-                'total_stars' => $child->progress->where('status', 'T')->count() * 10,
+                'student' => $child,
+                'baca' => $child->skillPercentage('baca'),
+                'tulis' => $child->skillPercentage('tulis'),
+                'hitung' => $child->skillPercentage('hitung'),
+                'total_stars' => $child->progress->where('display_status', 'T')->count() * 10,
             ];
         });
         $selectedChildData = $selectedChild
@@ -32,16 +34,10 @@ class DashboardController extends Controller
             : null;
 
         $today = Carbon::today();
-        $raporSchedules = $children->filter(fn ($child) => !empty($child->join_date))->map(function ($child) use ($today) {
-            $joinDate = Carbon::parse($child->join_date)->startOfDay();
-            $monthsDiff = max(0, $joinDate->diffInMonths($today, false));
-            $periodNumber = (int) floor($monthsDiff / 3) + 1;
-            $nextDate = $joinDate->copy()->addMonths($periodNumber * 3);
-
-            while ($nextDate->lt($today)) {
-                $periodNumber++;
-                $nextDate = $joinDate->copy()->addMonths($periodNumber * 3);
-            }
+        $raporSchedules = $children->filter(fn ($child) => ! empty($child->join_date))->map(function ($child) use ($today) {
+            $period = app(ReportPeriodService::class)->nextDistribution($child);
+            $periodNumber = $period['number'];
+            $nextDate = $period['due_date'];
 
             return [
                 'student_name' => $child->name,
@@ -52,7 +48,7 @@ class DashboardController extends Controller
         })->sortBy('days_left')->values();
 
         $recentProgress = $selectedChild
-            ? $selectedChild->progress->sortByDesc('updated_at')->take(3)->values()
+            ? app(ProgressReportService::class)->assessed($selectedChild->progress)->sortByDesc('updated_at')->take(3)->values()
             : collect();
         $skillCards = $selectedChild
             ? $this->buildSkillCards($selectedChild->progress)
@@ -77,6 +73,7 @@ class DashboardController extends Controller
 
     private function buildSkillCards(Collection $progress): array
     {
+        $progress = app(ProgressReportService::class)->assessed($progress);
         $definitions = [
             'baca' => ['label' => 'Membaca (Baca)', 'empty' => 'Belum ada materi membaca yang dinilai.'],
             'tulis' => ['label' => 'Menulis (Tulis)', 'empty' => 'Belum ada materi menulis yang dinilai.'],
@@ -86,10 +83,10 @@ class DashboardController extends Controller
         return collect($definitions)->mapWithKeys(function (array $definition, string $skill) use ($progress) {
             $items = $progress->filter(fn (StudentProgress $item) => $item->material?->skill_type === $skill);
             $total = $items->count();
-            $terampil = $items->where('status', 'T')->count();
-            $paham = $items->whereIn('status', ['P', 'T'])->count();
+            $terampil = $items->where('display_status', 'T')->count();
+            $paham = $items->whereIn('display_status', ['P', 'T'])->count();
             $score = $total > 0
-                ? (int) round($items->avg(fn (StudentProgress $item) => $this->statusScore($item->status)))
+                ? (int) round($items->avg(fn (StudentProgress $item) => $this->statusScore($item->display_status)))
                 : 0;
 
             if ($score >= 80) {
@@ -99,7 +96,7 @@ class DashboardController extends Controller
                 $status = 'P';
                 $description = "{$paham} dari {$total} materi sudah paham.";
             } else {
-                $status = 'K';
+                $status = $total > 0 ? 'K' : null;
                 $description = $total > 0
                     ? "{$paham} dari {$total} materi sudah paham, perlu pendampingan lanjutan."
                     : $definition['empty'];
@@ -116,7 +113,8 @@ class DashboardController extends Controller
 
     private function buildSkillTrend(Collection $progress): array
     {
-        $months = collect(range(4, 0))->map(fn (int $offset) => Carbon::today()->subMonths($offset));
+        $progress = app(ProgressReportService::class)->assessed($progress);
+        $months = collect(range(4, 0))->map(fn (int $offset) => Carbon::today()->startOfMonth()->subMonths($offset));
         $skills = [
             'baca' => 'Membaca',
             'tulis' => 'Menulis',
@@ -135,7 +133,7 @@ class DashboardController extends Controller
                     }
 
                     $endOfMonth = $month->copy()->endOfMonth();
-                    $score = $items->avg(fn (StudentProgress $item) => $this->progressScoreAt($item, $endOfMonth));
+                    $score = $items->map(fn (StudentProgress $item) => $this->progressScoreAt($item, $endOfMonth))->filter(fn ($score) => $score > 0)->avg() ?? 0;
 
                     return (int) round($score);
                 })->values()->all();
@@ -170,7 +168,7 @@ class DashboardController extends Controller
         return match ($status) {
             'T' => 100,
             'P' => 66,
-            'B' => 33,
+            'K', 'B' => 33,
             default => 0,
         };
     }
@@ -178,15 +176,15 @@ class DashboardController extends Controller
     private function emptySkillCards(): array
     {
         return [
-            'baca' => ['label' => 'Membaca (Baca)', 'status' => 'K', 'percentage' => 0, 'description' => 'Belum ada materi membaca yang dinilai.'],
-            'tulis' => ['label' => 'Menulis (Tulis)', 'status' => 'K', 'percentage' => 0, 'description' => 'Belum ada materi menulis yang dinilai.'],
-            'hitung' => ['label' => 'Berhitung (Hitung)', 'status' => 'K', 'percentage' => 0, 'description' => 'Belum ada materi berhitung yang dinilai.'],
+            'baca' => ['label' => 'Membaca (Baca)', 'status' => null, 'percentage' => 0, 'description' => 'Belum ada materi membaca yang dinilai.'],
+            'tulis' => ['label' => 'Menulis (Tulis)', 'status' => null, 'percentage' => 0, 'description' => 'Belum ada materi menulis yang dinilai.'],
+            'hitung' => ['label' => 'Berhitung (Hitung)', 'status' => null, 'percentage' => 0, 'description' => 'Belum ada materi berhitung yang dinilai.'],
         ];
     }
 
     private function emptySkillTrend(): array
     {
-        $months = collect(range(4, 0))->map(fn (int $offset) => Carbon::today()->subMonths($offset)->translatedFormat('M'))->values()->all();
+        $months = collect(range(4, 0))->map(fn (int $offset) => Carbon::today()->startOfMonth()->subMonths($offset)->translatedFormat('M'))->values()->all();
 
         return [
             'labels' => $months,

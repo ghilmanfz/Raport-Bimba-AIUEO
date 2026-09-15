@@ -19,10 +19,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Run rapor reminder check daily at 9 AM
-        $schedule->command('rapor:remind')
-            ->dailyAt('09:00')
-            ->timezone('Asia/Jakarta');
+        // Application schedules are defined once in routes/console.php (Laravel 11).
     }
 
     /**

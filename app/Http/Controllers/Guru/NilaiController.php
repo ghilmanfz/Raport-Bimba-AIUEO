@@ -9,19 +9,21 @@ use App\Models\Student;
 use App\Models\StudentProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NilaiController extends Controller
 {
     public function index(Request $request)
     {
         $teacher = Auth::user()->teacher;
+        abort_unless($teacher, 403);
         $students = Student::where('teacher_id', $teacher?->id)
             ->where('status', 'aktif')
             ->orderBy('name')
             ->get();
 
         $selectedStudentId = $request->input('student_id', $students->first()?->id);
-        $selectedSkill     = $request->input('skill', 'baca');
+        $selectedSkill = $request->input('skill', 'baca');
 
         $selectedStudent = $selectedStudentId
             ? Student::where('teacher_id', $teacher?->id)->with('classroom')->find($selectedStudentId)
@@ -38,7 +40,7 @@ class NilaiController extends Controller
             ?: ($availableLevels->first() ?? 'Level 1');
 
         $selectedLevel = $request->input('level', $defaultLevel);
-        if (!$availableLevels->contains($selectedLevel)) {
+        if (! $availableLevels->contains($selectedLevel)) {
             $selectedLevel = $defaultLevel;
         }
 
@@ -48,31 +50,22 @@ class NilaiController extends Controller
             ->get();
 
         $progress = [];
-        if ($selectedStudentId) {
-            $existing = StudentProgress::where('student_id', $selectedStudentId)
+        if ($selectedStudent) {
+            $existing = StudentProgress::where('student_id', $selectedStudent->id)
                 ->whereIn('material_id', $materials->pluck('id'))
                 ->get()
                 ->keyBy('material_id');
 
             foreach ($materials as $material) {
                 $p = $existing->get($material->id);
-                $status = '';
-                if ($p) {
-                    if ($p->skilled_date) {
-                        $status = 'T';
-                    } elseif ($p->understand_date) {
-                        $status = 'P';
-                    } elseif ($p->start_date) {
-                        $status = 'K';
-                    }
-                }
+                $status = $p?->display_status ?? '';
 
                 $progress[] = [
-                    'material'        => $material,
-                    'start_date'      => $p?->start_date?->format('Y-m-d'),
+                    'material' => $material,
+                    'start_date' => $p?->start_date?->format('Y-m-d'),
                     'understand_date' => $p?->understand_date?->format('Y-m-d'),
-                    'skilled_date'    => $p?->skilled_date?->format('Y-m-d'),
-                    'status'          => $status,
+                    'skilled_date' => $p?->skilled_date?->format('Y-m-d'),
+                    'status' => $status,
                 ];
             }
         }
@@ -85,39 +78,45 @@ class NilaiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'student_id'                => 'required|exists:students,id',
-            'progress'                  => 'required|array',
-            'progress.*.material_id'    => 'required|exists:materials,id',
-            'progress.*.start_date'     => 'nullable|date',
-            'progress.*.understand_date'=> 'nullable|date',
-            'progress.*.skilled_date'   => 'nullable|date',
+            'student_id' => 'required|exists:students,id',
+            'progress' => 'required|array',
+            'progress.*.material_id' => 'required|distinct|exists:materials,id',
+            'progress.*.start_date' => 'nullable|date',
+            'progress.*.understand_date' => 'nullable|date',
+            'progress.*.skilled_date' => 'nullable|date',
         ]);
 
         $teacher = Auth::user()->teacher;
+        abort_unless($teacher, 403);
         $student = Student::where('teacher_id', $teacher?->id)->find($request->student_id);
-        if (!$student) {
+        if (! $student) {
             return redirect()->back()->withErrors(['student_id' => 'Murid tidak termasuk bimbingan Anda.']);
         }
 
-        foreach ($request->progress as $item) {
-            $status = 'K';
-            if (!empty($item['skilled_date'])) $status = 'T';
-            elseif (!empty($item['understand_date'])) $status = 'P';
+        DB::transaction(function () use ($request, $teacher, $student) {
+            foreach ($request->progress as $item) {
+                $dates = [
+                    'start_date' => $item['start_date'] ?? null,
+                    'understand_date' => $item['understand_date'] ?? null,
+                    'skilled_date' => $item['skilled_date'] ?? null,
+                ];
+                $status = (new StudentProgress($dates))->calculateStatus();
+                $key = ['student_id' => $student->id, 'material_id' => $item['material_id']];
 
-            StudentProgress::updateOrCreate(
-                [
-                    'student_id'  => $request->student_id,
-                    'material_id' => $item['material_id'],
-                ],
-                [
-                    'teacher_id'      => $teacher?->id,
-                    'start_date'      => $item['start_date'] ?: null,
-                    'understand_date' => $item['understand_date'] ?: null,
-                    'skilled_date'    => $item['skilled_date'] ?: null,
-                    'status'          => $status,
-                ]
-            );
-        }
+                if ($status === '') {
+                    // Clearing all three dates removes only this submitted assessment.
+                    // Untouched materials and legacy rows outside this form are preserved.
+                    StudentProgress::where($key)->delete();
+
+                    continue;
+                }
+
+                StudentProgress::updateOrCreate($key, $dates + [
+                    'teacher_id' => $teacher->id,
+                    'status' => $status,
+                ]);
+            }
+        });
 
         $guruName = Auth::user()->name;
 
@@ -125,7 +124,7 @@ class NilaiController extends Controller
         Notification::send(
             Auth::id(),
             'Nilai Disimpan',
-            'Nilai untuk murid ' . ($student->name ?? '') . ' berhasil disimpan.',
+            'Nilai untuk murid '.($student->name ?? '').' berhasil disimpan.',
             'success',
             'lucide:check-circle',
             route('guru.nilai')
@@ -136,7 +135,7 @@ class NilaiController extends Controller
             Notification::send(
                 $student->parent_id,
                 'Nilai Anak Diperbarui',
-                'Guru ' . $guruName . ' telah memperbarui nilai ' . $student->name . '.',
+                'Guru '.$guruName.' telah memperbarui nilai '.$student->name.'.',
                 'info',
                 'lucide:file-text',
                 route('wali.dashboard')
@@ -146,7 +145,7 @@ class NilaiController extends Controller
         // Notify admins
         Notification::notifyAdmins(
             'Input Nilai Baru',
-            'Guru ' . $guruName . ' menginput nilai untuk murid ' . ($student->name ?? '') . '.',
+            'Guru '.$guruName.' menginput nilai untuk murid '.($student->name ?? '').'.',
             'info',
             'lucide:file-text',
             route('admin.murid')

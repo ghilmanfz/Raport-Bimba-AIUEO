@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    protected $fillable = ['user_id', 'type', 'icon', 'title', 'message', 'link', 'read_at'];
+    protected $fillable = ['user_id', 'type', 'icon', 'title', 'message', 'link', 'read_at', 'deduplication_key'];
 
     protected $casts = [
         'read_at' => 'datetime',
@@ -26,11 +26,11 @@ class Notification extends Model
     {
         return static::create([
             'user_id' => $userId,
-            'type'    => $type,
-            'icon'    => $icon,
-            'title'   => $title,
+            'type' => $type,
+            'icon' => $icon,
+            'title' => $title,
             'message' => $message,
-            'link'    => $link,
+            'link' => $link,
         ]);
     }
 

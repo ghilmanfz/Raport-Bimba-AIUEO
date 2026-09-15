@@ -108,7 +108,7 @@ class Student extends Model
             return 0;
         }
 
-        $skilled = $details->where('status', 'T')->count();
+        $skilled = $details->where('display_status', 'T')->count();
 
         return round(($skilled / $total) * 100, 1);
     }

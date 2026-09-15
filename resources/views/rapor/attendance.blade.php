@@ -8,7 +8,7 @@
     }
 </style>
 <section id="hasil-absensi" style="margin: 18px 0 24px; scroll-margin-top: 96px; page-break-inside: avoid; break-inside: avoid; font-size: 13px;">
-    <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Hasil Absensi per Bulan</h3>
+    <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Hasil Absensi per Bulan Belajar</h3>
     <p style="font-size: 12px; margin-bottom: 8px;">
         Periode {{ $attendanceReport['period']['number'] }} (3 bulan):
         {{ $attendanceReport['period']['start']->translatedFormat('d M Y') }} - {{ $attendanceReport['period']['end']->translatedFormat('d M Y') }}.
@@ -20,7 +20,7 @@
     <table class="rapor-table" style="width: 100%; table-layout: fixed;">
         <thead>
             <tr>
-                <th style="width: 40%;">Bulan / Tanggal</th>
+                <th style="width: 40%;">Bulan Belajar / Tanggal</th>
                 @foreach(\App\Models\Attendance::STATUS_LABELS as $label)
                     <th>{{ $label }}</th>
                 @endforeach
@@ -32,7 +32,7 @@
                 <tr>
                     <td>
                         {{ $month['label'] }}
-                        <span style="display: block; font-size: 11px; color: #475569;">{{ $month['start']->translatedFormat('d M') }} - {{ $month['end']->translatedFormat('d M') }}</span>
+                        <span style="display: block; font-size: 11px; color: #475569;">{{ $month['start']->translatedFormat('d M Y') }} - {{ $month['end']->translatedFormat('d M Y') }}</span>
                     </td>
                     @foreach(['hadir', 'sakit', 'izin', 'alpa', 'total'] as $key)
                         <td style="text-align: center;">{{ $month['future'] ? '-' : $month['summary'][$key] }}</td>
@@ -49,7 +49,7 @@
     </table>
     </div>
     <p style="font-size: 11px; color: #475569; margin-top: 6px;">
-        Total tercatat = Hadir + Sakit + Izin + Alpa. Tanggal yang belum dicatat tidak dihitung sebagai Alpa. Tanda - berarti bulan belum berjalan.
+        Satu bulan belajar dihitung dari tanggal masuk, bukan bulan kalender. Total tercatat = Hadir + Sakit + Izin + Alpa. Tanggal yang belum dicatat tidak dihitung sebagai Alpa. Tanda - berarti bulan belajar belum dimulai.
         @if($attendanceReport['summary']['total'] === 0)
             Belum ada absensi tercatat pada periode ini.
         @endif
