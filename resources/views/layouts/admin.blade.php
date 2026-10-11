@@ -43,7 +43,7 @@
 <body class="min-h-screen flex flex-col lg:flex-row">
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+  <aside id="sidebar" class="no-print fixed inset-y-0 left-0 z-50 w-64 bg-[#fafafb] border-r border-[#dee1e6] transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
     <div class="p-6 flex items-center gap-3">
       @php $sidebarLogo = \App\Models\Setting::get('institution_logo'); @endphp
       <div class="w-8 h-8 {{ $sidebarLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -71,6 +71,11 @@
          class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.absensi*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
         <iconify-icon icon="lucide:clipboard-check" width="18"></iconify-icon>
         Absensi
+      </a>
+      <a href="{{ route('admin.rapor') }}"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.rapor*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
+        <iconify-icon icon="lucide:file-text" width="18"></iconify-icon>
+        Laporan Rapor
       </a>
       <a href="{{ route('admin.guru') }}"
          class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm font-roboto {{ request()->routeIs('admin.guru*') ? 'sidebar-active' : 'text-[#565d6d] hover:bg-gray-100' }}">
@@ -109,10 +114,10 @@
   <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
 
   <!-- Main Content Area -->
-  <div class="flex-1 flex flex-col lg:ml-64 min-w-0">
+  <div class="flex-1 flex flex-col lg:ml-64 print:ml-0 min-w-0">
 
     <!-- Header -->
-    <header data-admin-headbar class="sticky top-0 z-30 min-h-[72px] bg-white/90 backdrop-blur-md border-b border-[#dee1e6] flex items-center justify-between px-4 py-2 lg:px-8">
+    <header data-admin-headbar class="no-print sticky top-0 z-30 min-h-[72px] bg-white/90 backdrop-blur-md border-b border-[#dee1e6] flex items-center justify-between px-4 py-2 lg:px-8">
       <div class="flex min-h-12 items-center gap-4">
         <button id="mobile-menu-btn" class="lg:hidden p-2 text-[#565d6d] hover:bg-gray-100 rounded-lg">
           <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
@@ -134,7 +139,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="px-8 py-4 border-t border-[#dee1e6] text-center">
+    <footer class="no-print px-8 py-4 border-t border-[#dee1e6] text-center">
       <p class="text-xs text-[#565d6d] font-roboto">© {{ date('Y') }} E-Rapor BiMBA AIUEO Smart Education Centre. All rights reserved.</p>
     </footer>
   </div>

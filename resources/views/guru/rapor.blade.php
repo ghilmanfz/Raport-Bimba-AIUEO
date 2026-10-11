@@ -1,4 +1,4 @@
-﻿@extends('layouts.guru')
+@extends($reportLayout ?? 'layouts.guru')
 
 @section('title', 'Cetak Rapor Digital - E-Rapor BiMBA')
 @section('page-title', 'Cetak Rapor Digital')
@@ -16,10 +16,15 @@
   .status-T { background: #FFEDD5; color: #C2410C; font-weight: 700; }
   .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
+  .admin-rapor-preview { overflow-x: auto; }
+  .admin-rapor-preview .rapor-sheet { min-width: 640px; }
 
   @media print {
     .no-print { display: none !important; }
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    main { margin: 0 !important; padding: 0 !important; }
+    .admin-rapor-preview { overflow: visible !important; }
+    .admin-rapor-preview .rapor-sheet { min-width: 0 !important; }
     .rapor-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 40px !important; }
     .rapor-table th, .rapor-table td { padding: 6px 10px; }
     @page { size: A4; margin: 15mm; }
@@ -35,6 +40,10 @@
     <p class="text-sm text-[#565d6d]">Laporan perkembangan belajar siswa BiMBA AIUEO</p>
   </div>
   <div class="flex flex-wrap gap-2">
+    @if($isAdminReport ?? false)
+      <a href="{{ route('admin.rapor', ['year' => $reportYear]) }}" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-lg text-sm font-medium hover:bg-gray-50"><iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>Daftar Rapor {{ $reportYear }}</a>
+      <a href="{{ route('admin.rapor.pdf', ['student' => $student->id, 'year' => $reportYear, 'period_number' => $attendanceReport['period']['number'], 'period_end' => $attendanceReport['period']['cutoff']->toDateString()]) }}" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-lg text-sm font-medium hover:bg-gray-50"><iconify-icon icon="lucide:download" width="16"></iconify-icon>PDF</a>
+    @endif
     <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-medium text-[#171a1f] hover:bg-gray-50">
       <iconify-icon icon="lucide:printer" width="16" class="text-[#F97316]"></iconify-icon>
       Cetak
@@ -43,6 +52,7 @@
 </div>
 
 <!-- Student Selector (no-print) -->
+@unless($isAdminReport ?? false)
 <form method="GET" action="{{ route('guru.rapor') }}" class="no-print bg-white rounded-2xl border border-[#dee1e6] main-shadow p-5 mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
   <div class="md:col-span-8 space-y-1.5">
     <label class="text-xs font-semibold text-[#565d6d] uppercase tracking-wider">Pilih Siswa</label>
@@ -67,14 +77,16 @@
     </button>
   </div>
 </form>
+@endunless
 
 @if($student && $reportData)
-@include('rapor.period-filter', ['action' => route('guru.rapor')])
+@include('rapor.period-filter', ['action' => $reportAction ?? route('guru.rapor')])
 @php
   $statusLabel = fn($s) => match($s) { 'T' => 'Terampil', 'P' => 'Paham', default => ($s === '' ? '' : 'Kenal (Pengenalan)') };
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
+@if($isAdminReport ?? false)<div class="admin-rapor-preview">@endif
 <div class="rapor-sheet max-w-[850px] mx-auto bg-white rounded-lg shadow-lg border border-[#cbd5e1] p-10 mb-6" style="font-family: 'Times New Roman', Times, serif;">
 
   <!-- Report Title -->
@@ -222,6 +234,7 @@
   @endif
 
   <!-- Manual Notes Form (no-print) -->
+  @unless($isAdminReport ?? false)
   <div class="no-print border border-[#dee1e6] rounded-lg p-4 mb-6">
     <form method="POST" action="{{ route('guru.rapor.notes') }}">
       @csrf
@@ -235,6 +248,8 @@
       </button>
     </form>
   </div>
+
+  @endunless
 
   <!-- Radar Chart -->
   <div class="flex justify-center mb-6">
@@ -260,7 +275,7 @@
       <p>Guru Pengajar</p>
       <div class="mt-6 mb-3" style="min-height: 130px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
         <div class="border-b border-[#1e293b] mx-auto" style="width: 180px;"></div>
-        <p class="mt-1"><strong>{{ auth()->user()->name }}</strong></p>
+        <p class="mt-1"><strong>{{ ($isAdminReport ?? false) ? ($student->teacher?->user?->name ?? '-') : auth()->user()->name }}</strong></p>
       </div>
     </div>
   </div>
@@ -276,6 +291,7 @@
   @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
+@if($isAdminReport ?? false)</div>@endif
 
 <!-- Perbandingan Rapor Sebelumnya (no-print) -->
 @if($prevReportData)
@@ -330,17 +346,8 @@
 @endif
 
 <!-- Quick Action Cards (no-print) -->
-<div class="no-print grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[850px] mx-auto">
-  <a href="{{ route('guru.grafik') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#F97316] hover:bg-[#FFF7ED]/30 group">
-    <div class="w-10 h-10 bg-[#F97316]/10 rounded-xl flex items-center justify-center group-hover:bg-[#F97316]/20">
-      <iconify-icon icon="lucide:bar-chart-2" width="20" class="text-[#F97316]"></iconify-icon>
-    </div>
-    <div>
-      <p class="text-sm font-semibold text-[#171a1f]">Lihat Grafik Lengkap</p>
-      <p class="text-xs text-[#565d6d]">Visualisasi perkembangan semua siswa</p>
-    </div>
-    <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#F97316]"></iconify-icon>
-  </a>
+@unless($isAdminReport ?? false)
+<div class="no-print max-w-[850px] mx-auto">
   <a href="{{ route('guru.nilai') }}" class="flex items-center gap-4 p-5 border-2 border-dashed border-[#dee1e6] rounded-2xl hover:border-[#F97316] hover:bg-[#FFEDD5]/30 group">
     <div class="w-10 h-10 bg-[#F97316]/10 rounded-xl flex items-center justify-center group-hover:bg-[#F97316]/20">
       <iconify-icon icon="lucide:file-edit" width="20" class="text-[#C2410C]"></iconify-icon>
@@ -352,6 +359,7 @@
     <iconify-icon icon="lucide:arrow-right" width="16" class="text-[#565d6d] ml-auto group-hover:text-[#C2410C]"></iconify-icon>
   </a>
 </div>
+@endunless
 @else
 <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow p-12 text-center">
   <iconify-icon icon="lucide:file-text" width="48" class="text-[#dee1e6] mx-auto mb-4"></iconify-icon>

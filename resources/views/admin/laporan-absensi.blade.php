@@ -13,10 +13,10 @@
 
 @section('content')
 @php
-  $reportQuery = array_filter(['month' => $month, 'classroom_id' => $selectedClassroom, 'student_id' => $selectedStudent, 'student_status' => $studentStatus]);
+  $reportQuery = array_filter(['year' => $year, 'report_month' => $selectedMonth, 'teacher_id' => $selectedTeacher, 'student_id' => $selectedStudent, 'student_status' => $studentStatus]);
 @endphp
 <div class="no-print flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-6">
-  <div><h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Laporan Absensi</h1><p class="text-sm text-[#565d6d] mt-1">Rekap kehadiran harian dan bulanan setiap anak.</p></div>
+  <div><h1 class="text-2xl lg:text-3xl font-bold tracking-tight">Laporan Absensi</h1><p class="text-sm text-[#565d6d] mt-1">Rekap kehadiran {{ $periodLabel }}.</p></div>
   <div class="flex flex-wrap gap-2">
     <a href="{{ route('admin.absensi.index') }}" class="inline-flex items-center gap-2 px-4 py-2.5 border border-[#dee1e6] bg-white rounded-xl text-sm font-semibold hover:bg-gray-50"><iconify-icon icon="lucide:clipboard-check" width="17"></iconify-icon>Input Harian</a>
     <a href="{{ route('admin.absensi.export', $reportQuery) }}" class="inline-flex items-center gap-2 px-4 py-2.5 border border-green-200 bg-green-50 text-green-700 rounded-xl text-sm font-semibold hover:bg-green-100"><iconify-icon icon="lucide:file-spreadsheet" width="17"></iconify-icon>CSV</a>
@@ -25,18 +25,36 @@
   </div>
 </div>
 
-<form method="GET" action="{{ route('admin.absensi.report') }}" class="no-print bg-white rounded-2xl border border-[#dee1e6] main-shadow p-5 mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-  <div class="md:col-span-2"><label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Bulan</label><input type="month" name="month" value="{{ $month }}" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm"></div>
-  <div class="md:col-span-2"><label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Kelas Saat Ini</label><select name="classroom_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white"><option value="">Semua Kelas</option>@foreach($classrooms as $classroom)<option value="{{ $classroom->id }}" @selected((string)$selectedClassroom === (string)$classroom->id)>{{ $classroom->name }}</option>@endforeach</select></div>
-  <div class="md:col-span-2"><label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Status Murid</label><select name="student_status" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white">@foreach($studentStatusOptions as $value => $label)<option value="{{ $value }}" @selected($studentStatus === $value)>{{ $label }}</option>@endforeach</select></div>
-  <div class="md:col-span-4"><label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Anak</label><select name="student_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white"><option value="">Semua Anak</option>@foreach($studentOptions as $option)<option value="{{ $option->id }}" @selected((string)$selectedStudent === (string)$option->id)>{{ $option->name }} · {{ $option->status_label }} · {{ $option->classroom?->name ?? '-' }}</option>@endforeach</select></div>
-  <div class="md:col-span-2"><button class="w-full px-4 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-semibold hover:bg-[#EA580C]">Terapkan</button></div>
+<form method="GET" action="{{ route('admin.absensi.report') }}" class="no-print bg-white rounded-2xl border border-[#dee1e6] main-shadow p-5 mb-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-4 items-end">
+  <div>
+    <label for="attendance-year" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Tahun</label>
+    <select id="attendance-year" name="year" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white">
+      @foreach($years as $option)<option value="{{ $option }}" @selected($year === $option)>{{ $option }}</option>@endforeach
+    </select>
+  </div>
+  <div>
+    <label for="attendance-month" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Bulan</label>
+    <select id="attendance-month" name="report_month" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white">
+      <option value="">Semua Bulan</option>
+      @foreach(range(1, 12) as $option)<option value="{{ $option }}" @selected($selectedMonth === $option)>{{ \Carbon\Carbon::create($year, $option, 1)->locale('id')->translatedFormat('F') }}</option>@endforeach
+    </select>
+  </div>
+  <div>
+    <label for="attendance-teacher" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Kelompok / Kelas Saat Ini</label>
+    <select id="attendance-teacher" name="teacher_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white">
+      <option value="">Semua Kelas</option>
+      @foreach($teachers as $teacher)<option value="{{ $teacher->id }}" @selected((string)$selectedTeacher === (string)$teacher->id)>Kelas {{ $teacher->user?->name ?? $teacher->nip }}</option>@endforeach
+    </select>
+  </div>
+  <div><label for="attendance-status" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Status Murid Saat Ini</label><select id="attendance-status" name="student_status" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white">@foreach($studentStatusOptions as $value => $label)<option value="{{ $value }}" @selected($studentStatus === $value)>{{ $label }}</option>@endforeach</select></div>
+  <div><label for="attendance-student" class="block text-xs font-semibold text-[#565d6d] mb-1.5">Anak</label><select id="attendance-student" name="student_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white"><option value="">Semua Anak</option>@foreach($studentOptions as $option)<option value="{{ $option->id }}" @selected((string)$selectedStudent === (string)$option->id)>{{ $option->name }} · {{ $option->status_label }}</option>@endforeach</select></div>
+  <div><button class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#F97316] text-white rounded-xl text-sm font-semibold hover:bg-[#EA580C]"><iconify-icon icon="lucide:filter" width="17"></iconify-icon>Terapkan</button></div>
 </form>
 
 <div class="print-card bg-white rounded-2xl border border-[#dee1e6] main-shadow p-5 lg:p-7 mb-6">
   <div class="text-center mb-6">
     <p class="text-xs font-bold tracking-[0.2em] text-[#F97316] uppercase">{{ $institutionName }}</p>
-    <h2 class="text-2xl font-bold mt-1">Rekap Kehadiran {{ $monthLabel }}</h2>
+    <h2 class="text-2xl font-bold mt-1">Rekap Kehadiran {{ $periodLabel }}</h2>
     <p class="text-sm text-[#565d6d] mt-1">{{ $summaryRows->count() }} murid · Filter status: {{ $studentStatusLabel }}</p>
     @if ($institutionAddress)
       <p class="text-xs text-[#565d6d] mt-1">{{ $institutionAddress }}</p>
@@ -50,16 +68,16 @@
     Rasio hadir dihitung dari <strong>Hadir ÷ total hari yang sudah dicatat (H/S/I/A)</strong>. Murid yang belum memiliki catatan pada periode ini ditampilkan sebagai “Belum ada data”, bukan 0%.
   </div>
 
-  <h3 class="text-lg font-bold mb-3">Rekap Bulanan per Anak</h3>
-  <div class="overflow-x-auto mb-8"><table class="w-full text-left min-w-[960px] border border-[#dee1e6]"><thead class="bg-[#fafafb] text-xs uppercase text-[#565d6d]"><tr><th class="px-4 py-3">Anak</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Kelas Saat Ini</th><th class="px-3 py-3 text-center">H</th><th class="px-3 py-3 text-center">S</th><th class="px-3 py-3 text-center">I</th><th class="px-3 py-3 text-center">A</th><th class="px-3 py-3 text-center">Hari Tercatat</th><th class="px-4 py-3">Hadir/Tercatat</th></tr></thead><tbody class="divide-y divide-[#edf0f3]">
-    @forelse($summaryRows as $row)<tr><td class="px-4 py-3"><p class="font-semibold text-sm">{{ $row['student']->name }}</p><p class="text-xs text-[#565d6d]">{{ $row['student']->nis }}</p></td><td class="px-4 py-3 text-sm">{{ $row['student']->status_label }}</td><td class="px-4 py-3 text-sm">{{ $row['student']->classroom?->name ?? '-' }}</td><td class="px-3 py-3 text-center font-semibold text-green-700">{{ $row['hadir'] }}</td><td class="px-3 py-3 text-center text-blue-700">{{ $row['sakit'] }}</td><td class="px-3 py-3 text-center text-amber-700">{{ $row['izin'] }}</td><td class="px-3 py-3 text-center text-red-700">{{ $row['alpa'] }}</td><td class="px-3 py-3 text-center">{{ $row['total'] }}</td><td class="px-4 py-3">@if($row['percentage'] === null)<span class="text-xs font-semibold text-slate-500">Belum ada data</span>@else<div class="flex items-center gap-2"><div class="h-2 w-24 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width:{{ $row['percentage'] }}%"></div></div><span class="text-sm font-bold">{{ $row['percentage'] }}%</span></div>@endif</td></tr>
+  <h3 class="text-lg font-bold mb-3">Rekap {{ $selectedMonth ? 'Bulanan' : 'Tahunan' }} per Anak</h3>
+  <div class="overflow-x-auto mb-8"><table class="w-full text-left min-w-[960px] border border-[#dee1e6]"><thead class="bg-[#fafafb] text-xs uppercase text-[#565d6d]"><tr><th class="px-4 py-3">Anak</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Guru Pembimbing Saat Ini</th><th class="px-3 py-3 text-center">H</th><th class="px-3 py-3 text-center">S</th><th class="px-3 py-3 text-center">I</th><th class="px-3 py-3 text-center">A</th><th class="px-3 py-3 text-center">Hari Tercatat</th><th class="px-4 py-3">Hadir/Tercatat</th></tr></thead><tbody class="divide-y divide-[#edf0f3]">
+    @forelse($summaryRows as $row)<tr><td class="px-4 py-3"><p class="font-semibold text-sm">{{ $row['student']->name }}</p><p class="text-xs text-[#565d6d]">{{ $row['student']->nis }}</p></td><td class="px-4 py-3 text-sm">{{ $row['student']->status_label }}</td><td class="px-4 py-3 text-sm">{{ $row['student']->teacher?->user?->name ?? '-' }}</td><td class="px-3 py-3 text-center font-semibold text-green-700">{{ $row['hadir'] }}</td><td class="px-3 py-3 text-center text-blue-700">{{ $row['sakit'] }}</td><td class="px-3 py-3 text-center text-amber-700">{{ $row['izin'] }}</td><td class="px-3 py-3 text-center text-red-700">{{ $row['alpa'] }}</td><td class="px-3 py-3 text-center">{{ $row['total'] }}</td><td class="px-4 py-3">@if($row['percentage'] === null)<span class="text-xs font-semibold text-slate-500">Belum ada data</span>@else<div class="flex items-center gap-2"><div class="h-2 w-24 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width:{{ $row['percentage'] }}%"></div></div><span class="text-sm font-bold">{{ $row['percentage'] }}%</span></div>@endif</td></tr>
     @empty <tr><td colspan="9" class="px-6 py-10 text-center text-sm text-[#565d6d]">Tidak ada murid untuk filter ini.</td></tr>@endforelse
   </tbody></table></div>
 
   <h3 class="text-lg font-bold mb-3">Rekap Harian</h3>
   <div class="overflow-x-auto"><table class="w-full text-left min-w-[620px] border border-[#dee1e6]"><thead class="bg-[#fafafb] text-xs uppercase text-[#565d6d]"><tr><th class="px-4 py-3">Tanggal</th><th class="px-3 py-3 text-center">Hadir</th><th class="px-3 py-3 text-center">Sakit</th><th class="px-3 py-3 text-center">Izin</th><th class="px-3 py-3 text-center">Alpa</th><th class="px-3 py-3 text-center">Total Tercatat</th><th class="px-4 py-3">Hadir/Tercatat</th></tr></thead><tbody class="divide-y divide-[#edf0f3]">
     @forelse($dailySummary as $day)<tr><td class="px-4 py-3 text-sm font-semibold">{{ \Carbon\Carbon::parse($day['date'])->locale('id')->translatedFormat('l, d F Y') }}</td><td class="px-3 py-3 text-center text-green-700 font-semibold">{{ $day['hadir'] }}</td><td class="px-3 py-3 text-center text-blue-700">{{ $day['sakit'] }}</td><td class="px-3 py-3 text-center text-amber-700">{{ $day['izin'] }}</td><td class="px-3 py-3 text-center text-red-700">{{ $day['alpa'] }}</td><td class="px-3 py-3 text-center">{{ $day['total'] }}</td><td class="px-4 py-3 text-sm font-bold">{{ $day['percentage'] }}%</td></tr>
-    @empty <tr><td colspan="7" class="px-6 py-10 text-center text-sm text-[#565d6d]">Belum ada absensi tercatat pada bulan ini.</td></tr>@endforelse
+    @empty <tr><td colspan="7" class="px-6 py-10 text-center text-sm text-[#565d6d]">Belum ada absensi tercatat pada periode ini.</td></tr>@endforelse
   </tbody></table></div>
 </div>
 @endsection

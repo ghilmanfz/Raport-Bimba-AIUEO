@@ -31,10 +31,10 @@
   </div>
   <div class="md:col-span-3">
     <label class="block text-xs font-semibold text-[#565d6d] mb-1.5">Kelompok / Kelas</label>
-    <select name="classroom_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
+    <select name="teacher_id" class="w-full px-3 py-2.5 border border-[#dee1e6] rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
       <option value="">Semua Kelas</option>
-      @foreach($classrooms as $classroom)
-        <option value="{{ $classroom->id }}" @selected((string) $selectedClassroom === (string) $classroom->id)>{{ $classroom->name }}</option>
+      @foreach($teachers as $teacher)
+        <option value="{{ $teacher->id }}" @selected((string) $selectedTeacher === (string) $teacher->id)>Kelas {{ $teacher->user?->name ?? $teacher->nip }}</option>
       @endforeach
     </select>
   </div>
@@ -73,7 +73,7 @@
 <form method="POST" action="{{ route('admin.absensi.store') }}">
   @csrf
   <input type="hidden" name="attendance_date" value="{{ $date }}">
-  <input type="hidden" name="classroom_id" value="{{ $selectedClassroom }}">
+  <input type="hidden" name="teacher_id" value="{{ $selectedTeacher }}">
   <input type="hidden" name="search" value="{{ $search }}">
 
   <div class="bg-white rounded-2xl border border-[#dee1e6] main-shadow overflow-hidden">
@@ -90,9 +90,9 @@
     </div>
 
     <div class="overflow-x-auto">
-      <table class="w-full text-left min-w-[900px]">
+      <table class="w-full text-left min-w-[760px]">
         <thead class="bg-[#fafafb] border-b border-[#dee1e6] text-xs uppercase tracking-wide text-[#565d6d]">
-          <tr><th class="px-5 py-4">Anak</th><th class="px-5 py-4">Kelas</th><th class="px-5 py-4">Guru Pembimbing</th><th class="px-5 py-4 w-48">Kehadiran</th><th class="px-5 py-4">Catatan</th></tr>
+          <tr><th class="px-5 py-4">Anak</th><th class="px-5 py-4">Guru Pembimbing</th><th class="px-5 py-4 w-48">Kehadiran</th><th class="px-5 py-4">Catatan</th></tr>
         </thead>
         <tbody class="divide-y divide-[#edf0f3]">
           @forelse($students as $i => $student)
@@ -102,7 +102,6 @@
                 <input type="hidden" name="attendances[{{ $i }}][student_id]" value="{{ $student->id }}">
                 <p class="font-semibold text-sm text-[#171a1f]">{{ $student->name }}</p><p class="text-xs text-[#565d6d]">{{ $student->nis }}</p>
               </td>
-              <td class="px-5 py-4 text-sm text-[#565d6d]">{{ $student->classroom?->name ?? '-' }}</td>
               <td class="px-5 py-4 text-sm text-[#565d6d]">{{ $student->teacher?->user?->name ?? '-' }}</td>
               <td class="px-5 py-4">
                 <select name="attendances[{{ $i }}][status]" class="attendance-status w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#F97316]/20">
@@ -115,7 +114,7 @@
               <td class="px-5 py-4"><input type="text" name="attendances[{{ $i }}][notes]" value="{{ old("attendances.$i.notes", $attendance?->notes) }}" maxlength="500" placeholder="Opsional" class="w-full px-3 py-2 border border-[#dee1e6] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#F97316]/20"></td>
             </tr>
           @empty
-            <tr><td colspan="5" class="px-6 py-12 text-center text-sm text-[#565d6d]">Tidak ada murid aktif yang sesuai dengan filter.</td></tr>
+            <tr><td colspan="4" class="px-6 py-12 text-center text-sm text-[#565d6d]">Tidak ada murid aktif yang sesuai dengan filter.</td></tr>
           @endforelse
         </tbody>
       </table>

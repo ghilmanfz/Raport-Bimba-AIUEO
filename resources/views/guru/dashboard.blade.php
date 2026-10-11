@@ -40,8 +40,8 @@
         <h2 class="text-lg font-bold text-[#171a1f]">Distribusi Nilai Modul</h2>
         <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada siswa bimbingan aktif.</p>
       </div>
-      <a href="{{ route('guru.grafik') }}" class="text-[#F97316] text-sm font-medium flex items-center gap-1 hover:underline">
-        Detail Lengkap
+      <a href="{{ route('guru.nilai') }}" class="text-[#F97316] text-sm font-medium flex items-center gap-1 hover:underline">
+        Pengolahan Nilai
         <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
       </a>
     </div>

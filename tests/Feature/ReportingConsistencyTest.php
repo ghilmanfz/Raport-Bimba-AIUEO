@@ -11,6 +11,7 @@ use App\Models\StudentProgress;
 use App\Models\Teacher;
 use App\Models\User;
 use App\Services\AttendanceService;
+use App\Services\ProgressReportService;
 use App\Services\ReportPeriodService;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Scheduling\Schedule;
@@ -84,20 +85,19 @@ class ReportingConsistencyTest extends TestCase
         }
     }
 
-    public function test_legacy_empty_k_rows_do_not_count_in_graphs_and_are_not_deleted(): void
+    public function test_legacy_empty_k_rows_do_not_count_in_summaries_and_are_not_deleted(): void
     {
         [$guru, $wali, $student] = $this->family();
         for ($index = 0; $index < 26; $index++) {
             $this->progress($student, $index < 6 ? ['skilled_date' => '2026-09-12', 'status' => 'K'] : ['status' => 'K']);
         }
-        $response = $this->actingAs($guru)->get(route('guru.grafik'))->assertOk();
-        $this->assertSame(['T' => 6, 'P' => 0, 'K' => 0], $response->viewData('statusCounts'));
-        $this->assertSame(6, $response->viewData('totalProgress'));
-        $this->assertEquals(100, $response->viewData('statusPercent')['T']);
-        $this->assertEquals(100, $response->viewData('studentStats')[0]['progress_pct']);
+        $summary = app(ProgressReportService::class)->summarize($student->progress);
+        $this->assertSame(['T' => 6, 'P' => 0, 'K' => 0], $summary['counts']);
+        $this->assertSame(6, $summary['total']);
+        $this->assertEquals(100, $summary['percentages']['T']);
         $this->assertSame(100.0, $student->skillPercentage('baca'));
         $this->assertDatabaseCount('student_progress', 26);
-        $dashboard = $this->get(route('guru.dashboard'))->assertOk();
+        $dashboard = $this->actingAs($guru)->get(route('guru.dashboard'))->assertOk();
         $this->assertSame(['T' => 6, 'P' => 0, 'K' => 0], $dashboard->viewData('stats')['status_counts']);
         $this->assertSame(0, $dashboard->viewData('stats')['perlu_perhatian']);
         $parent = $this->actingAs($wali)->get(route('wali.dashboard'))->assertOk();
@@ -105,10 +105,6 @@ class ReportingConsistencyTest extends TestCase
         $this->assertNull($parent->viewData('skillCards')['tulis']['status']);
         $this->assertDatabaseCount('student_progress', 26);
 
-        if (getenv('RAPOR_VISUAL_QA')) {
-            File::ensureDirectoryExists(storage_path('app/rapor-qa'));
-            File::put(storage_path('app/rapor-qa/graph.html'), $response->getContent());
-        }
     }
 
     public function test_saving_t_only_does_not_create_k_for_blank_materials_or_touch_other_values(): void
@@ -133,18 +129,17 @@ class ReportingConsistencyTest extends TestCase
         $this->assertDatabaseHas('student_progress', ['id' => $untouched->id, 'status' => 'P']);
     }
 
-    public function test_unassessed_student_is_not_labelled_kenal_and_search_filters_the_whole_chart(): void
+    public function test_unassessed_student_is_not_counted_as_kenal_in_summaries(): void
     {
         [$guru, , $empty] = $this->family();
         $this->progress($empty, ['status' => 'K']);
         $other = Student::create(['nis' => 'OTHER', 'name' => 'Lain', 'gender' => 'L', 'status' => 'aktif', 'teacher_id' => $empty->teacher_id, 'join_date' => '2026-09-11']);
         $this->progress($other, ['start_date' => '2026-09-12', 'status' => 'K']);
-        $response = $this->actingAs($guru)->get(route('guru.grafik', ['search' => $empty->name]))->assertOk()->assertSee('Belum Dinilai');
-        $this->assertSame(0, $response->viewData('totalProgress'));
-        $this->assertNull($response->viewData('studentStats')[0]['latest_status']);
-        $this->assertNull($response->viewData('studentStats')[0]['progress_pct']);
-        $full = $this->get(route('guru.grafik'))->assertOk();
-        $this->assertSame(['T' => 0, 'P' => 0, 'K' => 1], $full->viewData('statusCounts'));
+        $reports = app(ProgressReportService::class);
+        $this->assertSame(0, $reports->summarize($empty->progress)['total']);
+        $this->assertSame(['T' => 0, 'P' => 0, 'K' => 1], $reports->summarize($other->progress)['counts']);
+        $response = $this->actingAs($guru)->get(route('guru.nilai', ['student_id' => $empty->id]))->assertOk();
+        $this->assertSame('', $response->viewData('progress')[0]['status']);
     }
 
     public function test_reminders_use_the_assigned_teacher_are_idempotent_and_link_the_completed_period(): void

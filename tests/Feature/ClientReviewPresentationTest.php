@@ -35,22 +35,16 @@ class ClientReviewPresentationTest extends TestCase
 
         foreach ([$first->classroom_id, 'kelas-lama-tidak-valid'] as $legacyClass) {
             $daily = $this->actingAs($guru)->get(route('guru.absensi.index', ['classroom_id' => $legacyClass]))->assertOk();
-            $graph = $this->get(route('guru.grafik', ['classroom_id' => $legacyClass]))->assertOk();
-            foreach ([$daily, $graph] as $response) {
-                $this->assertEqualsCanonicalizing([$first->id, $second->id], $response->viewData('students')->modelKeys());
-                $response->assertDontSee('name="classroom_id"', false)->assertDontSee('Semua Kelas')->assertDontSee('Bukan Bimbingan')->assertDontSee('Siswa Lulus');
-            }
+            $this->assertEqualsCanonicalizing([$first->id, $second->id], $daily->viewData('students')->modelKeys());
+            $daily->assertDontSee('name="classroom_id"', false)->assertDontSee('Semua Kelas')->assertDontSee('Bukan Bimbingan')->assertDontSee('Siswa Lulus');
             $this->assertSame(2, $daily->viewData('dailyStats')['unrecorded']);
-            $this->assertSame(['T' => 1, 'P' => 1, 'K' => 0], $graph->viewData('statusCounts'));
-            $this->assertSame(0, $this->xpath($graph->getContent())->query('//th[normalize-space()="Kelas"]')->length);
-            $this->assertSame(1, $this->xpath($graph->getContent())->query('//tbody//p[normalize-space()="Level 1"]')->length);
+            $this->get(route('guru.grafik', ['classroom_id' => $legacyClass]))->assertRedirect('/guru/nilai');
         }
 
         $this->savePreview('teacher-attendance.html', $daily->getContent());
-        $this->savePreview('teacher-graph.html', $graph->getContent());
     }
 
-    public function test_search_by_name_or_nis_still_filters_attendance_and_graph_totals(): void
+    public function test_search_by_name_or_nis_still_filters_attendance(): void
     {
         [$guru, , $first, $second] = $this->family();
         $this->grade($first, 'T');
@@ -58,14 +52,11 @@ class ClientReviewPresentationTest extends TestCase
         foreach ([$second->name, $second->nis] as $search) {
             $params = ['search' => $search, 'classroom_id' => $first->classroom_id];
             $daily = $this->actingAs($guru)->get(route('guru.absensi.index', $params))->assertOk();
-            $graph = $this->get(route('guru.grafik', $params))->assertOk();
             $this->assertSame([$second->id], $daily->viewData('students')->modelKeys());
-            $this->assertSame([$second->id], $graph->viewData('students')->modelKeys());
-            $this->assertSame(['T' => 0, 'P' => 1, 'K' => 0], $graph->viewData('statusCounts'));
         }
-        $empty = $this->get(route('guru.grafik', ['search' => 'tidak-ditemukan']))->assertOk()->assertSee('Tidak ada siswa ditemukan.');
-        $this->assertSame(0, $empty->viewData('totalProgress'));
-        $this->assertSame('4', $this->xpath($empty->getContent())->query('//tbody/tr/td')->item(0)->getAttribute('colspan'));
+        $empty = $this->get(route('guru.absensi.index', ['search' => 'tidak-ditemukan']))->assertOk();
+        $this->assertCount(0, $empty->viewData('students'));
+        $this->assertSame('3', $this->xpath($empty->getContent())->query('//tbody/tr/td')->item(0)->getAttribute('colspan'));
     }
 
     public function test_saving_attendance_ignores_old_class_filter_but_preserves_class_records(): void
@@ -82,7 +73,9 @@ class ClientReviewPresentationTest extends TestCase
             $this->assertDatabaseHas('classrooms', ['id' => $student->classroom_id]);
         }
         $admin = User::create(['name' => 'Admin Uji', 'email' => 'admin-review@example.test', 'password' => 'password', 'role' => 'admin']);
-        $this->actingAs($admin)->post(route('admin.absensi.store'), $payload)->assertSessionHasErrors('classroom_id');
+        $this->actingAs($admin)->post(route('admin.absensi.store'), $payload)->assertSessionHasNoErrors();
+        $payload['teacher_id'] = 'guru-tidak-valid';
+        $this->post(route('admin.absensi.store'), $payload)->assertSessionHasErrors('teacher_id');
         $this->assertDatabaseCount('attendances', 2);
     }
 
@@ -142,7 +135,7 @@ class ClientReviewPresentationTest extends TestCase
     public function test_teacher_navigation_and_operational_labels_use_siswa(): void
     {
         [$guru] = $this->family();
-        foreach (['guru.dashboard', 'guru.murid', 'guru.absensi.index', 'guru.nilai', 'guru.grafik', 'guru.rapor'] as $route) {
+        foreach (['guru.dashboard', 'guru.murid', 'guru.absensi.index', 'guru.nilai', 'guru.rapor'] as $route) {
             $this->actingAs($guru)->get(route($route))->assertOk()
                 ->assertSee('Absensi Siswa')->assertSee('Daftar Siswa Bimbingan')
                 ->assertDontSee('Absensi Anak')->assertDontSee('Cari Anak')->assertDontSee('Pilih Murid');

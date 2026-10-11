@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Laporan Absensi {{ $monthLabel }}</title>
+  <title>Laporan Absensi {{ $periodLabel }}</title>
   <style>
     @page { margin: 24px 28px; }
     body { font-family: DejaVu Sans, sans-serif; color:#1e293b; font-size:10px; }
@@ -23,7 +23,7 @@
 <body>
   <div class="institution">{{ $institutionName }}</div>
   <h1>Laporan Absensi Anak</h1>
-  <div class="subtitle">Periode {{ $monthLabel }} · {{ $summaryRows->count() }} murid · Status: {{ $studentStatusLabel }}</div>
+  <div class="subtitle">Periode {{ $periodLabel }} · {{ $summaryRows->count() }} murid · Status: {{ $studentStatusLabel }}</div>
   @if ($institutionAddress)
     <div class="subtitle">{{ $institutionAddress }}</div>
   @endif
@@ -31,9 +31,9 @@
   <table class="cards"><tr><td>Total<strong>{{ $overall['total'] }}</strong></td><td>Hadir<strong>{{ $overall['hadir'] }}</strong></td><td>Sakit<strong>{{ $overall['sakit'] }}</strong></td><td>Izin<strong>{{ $overall['izin'] }}</strong></td><td>Alpa<strong>{{ $overall['alpa'] }}</strong></td></tr></table>
   <div class="footer">Rasio hadir = Hadir ÷ total hari yang sudah dicatat (H/S/I/A). Tanda “-” berarti belum ada data absensi pada periode ini.</div>
 
-  <div class="section"><strong>Rekap Bulanan per Anak</strong></div>
-  <table class="report"><thead><tr><th>NIS</th><th>Nama Anak</th><th>Status</th><th>Kelas Saat Ini</th><th>H</th><th>S</th><th>I</th><th>A</th><th>Hari Tercatat</th><th>Hadir/Tercatat</th></tr></thead><tbody>
-    @forelse($summaryRows as $row)<tr><td>{{ $row['student']->nis }}</td><td>{{ $row['student']->name }}</td><td>{{ $row['student']->status_label }}</td><td>{{ $row['student']->classroom?->name ?? '-' }}</td><td class="center">{{ $row['hadir'] }}</td><td class="center">{{ $row['sakit'] }}</td><td class="center">{{ $row['izin'] }}</td><td class="center">{{ $row['alpa'] }}</td><td class="center">{{ $row['total'] }}</td><td class="center">{{ $row['percentage'] === null ? '-' : $row['percentage'].'%' }}</td></tr>@empty<tr><td colspan="10" class="center">Tidak ada data.</td></tr>@endforelse
+  <div class="section"><strong>Rekap {{ $selectedMonth ? 'Bulanan' : 'Tahunan' }} per Anak</strong></div>
+  <table class="report"><thead><tr><th>NIS</th><th>Nama Anak</th><th>Status</th><th>Guru Pembimbing Saat Ini</th><th>H</th><th>S</th><th>I</th><th>A</th><th>Hari Tercatat</th><th>Hadir/Tercatat</th></tr></thead><tbody>
+    @forelse($summaryRows as $row)<tr><td>{{ $row['student']->nis }}</td><td>{{ $row['student']->name }}</td><td>{{ $row['student']->status_label }}</td><td>{{ $row['student']->teacher?->user?->name ?? '-' }}</td><td class="center">{{ $row['hadir'] }}</td><td class="center">{{ $row['sakit'] }}</td><td class="center">{{ $row['izin'] }}</td><td class="center">{{ $row['alpa'] }}</td><td class="center">{{ $row['total'] }}</td><td class="center">{{ $row['percentage'] === null ? '-' : $row['percentage'].'%' }}</td></tr>@empty<tr><td colspan="10" class="center">Tidak ada data.</td></tr>@endforelse
   </tbody></table>
 
   <div class="section"><strong>Rekap Harian</strong></div>

@@ -5,12 +5,12 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GuruController as AdminGuruController;
 use App\Http\Controllers\Admin\MuridController;
 use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\RaporController as AdminRaporController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\WaliController as AdminWaliController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Guru\AttendanceController as GuruAttendanceController;
 use App\Http\Controllers\Guru\DashboardController as GuruDashboardController;
-use App\Http\Controllers\Guru\GrafikController;
 use App\Http\Controllers\Guru\MuridController as GuruMuridController;
 use App\Http\Controllers\Guru\NilaiController;
 use App\Http\Controllers\Guru\RaporController as GuruRaporController;
@@ -73,6 +73,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/absensi/laporan/pdf', [AdminAttendanceController::class, 'pdf'])->name('absensi.pdf');
     Route::get('/absensi/laporan/csv', [AdminAttendanceController::class, 'export'])->name('absensi.export');
 
+    Route::get('/rapor', [AdminRaporController::class, 'index'])->name('rapor');
+    Route::get('/rapor/{student}', [AdminRaporController::class, 'show'])->name('rapor.show');
+    Route::get('/rapor/{student}/pdf', [AdminRaporController::class, 'pdf'])->name('rapor.pdf');
+
     Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru');
     Route::get('/guru/{teacher}/detail', [AdminGuruController::class, 'show'])->name('guru.show');
     Route::get('/guru/export', [AdminGuruController::class, 'export'])->name('guru.export');
@@ -114,7 +118,7 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
     Route::get('/nilai', [NilaiController::class, 'index'])->name('nilai');
     Route::post('/nilai', [NilaiController::class, 'store'])->name('nilai.store');
 
-    Route::get('/grafik', [GrafikController::class, 'index'])->name('grafik');
+    Route::redirect('/grafik', '/guru/nilai')->name('grafik');
 
     Route::get('/rapor', [GuruRaporController::class, 'index'])->name('rapor');
     Route::post('/rapor/notes', [GuruRaporController::class, 'saveNotes'])->name('rapor.notes');

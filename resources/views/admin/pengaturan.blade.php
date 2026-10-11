@@ -288,16 +288,6 @@
           </div>
           <div class="border-t border-[#dee1e6] pt-4 flex items-center justify-between">
             <div>
-              <p class="text-sm font-bold text-[#171a1f]">Lihat Grafik Perkembangan</p>
-              <p class="text-xs text-[#565d6d]">Melihat grafik perkembangan murid di kelasnya.</p>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked disabled class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F97316]"></div>
-            </label>
-          </div>
-          <div class="border-t border-[#dee1e6] pt-4 flex items-center justify-between">
-            <div>
               <p class="text-sm font-bold text-[#171a1f]">Generate Rapor</p>
               <p class="text-xs text-[#565d6d]">Membuat laporan rapor murid untuk wali murid.</p>
             </div>

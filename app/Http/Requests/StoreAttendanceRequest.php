@@ -17,7 +17,7 @@ class StoreAttendanceRequest extends FormRequest
     {
         return [
             'attendance_date' => ['required', 'date', 'before_or_equal:today'],
-            'classroom_id' => [Rule::excludeIf(fn () => $this->user()?->role === 'guru'), 'nullable', 'exists:classrooms,id'],
+            'teacher_id' => [Rule::excludeIf(fn () => $this->user()?->role === 'guru'), 'nullable', 'exists:teachers,id'],
             'search' => ['nullable', 'string', 'max:100'],
             'attendances' => ['required', 'array', 'min:1'],
             'attendances.*.student_id' => ['required', 'integer', 'distinct', 'exists:students,id'],

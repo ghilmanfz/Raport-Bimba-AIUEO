@@ -86,6 +86,27 @@ class ReportPeriodService
         return array_map(fn ($number) => $this->forNumber($student, $number), range(1, $this->current($student)['number']));
     }
 
+    public function forYear(Student $student, int $year): array
+    {
+        $anchor = $this->anchor($student);
+        $months = ($year - $anchor->year) * 12 + 1 - $anchor->month;
+        $firstNumber = max(1, intdiv(max(0, $months), 3));
+        $lastNumber = $this->current($student)['number'];
+        $periods = [];
+
+        for ($number = $firstNumber; $number <= $lastNumber; $number++) {
+            $period = $this->forNumber($student, $number);
+            if ($period['end']->year > $year) {
+                break;
+            }
+            if ($period['end']->year === $year) {
+                $periods[] = $period;
+            }
+        }
+
+        return $periods;
+    }
+
     private function anchor(Student $student): CarbonImmutable
     {
         return CarbonImmutable::parse($student->join_date ?? $student->created_at ?? today())->startOfDay()->locale('id');

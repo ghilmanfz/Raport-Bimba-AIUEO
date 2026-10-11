@@ -80,11 +80,6 @@
           <iconify-icon icon="lucide:clipboard-list" width="18"></iconify-icon>
           Pengolahan Nilai
         </a>
-        <a href="{{ route('guru.grafik') }}"
-           class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.grafik') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
-          <iconify-icon icon="lucide:bar-chart-2" width="18"></iconify-icon>
-          Grafik Perkembangan
-        </a>
         <a href="{{ route('guru.rapor') }}"
            class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm {{ request()->routeIs('guru.rapor') ? 'sidebar-active-gradient' : 'text-[#565d6d] hover:bg-gray-100' }}">
           <iconify-icon icon="lucide:printer" width="18"></iconify-icon>
