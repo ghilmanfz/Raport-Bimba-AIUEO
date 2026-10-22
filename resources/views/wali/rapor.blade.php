@@ -17,10 +17,14 @@
   .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-B { background: #f1f5f9; color: #475569; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
+  .rapor-preview { overflow-x: auto; }
+  .rapor-preview .rapor-sheet { min-width: 640px; }
 
   @media print {
     .no-print { display: none !important; }
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rapor-preview { overflow: visible !important; }
+    .rapor-preview .rapor-sheet { min-width: 0 !important; }
     .rapor-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 40px !important; }
     .rapor-table th, .rapor-table td { padding: 6px 10px; }
     .keep-together,
@@ -97,6 +101,7 @@
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
+<div class="rapor-preview" role="region" aria-label="Pratinjau rapor" tabindex="0">
 <div class="rapor-sheet max-w-[850px] mx-auto bg-white rounded-lg shadow-lg border border-[#cbd5e1] p-10 mb-6" style="font-family: 'Times New Roman', Times, serif;">
 
   <!-- Report Title -->
@@ -243,13 +248,6 @@
     <div class="border border-[#1e293b] rounded p-4 mb-6" style="font-size: 13px; line-height: 1.6;"><strong>Catatan Guru:</strong> {{ $student->development_notes }}</div>
   @endif
 
-  <!-- Radar Chart -->
-  <div class="flex justify-center mb-6">
-    <div style="width: 280px; height: 220px;">
-      <canvas id="waliRaporRadarChart"></canvas>
-    </div>
-  </div>
-
 <!-- Signature Section -->
   <div class="keep-together no-page-break" style="font-size: 13px; display: block; width: 100%;">
     <div style="display:flex; justify-content:space-between; gap: 24px; width:100%;">
@@ -283,80 +281,12 @@
   </div>
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
-
-<!-- Summary Cards (no-print) -->
-<div class="no-print max-w-[850px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#F97316'], 'tulis' => ['Menulis', 'lucide:pencil', '#F97316'], 'hitung' => ['Berhitung', 'lucide:calculator', '#FDBA74']] as $skillKey => [$label, $icon, $color])
-  <div class="bg-white rounded-2xl border border-[#dee1e6] p-5 shadow-sm">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $color }}15;">
-        <iconify-icon icon="{{ $icon }}" width="20" style="color: {{ $color }};"></iconify-icon>
-      </div>
-      <h4 class="text-sm font-bold text-[#171a1f]">{{ $label }}</h4>
-    </div>
-    <div class="flex items-end justify-between">
-      <span class="text-2xl font-black text-[#171a1f]">{{ round($reportData[$skillKey]['percentage']) }}%</span>
-      <span class="text-xs text-[#565d6d]">{{ $reportData[$skillKey]['details']->where('status', 'T')->count() }}/{{ $reportData[$skillKey]['details']->count() }} Terampil</span>
-    </div>
-    <div class="w-full h-2 bg-gray-100 rounded-full mt-3 overflow-hidden">
-      <div class="h-full rounded-full" style="width: {{ $reportData[$skillKey]['percentage'] }}%; background: {{ $color }};"></div>
-    </div>
-  </div>
-  @endforeach
 </div>
 
-<!-- Perbandingan Rapor Sebelumnya (no-print) -->
-@if($prevReportData)
-<div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm mb-6">
-  <div class="flex items-center gap-2 mb-5">
-    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#F97316]"></iconify-icon>
-    <h3 class="text-base font-bold text-[#171a1f]">Perbandingan dengan Periode Sebelumnya</h3>
-  </div>
-  <p class="text-xs text-[#565d6d] mb-4">Perbandingan pencapaian bulan ini vs bulan {{ now()->subMonth()->translatedFormat('F Y') }}</p>
-
-  <div class="space-y-4">
-    @foreach(['baca' => ['Membaca', '#F97316'], 'tulis' => ['Menulis', '#F97316'], 'hitung' => ['Berhitung', '#FDBA74']] as $skillKey => [$label, $color])
-    @php
-      $current = round($reportData[$skillKey]['percentage']);
-      $prev = round($prevReportData[$skillKey]['percentage']);
-      $diff = $current - $prev;
-    @endphp
-    <div>
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-sm font-semibold text-[#171a1f]">{{ $label }}</span>
-        <div class="flex items-center gap-3 text-sm">
-          <span class="text-[#9095a0]">{{ $prev }}%</span>
-          <iconify-icon icon="lucide:arrow-right" width="14" class="text-[#9095a0]"></iconify-icon>
-          <span class="font-bold text-[#171a1f]">{{ $current }}%</span>
-          @if($diff > 0)
-            <span class="flex items-center gap-0.5 text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:trending-up" width="12"></iconify-icon> +{{ $diff }}%
-            </span>
-          @elseif($diff < 0)
-            <span class="flex items-center gap-0.5 text-red-500 text-xs font-bold bg-red-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:trending-down" width="12"></iconify-icon> {{ $diff }}%
-            </span>
-          @else
-            <span class="flex items-center gap-0.5 text-[#9095a0] text-xs font-bold bg-gray-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:minus" width="12"></iconify-icon> 0%
-            </span>
-          @endif
-        </div>
-      </div>
-      <!-- Dual progress bar -->
-      <div class="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-        <div class="absolute h-full rounded-full opacity-30" style="width: {{ $prev }}%; background: {{ $color }};"></div>
-        <div class="absolute h-full rounded-full" style="width: {{ $current }}%; background: {{ $color }};"></div>
-      </div>
-      <div class="flex justify-between mt-1">
-        <span class="text-[10px] text-[#9095a0]">{{ now()->subMonth()->translatedFormat('F') }}: {{ $prev }}%</span>
-        <span class="text-[10px] font-semibold" style="color: {{ $color }};">{{ now()->translatedFormat('F') }}: {{ $current }}%</span>
-      </div>
-    </div>
-    @endforeach
-  </div>
-</div>
-@endif
+<!-- Skill Summary (no-print) -->
+<section class="no-print max-w-[850px] mx-auto border-y border-[#dee1e6] py-6 mb-6" aria-label="Ringkasan materi per level">
+  @include('rapor.skill-summary', ['skillReport' => $reportData])
+</section>
 
 <!-- Panduan Penilaian (no-print) -->
 <div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm">
@@ -397,46 +327,3 @@
 </div>
 @endif
 @endsection
-
-@if($student && $reportData)
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const radarCtx = document.getElementById('waliRaporRadarChart').getContext('2d');
-new Chart(radarCtx, {
-  type: 'radar',
-  data: {
-    labels: ['Membaca', 'Menulis', 'Berhitung'],
-    datasets: [{
-      label: 'Kompetensi (%)',
-      data: [{{ $reportData['baca']['percentage'] }}, {{ $reportData['tulis']['percentage'] }}, {{ $reportData['hitung']['percentage'] }}],
-      borderColor: '#9A3412',
-      backgroundColor: 'rgba(30,64,175,0.12)',
-      borderWidth: 2,
-      pointRadius: 5,
-      pointBackgroundColor: '#9A3412',
-      pointHoverRadius: 7
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: true, position: 'bottom', labels: { font: { size: 11, family: 'sans-serif' } } }
-    },
-    scales: {
-      r: {
-        beginAtZero: true,
-        max: 100,
-        ticks: { stepSize: 25, font: { size: 9 }, color: '#64748b', backdropColor: 'transparent' },
-        grid: { color: 'rgba(30,64,175,0.1)' },
-        angleLines: { color: 'rgba(30,64,175,0.1)' },
-        pointLabels: { font: { size: 11, weight: '600' }, color: '#334155' }
-      }
-    }
-  }
-});
-});
-</script>
-@endpush
-@endif

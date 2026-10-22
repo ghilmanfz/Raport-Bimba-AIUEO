@@ -46,10 +46,16 @@ class ProgressReportService
         foreach (['baca', 'tulis', 'hitung'] as $skill) {
             $details = $this->assessed($progress)->filter(fn ($item) => $item->material?->skill_type === $skill)->values();
             $skilled = $details->where('display_status', 'T')->count();
+            $byLevel = $details->groupBy(fn ($item) => $item->material->level ?: 'Tanpa Level');
             $report[$skill] = [
                 'percentage' => $details->isNotEmpty() ? round($skilled / $details->count() * 100, 1) : 0,
                 'details' => $details,
-                'by_level' => $details->groupBy(fn ($item) => $item->material->level ?? 'Level 1'),
+                'by_level' => $byLevel,
+                'levels' => $byLevel->sortKeys(SORT_NATURAL)->map(fn (Collection $items, string $level) => [
+                    'level' => $level,
+                    'skilled' => $items->where('display_status', 'T')->count(),
+                    'total' => $items->count(),
+                ])->values()->all(),
             ];
         }
 

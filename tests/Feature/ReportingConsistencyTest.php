@@ -101,8 +101,8 @@ class ReportingConsistencyTest extends TestCase
         $this->assertSame(['T' => 6, 'P' => 0, 'K' => 0], $dashboard->viewData('stats')['status_counts']);
         $this->assertSame(0, $dashboard->viewData('stats')['perlu_perhatian']);
         $parent = $this->actingAs($wali)->get(route('wali.dashboard'))->assertOk();
-        $this->assertSame('T', $parent->viewData('skillCards')['baca']['status']);
-        $this->assertNull($parent->viewData('skillCards')['tulis']['status']);
+        $this->assertSame([['level' => 'Level 1', 'skilled' => 6, 'total' => 6]], $parent->viewData('reportData')['baca']['levels']);
+        $this->assertSame([], $parent->viewData('reportData')['tulis']['levels']);
         $this->assertDatabaseCount('student_progress', 26);
 
     }

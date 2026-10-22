@@ -21,10 +21,14 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   .status-T { background: #FFEDD5; color: #C2410C; font-weight: 700; }
   .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
+  .rapor-preview { overflow-x: auto; }
+  .rapor-preview .rapor-sheet { min-width: 640px; }
 
   @media print {
     .no-print { display: none !important; }
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .rapor-preview { overflow: visible !important; }
+    .rapor-preview .rapor-sheet { min-width: 0 !important; }
     .rapor-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 40px !important; }
     .rapor-table th, .rapor-table td { padding: 6px 10px; }
     @page { size: A4; margin: 15mm; }
@@ -64,6 +68,7 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
+<div class="rapor-preview" role="region" aria-label="Pratinjau rapor" tabindex="0">
 <div class="rapor-sheet max-w-[850px] mx-auto bg-white rounded-lg shadow-lg border border-[#cbd5e1] p-10 mb-6" style="font-family: 'Times New Roman', Times, serif;">
 
   <!-- Report Title -->
@@ -225,13 +230,6 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
 
   @include('rapor.attendance')
 
-  <!-- Radar Chart -->
-  <div class="flex justify-center mb-6">
-    <div style="width: 280px; height: 220px;">
-      <canvas id="waliRaporRadarChart"></canvas>
-    </div>
-  </div>
-
   <!-- Signature Section -->
   <div class="grid grid-cols-2 gap-8 mt-10" style="font-size: 13px;">
     <div class="text-center">
@@ -267,86 +265,11 @@ Laporan Rapor Periode {{ $periodInfo['number'] ?? '' }}
   @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
-
-<!-- Summary Cards (no-print) -->
-<div class="no-print max-w-[850px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-  @foreach(['baca' => ['Membaca', 'lucide:book-open', '#F97316'], 'tulis' => ['Menulis', 'lucide:pencil', '#F97316'], 'hitung' => ['Berhitung', 'lucide:calculator', '#FDBA74']] as $skillKey => [$label, $icon, $color])
-  <div class="bg-white rounded-2xl border border-[#dee1e6] p-5 shadow-sm">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: {{ $color }}15;">
-        <iconify-icon icon="{{ $icon }}" width="20" style="color: {{ $color }};"></iconify-icon>
-      </div>
-      <h4 class="text-sm font-bold text-[#171a1f]">{{ $label }}</h4>
-    </div>
-    <div class="flex items-end justify-between">
-      <span class="text-2xl font-black text-[#171a1f]">{{ round($reportData[$skillKey]['percentage']) }}%</span>
-      <span class="text-xs text-[#565d6d]">{{ $reportData[$skillKey]['details']->where('status', 'T')->count() }}/{{ $reportData[$skillKey]['details']->count() }} Terampil</span>
-    </div>
-    <div class="w-full h-2 bg-gray-100 rounded-full mt-3 overflow-hidden">
-      <div class="h-full rounded-full" style="width: {{ $reportData[$skillKey]['percentage'] }}%; background: {{ $color }};"></div>
-    </div>
-  </div>
-  @endforeach
 </div>
 
-@endsection
+<!-- Skill Summary (no-print) -->
+<section class="no-print max-w-[850px] mx-auto border-y border-[#dee1e6] py-6 mb-6" aria-label="Ringkasan materi per level">
+  @include('rapor.skill-summary', ['skillReport' => $reportData])
+</section>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const radarCtx = document.getElementById('waliRaporRadarChart');
-  if (!radarCtx) return;
-  
-  new Chart(radarCtx, {
-    type: 'radar',
-    data: {
-      labels: ['Membaca', 'Menulis', 'Berhitung'],
-      datasets: [{
-        label: 'Kompetensi (%)',
-        data: [{{ $reportData['baca']['percentage'] }}, {{ $reportData['tulis']['percentage'] }}, {{ $reportData['hitung']['percentage'] }}],
-        borderColor: '#9A3412',
-        backgroundColor: 'rgba(30,64,175,0.12)',
-        borderWidth: 2,
-        pointRadius: 5,
-        pointBackgroundColor: '#9A3412',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      scales: {
-        r: {
-          beginAtZero: true,
-          max: 100,
-          ticks: {
-            stepSize: 25,
-            font: { size: 10 },
-            callback: function(value) {
-              return value + '%';
-            }
-          },
-          grid: { color: '#e2e8f0' },
-          angleLines: { color: '#e2e8f0' },
-          pointLabels: {
-            font: { size: 11, weight: '600' },
-            color: '#1e293b'
-          }
-        }
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return context.label + ': ' + context.parsed.r + '%';
-            }
-          }
-        }
-      }
-    }
-  });
-});
-</script>
-@endpush
+@endsection

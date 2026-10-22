@@ -16,15 +16,15 @@
   .status-T { background: #FFEDD5; color: #C2410C; font-weight: 700; }
   .status-P { background: #FFEDD5; color: #9A3412; font-weight: 700; }
   .status-K { background: #f1f5f9; color: #475569; font-weight: 700; }
-  .admin-rapor-preview { overflow-x: auto; }
-  .admin-rapor-preview .rapor-sheet { min-width: 640px; }
+  .rapor-preview { overflow-x: auto; }
+  .rapor-preview .rapor-sheet { min-width: 640px; }
 
   @media print {
     .no-print { display: none !important; }
     body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     main { margin: 0 !important; padding: 0 !important; }
-    .admin-rapor-preview { overflow: visible !important; }
-    .admin-rapor-preview .rapor-sheet { min-width: 0 !important; }
+    .rapor-preview { overflow: visible !important; }
+    .rapor-preview .rapor-sheet { min-width: 0 !important; }
     .rapor-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 40px !important; }
     .rapor-table th, .rapor-table td { padding: 6px 10px; }
     @page { size: A4; margin: 15mm; }
@@ -86,7 +86,7 @@
 @endphp
 
 <!-- ==================== FORMAL REPORT CARD ==================== -->
-@if($isAdminReport ?? false)<div class="admin-rapor-preview">@endif
+<div class="rapor-preview" role="region" aria-label="Pratinjau rapor" tabindex="0">
 <div class="rapor-sheet max-w-[850px] mx-auto bg-white rounded-lg shadow-lg border border-[#cbd5e1] p-10 mb-6" style="font-family: 'Times New Roman', Times, serif;">
 
   <!-- Report Title -->
@@ -251,13 +251,6 @@
 
   @endunless
 
-  <!-- Radar Chart -->
-  <div class="flex justify-center mb-6">
-    <div style="width: 280px; height: 220px;">
-      <canvas id="raporRadarChart"></canvas>
-    </div>
-  </div>
-
   <!-- Signature Section -->
   <div class="grid grid-cols-2 gap-8 mt-10" style="font-size: 13px;">
     <div class="text-center">
@@ -291,7 +284,7 @@
   @endif
 </div>
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
-@if($isAdminReport ?? false)</div>@endif
+</div>
 
 <!-- Perbandingan Rapor Sebelumnya (no-print) -->
 @if($prevReportData)
@@ -368,46 +361,3 @@
 </div>
 @endif
 @endsection
-
-@if($student && $reportData)
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const radarCtx = document.getElementById('raporRadarChart').getContext('2d');
-new Chart(radarCtx, {
-  type: 'radar',
-  data: {
-    labels: ['Membaca', 'Menulis', 'Berhitung'],
-    datasets: [{
-      label: 'Kompetensi (%)',
-      data: [{{ $reportData['baca']['percentage'] }}, {{ $reportData['tulis']['percentage'] }}, {{ $reportData['hitung']['percentage'] }}],
-      borderColor: '#9A3412',
-      backgroundColor: 'rgba(30,64,175,0.12)',
-      borderWidth: 2,
-      pointRadius: 5,
-      pointBackgroundColor: '#9A3412',
-      pointHoverRadius: 7
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: true, position: 'bottom', labels: { font: { size: 11, family: 'sans-serif' } } }
-    },
-    scales: {
-      r: {
-        beginAtZero: true,
-        max: 100,
-        ticks: { stepSize: 25, font: { size: 9 }, color: '#64748b', backdropColor: 'transparent' },
-        grid: { color: 'rgba(30,64,175,0.1)' },
-        angleLines: { color: 'rgba(30,64,175,0.1)' },
-        pointLabels: { font: { size: 11, weight: '600' }, color: '#334155' }
-      }
-    }
-  }
-});
-});
-</script>
-@endpush
-@endif

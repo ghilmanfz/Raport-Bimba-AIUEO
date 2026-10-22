@@ -29,7 +29,7 @@
 
   <!-- Header -->
   <header class="no-print fixed top-0 left-0 right-0 h-16 bg-white/60 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-12">
-    <div class="flex items-center gap-3">
+    <div class="flex items-center min-w-0 gap-2 sm:gap-3">
       @php $headerLogo = \App\Models\Setting::get('institution_logo'); @endphp
       <div class="w-8 h-8 {{ $headerLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
         @if($headerLogo)
@@ -38,9 +38,9 @@
           <iconify-icon icon="lucide:graduation-cap" width="18" style="color:#fff"></iconify-icon>
         @endif
       </div>
-      <span class="font-bold text-lg lg:text-xl font-['Inter'] text-[#171a1f]">E-Rapor BiMBA AIUEO</span>
+      <span class="min-w-0 font-bold text-sm sm:text-lg lg:text-xl leading-tight font-['Inter'] text-[#171a1f]">E-Rapor BiMBA AIUEO</span>
     </div>
-    <div class="flex items-center gap-4 lg:gap-6">
+    <div class="flex items-center shrink-0 gap-1 sm:gap-4 lg:gap-6">
       @include('partials.notification-bell')
       <div class="h-8 w-px bg-[#dee1e6] hidden sm:block"></div>
       @include('partials.profile-dropdown')
@@ -90,7 +90,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 lg:ml-64 p-4 lg:p-8 overflow-x-hidden">
+    <main class="flex-1 min-w-0 lg:ml-64 p-4 lg:p-8 overflow-x-hidden">
       @yield('content')
     </main>
   </div>

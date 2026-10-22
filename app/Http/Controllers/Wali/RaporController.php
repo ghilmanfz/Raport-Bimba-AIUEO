@@ -26,7 +26,6 @@ class RaporController extends Controller
         $qrCodeBase64 = null;
         $attendanceReport = null;
         $periodOptions = [];
-        $prevReportData = null;
         if ($student) {
             $periods = app(ReportPeriodService::class);
             $period = $periods->select($student, $request->only('period_number', 'period_end'));
@@ -34,16 +33,13 @@ class RaporController extends Controller
             $reportData = app(ProgressReportService::class)->reportData($student, $period['cutoff']);
             $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
             $qrCodeBase64 = RaporDownloadController::generateQrBase64($student, $period);
-            if ($period['number'] === $periods->current($student)['number']) {
-                $prevReportData = app(ProgressReportService::class)->reportData($student, now()->startOfMonth()->subDay());
-            }
         }
 
         $institutionName = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
         $unitName = Setting::get('unit_name', '');
 
-        return view('wali.rapor', compact('children', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
+        return view('wali.rapor', compact('children', 'student', 'reportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
     }
 
     public function riwayat(Request $request)
@@ -79,19 +75,9 @@ class RaporController extends Controller
                     $snapshot = app(ProgressReportService::class)->reportData($student, $periodEnd);
                     foreach ($snapshot as $skill => $data) {
                         $periodData['skills'][$skill] = [
-                            'total' => $data['details']->count(),
-                            'skilled' => $data['details']->where('display_status', 'T')->count(),
-                            'percentage' => $data['percentage'],
+                            'levels' => $data['levels'],
                         ];
                     }
-
-                    // Calculate average
-                    $avgPercentage = 0;
-                    if (count($periodData['skills']) > 0) {
-                        $sum = array_sum(array_column($periodData['skills'], 'percentage'));
-                        $avgPercentage = round($sum / count($periodData['skills']), 1);
-                    }
-                    $periodData['average'] = $avgPercentage;
 
                     $riwayatData[] = $periodData;
 
@@ -126,9 +112,6 @@ class RaporController extends Controller
         $institutionAddress = Setting::get('institution_address', '');
         $unitName = Setting::get('unit_name', '');
 
-        // Previous period data (not used in print, but required by view)
-        $prevReportData = null;
-
         $periodInfo = [
             'number' => $periodNumber,
             'start' => $periodStart->format('d M Y'),
@@ -138,7 +121,6 @@ class RaporController extends Controller
         return view('wali.rapor-periode', compact(
             'student',
             'reportData',
-            'prevReportData',
             'institutionName',
             'institutionAddress',
             'unitName',

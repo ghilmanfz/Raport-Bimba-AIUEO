@@ -68,7 +68,7 @@ class ReportReviewTest extends TestCase
         $this->assertStringContainsString('Belum ada absensi tercatat', view('rapor.attendance', ['attendanceReport' => $report])->render());
     }
 
-    public function test_teacher_parent_and_pdf_share_attendance_without_changing_graph_values(): void
+    public function test_teacher_parent_and_pdf_share_attendance_without_report_charts(): void
     {
         [$guru, $wali, $student] = $this->family();
         $this->attendance($student, '2026-07-01', 'hadir');
@@ -85,7 +85,8 @@ class ReportReviewTest extends TestCase
             $response->assertSee('Hasil Absensi per Bulan')->assertSee('Total Periode 3 Bulan')->assertSee('Catatan khusus dari guru.')->assertDontSee('Aspek terkuat')->assertDontSee('Rata-Rata Penguasaan');
             $this->assertSame(3, $response->viewData('attendanceReport')['summary']['total']);
             $this->assertSame(100.0, $response->viewData('reportData')['baca']['percentage']);
-            $this->assertStringContainsString('data: [100, 100, 100]', $response->getContent());
+            $response->assertDontSee('<canvas', false)->assertDontSee('RadarChart');
+            $this->assertSame([['level' => 'Level 1', 'skilled' => 1, 'total' => 1]], $response->viewData('reportData')['baca']['levels']);
             preg_match('/<table class="rapor-table">(.*?)<\/table>/s', $response->getContent(), $grades);
             $this->assertStringNotContainsString('%', strip_tags($grades[1]));
         }

@@ -5,14 +5,11 @@
 
 @section('content')
 @php
-  $child = $selectedChildData ?? $childrenData->first();
-  $studentName = $child ? $child['student']->name : 'Anak';
-  $studentInitials = $child ? collect(explode(' ', $child['student']->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('') : '?';
-  $classroomName = $child ? ($child['student']->classroom?->name ?? '-') : '-';
-  $bacaPct = $child ? round($child['baca']) : 0;
-  $tulisPct = $child ? round($child['tulis']) : 0;
-  $hitungPct = $child ? round($child['hitung']) : 0;
-  $selectedStudentId = $child ? $child['student']->id : null;
+  $child = $selectedChild;
+  $studentName = $child ? $child->name : 'Anak';
+  $studentInitials = $child ? collect(explode(' ', $child->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('') : '?';
+  $classroomName = $child ? ($child->classroom?->name ?? '-') : '-';
+  $selectedStudentId = $child ? $child->id : null;
   $reportUrl = $selectedStudentId ? route('wali.rapor', ['student_id' => $selectedStudentId]) : route('wali.rapor');
   $statusClass = function ($status) {
     return $status === 'aktif' ? 'bg-[#DCFCE7] text-[#166534]' : ($status === 'lulus' ? 'bg-[#FEE2E2] text-[#991B1B]' : 'bg-[#FEF3C7] text-[#92400E]');
@@ -81,10 +78,10 @@
       <h3 class="text-base font-bold text-[#171a1f]">Status Siswa</h3>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-      @forelse($childrenData as $item)
+      @forelse($children as $item)
         <div class="flex items-center justify-between px-4 py-3 bg-[#fafafb] rounded-xl border border-[#eef0f3]">
-          <p class="text-sm font-medium text-[#171a1f]">{{ $item['student']->name }}</p>
-          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg {{ $statusClass($item['student']->status) }}">{{ ucfirst($item['student']->status) }}</span>
+          <p class="text-sm font-medium text-[#171a1f]">{{ $item->name }}</p>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-lg {{ $statusClass($item->status) }}">{{ ucfirst($item->status) }}</span>
         </div>
       @empty
         <p class="text-sm text-[#565d6d]">Belum ada data siswa.</p>
@@ -107,51 +104,13 @@
   <h2 class="text-xl font-bold text-[#171a1f]">Ringkasan Progres Saat Ini</h2>
 </div>
 
-<!-- 3 Subject Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-  @php
-    $skillVisuals = [
-      'baca' => ['icon' => 'lucide:book-open', 'bg' => 'bg-[#FFEDD5]', 'text' => 'text-[#F97316]', 'bar' => 'bg-[#F97316]'],
-      'tulis' => ['icon' => 'lucide:pencil', 'bg' => 'bg-[#DBEAFE]', 'text' => 'text-[#3B82F6]', 'bar' => 'bg-[#3B82F6]'],
-      'hitung' => ['icon' => 'lucide:calculator', 'bg' => 'bg-[#DCFCE7]', 'text' => 'text-[#22C55E]', 'bar' => 'bg-[#22C55E]'],
-    ];
-    $statusBadgeClasses = [
-      'T' => 'bg-[#FFEDD5] text-[#C2410C] border border-[#FDBA74]',
-      'P' => 'bg-[#DBEAFE] text-[#2563EB] border border-[#BFDBFE]',
-      'K' => 'bg-gray-100 text-[#171a1f] border border-gray-200',
-    ];
-  @endphp
-  @foreach(['baca', 'tulis', 'hitung'] as $skillKey)
-    @php
-      $card = $skillCards[$skillKey];
-      $visual = $skillVisuals[$skillKey];
-      $badgeClass = $statusBadgeClasses[$card['status']] ?? $statusBadgeClasses['K'];
-    @endphp
-    <div class="bg-white rounded-xl p-6 custom-shadow flex flex-col h-full">
-      <div class="flex justify-between items-start mb-6">
-        <div class="w-12 h-12 {{ $visual['bg'] }} rounded-2xl flex items-center justify-center">
-          <iconify-icon icon="{{ $visual['icon'] }}" width="24" class="{{ $visual['text'] }}"></iconify-icon>
-        </div>
-        <span class="{{ $badgeClass }} text-[10px] font-bold px-3 py-1 rounded-full">{{ $card['status'] ? 'Status: '.$card['status'] : 'Belum Dinilai' }}</span>
-      </div>
-      <h3 class="text-lg font-bold text-[#171a1f] mb-2">{{ $card['label'] }}</h3>
-      <p class="text-sm text-[#565d6d] mb-6 flex-1">{{ $card['description'] }}</p>
-      <div class="space-y-2 mb-6">
-        <div class="flex justify-between text-xs font-semibold">
-          <span>Progres Belajar</span>
-          <span>{{ $card['percentage'] }}%</span>
-        </div>
-        <div class="w-full h-2 bg-[#f3f4f6] rounded-full overflow-hidden">
-          <div class="h-full {{ $visual['bar'] }}" style="width: {{ $card['percentage'] }}%"></div>
-        </div>
-      </div>
-      <a href="{{ $reportUrl }}" class="w-full flex items-center justify-center gap-2 text-[#F97316] text-sm font-medium hover:underline">
-        Lihat Detail Laporan
-        <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
-      </a>
-    </div>
-  @endforeach
-</div>
+<section class="mb-8 border-y border-[#dee1e6] py-6" aria-label="Ringkasan materi per level">
+  @include('rapor.skill-summary', ['skillReport' => $reportData])
+  <a href="{{ $reportUrl }}" class="inline-flex items-center gap-2 mt-5 text-[#F97316] text-sm font-medium hover:underline">
+    Lihat Detail Laporan
+    <iconify-icon icon="lucide:arrow-right" width="16"></iconify-icon>
+  </a>
+</section>
 
 <!-- Jadwal Pembagian Rapor -->
 <div class="bg-white rounded-xl p-6 custom-shadow mb-8">
@@ -177,19 +136,7 @@
   </div>
 </div>
 
-<!-- Bottom Grid: Chart + Side Panels -->
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-  <!-- Chart Section (xl: 2/3) -->
-  <div class="xl:col-span-2 bg-white rounded-xl p-6 custom-shadow">
-    <h3 class="text-lg font-bold text-[#171a1f] mb-1">Grafik Perkembangan Kemampuan</h3>
-    <p class="text-sm text-[#565d6d] mb-6">Visualisasi pertumbuhan belajar selama 5 bulan terakhir</p>
-    <div class="h-[300px]">
-      <canvas id="waliDashboardChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Right Panels -->
-  <div class="space-y-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 items-start gap-6">
     <!-- Panduan Penilaian -->
     <div class="bg-[#fafafb] rounded-xl p-6 custom-shadow">
       <div class="flex items-center gap-2 mb-5">
@@ -254,7 +201,6 @@
         @endforelse
       </div>
     </div>
-  </div>
 </div>
 
 @endif
@@ -264,66 +210,3 @@
   <p class="text-xs text-[#565d6d]">© {{ date('Y') }} E-Rapor {{ $institutionName }}. All rights reserved.</p>
 </footer>
 @endsection
-
-@if($child)
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const waliDashboardChartData = @json($skillTrend);
-const waliCtx = document.getElementById('waliDashboardChart').getContext('2d');
-new Chart(waliCtx, {
-  type: 'line',
-  data: {
-    labels: waliDashboardChartData.labels,
-    datasets: [
-      {
-        label: waliDashboardChartData.series.baca.label,
-        data: waliDashboardChartData.series.baca.data,
-        borderColor: '#F97316',
-        backgroundColor: 'rgba(249,115,22,0.08)',
-        borderWidth: 2.5,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: '#F97316'
-      },
-      {
-        label: waliDashboardChartData.series.tulis.label,
-        data: waliDashboardChartData.series.tulis.data,
-        borderColor: '#3B82F6',
-        backgroundColor: 'rgba(99,233,143,0.08)',
-        borderWidth: 2.5,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: '#3B82F6'
-      },
-      {
-        label: waliDashboardChartData.series.hitung.label,
-        data: waliDashboardChartData.series.hitung.data,
-        borderColor: '#FDBA74',
-        backgroundColor: 'rgba(242,191,140,0.08)',
-        borderWidth: 2.5,
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: '#FDBA74'
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { size: 11, family: 'Roboto' } } }
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
-      y: { beginAtZero: true, max: 100, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } }
-    }
-  }
-});
-});
-</script>
-@endpush
-@endif
