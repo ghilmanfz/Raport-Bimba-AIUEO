@@ -32,54 +32,6 @@
   </div>
 </div>
 
-<!-- Charts Section -->
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-8">
-  <div class="xl:col-span-2 bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
-    <div class="flex justify-between items-start mb-6">
-      <div>
-        <h2 class="text-lg font-bold text-[#171a1f]">Distribusi Nilai Modul</h2>
-        <p class="text-sm text-[#565d6d]">Jumlah penilaian modul K/P/T pada siswa bimbingan aktif.</p>
-      </div>
-      <a href="{{ route('guru.nilai') }}" class="text-[#F97316] text-sm font-medium flex items-center gap-1 hover:underline">
-        Pengolahan Nilai
-        <iconify-icon icon="lucide:arrow-right" width="14"></iconify-icon>
-      </a>
-    </div>
-    <div class="h-56">
-      <canvas id="dashboardBarChart"></canvas>
-    </div>
-  </div>
-
-  <!-- Status Kompetensi Donut -->
-  <div class="bg-white p-6 rounded-xl border border-[#dee1e6] main-shadow">
-    <h2 class="text-lg font-bold text-[#171a1f]">Status Kompetensi</h2>
-    <p class="text-sm text-[#565d6d] mb-6">Berdasarkan modul yang sudah dinilai (K, P, T). Modul kosong tidak dihitung.</p>
-    <div class="relative w-40 h-40 mx-auto mb-6">
-      <canvas id="dashboardDonutChart"></canvas>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="text-center"><p class="text-lg font-bold text-[#171a1f]">{{ $stats['total_assessed'] ?? 0 }}</p><p class="text-xs text-[#565d6d]">penilaian modul</p></div>
-      </div>
-    </div>
-    <div class="grid grid-cols-2 gap-y-3 gap-x-2">
-      <div class="flex items-center gap-2">
-        <div class="w-3 h-3 bg-[#22C55E] rounded-full flex-shrink-0"></div>
-        <span class="text-xs text-[#565d6d]">Terampil (T)</span>
-        <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['T'] ?? 0 }}%</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-3 h-3 bg-[#3B82F6] rounded-full flex-shrink-0"></div>
-        <span class="text-xs text-[#565d6d]">Paham (P)</span>
-        <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['P'] ?? 0 }}%</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-3 h-3 bg-[#E2E8F0] rounded-full flex-shrink-0"></div>
-        <span class="text-xs text-[#565d6d]">Kenal (K)</span>
-        <span class="text-xs font-bold ml-auto">{{ $stats['status_percent']['K'] ?? 0 }}%</span>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Jadwal Otomatis Pembagian Rapor -->
 <section class="bg-white p-6 rounded-2xl main-shadow border border-gray-50 mt-8">
   <div class="mb-5">
@@ -133,52 +85,3 @@
   @endif
 </section>
 @endsection
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-const ctxBar = document.getElementById('dashboardBarChart').getContext('2d');
-new Chart(ctxBar, {
-  type: 'bar',
-  data: {
-    labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
-    datasets: [{
-      data: [{{ $stats['status_counts']['T'] ?? 0 }}, {{ $stats['status_counts']['P'] ?? 0 }}, {{ $stats['status_counts']['K'] ?? 0 }}],
-      backgroundColor: ['#22C55E', '#3B82F6', '#E2E8F0'],
-      borderRadius: 8,
-      borderSkipped: false,
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { display: false }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0' } },
-      y: { beginAtZero: true, grid: { color: 'rgba(222,225,230,0.5)' }, ticks: { font: { size: 11, family: 'Roboto' }, color: '#9095a0', stepSize: 1 } }
-    }
-  }
-});
-
-const ctxDonut = document.getElementById('dashboardDonutChart').getContext('2d');
-new Chart(ctxDonut, {
-  type: 'doughnut',
-  data: {
-    labels: ['Terampil (T)', 'Paham (P)', 'Kenal (K)'],
-    datasets: [{
-      data: [{{ $stats['status_counts']['T'] ?? 0 }}, {{ $stats['status_counts']['P'] ?? 0 }}, {{ $stats['status_counts']['K'] ?? 0 }}],
-      backgroundColor: ['#22C55E', '#3B82F6', '#E2E8F0'],
-      borderWidth: 0,
-      hoverOffset: 6
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: true,
-    cutout: '62%',
-    plugins: { legend: { display: false } }
-  }
-});
-});
-</script>
-@endpush

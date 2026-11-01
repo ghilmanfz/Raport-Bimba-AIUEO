@@ -286,58 +286,6 @@
 <!-- ==================== END FORMAL REPORT CARD ==================== -->
 </div>
 
-<!-- Perbandingan Rapor Sebelumnya (no-print) -->
-@if($prevReportData)
-<div class="no-print max-w-[850px] mx-auto bg-white rounded-2xl border border-[#dee1e6] p-6 shadow-sm mb-4">
-  <div class="flex items-center gap-2 mb-5">
-    <iconify-icon icon="lucide:git-compare" width="18" class="text-[#F97316]"></iconify-icon>
-    <h3 class="text-base font-bold text-[#171a1f]">Perbandingan dengan Periode Sebelumnya</h3>
-  </div>
-  <p class="text-xs text-[#565d6d] mb-4">Perbandingan pencapaian bulan ini vs bulan {{ now()->subMonth()->translatedFormat('F Y') }}</p>
-
-  <div class="space-y-4">
-    @foreach(['baca' => ['Membaca', '#F97316'], 'tulis' => ['Menulis', '#F97316'], 'hitung' => ['Berhitung', '#FDBA74']] as $skillKey => [$label, $color])
-    @php
-      $current = round($reportData[$skillKey]['percentage']);
-      $prev = round($prevReportData[$skillKey]['percentage']);
-      $diff = $current - $prev;
-    @endphp
-    <div>
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-sm font-semibold text-[#171a1f]">{{ $label }}</span>
-        <div class="flex items-center gap-3 text-sm">
-          <span class="text-[#9095a0]">{{ $prev }}%</span>
-          <iconify-icon icon="lucide:arrow-right" width="14" class="text-[#9095a0]"></iconify-icon>
-          <span class="font-bold text-[#171a1f]">{{ $current }}%</span>
-          @if($diff > 0)
-            <span class="flex items-center gap-0.5 text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:trending-up" width="12"></iconify-icon> +{{ $diff }}%
-            </span>
-          @elseif($diff < 0)
-            <span class="flex items-center gap-0.5 text-red-500 text-xs font-bold bg-red-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:trending-down" width="12"></iconify-icon> {{ $diff }}%
-            </span>
-          @else
-            <span class="flex items-center gap-0.5 text-[#9095a0] text-xs font-bold bg-gray-50 px-2 py-0.5 rounded-full">
-              <iconify-icon icon="lucide:minus" width="12"></iconify-icon> 0%
-            </span>
-          @endif
-        </div>
-      </div>
-      <div class="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-        <div class="absolute h-full rounded-full opacity-30" style="width: {{ $prev }}%; background: {{ $color }};"></div>
-        <div class="absolute h-full rounded-full" style="width: {{ $current }}%; background: {{ $color }};"></div>
-      </div>
-      <div class="flex justify-between mt-1">
-        <span class="text-[10px] text-[#9095a0]">{{ now()->subMonth()->translatedFormat('F') }}: {{ $prev }}%</span>
-        <span class="text-[10px] font-semibold" style="color: {{ $color }};">{{ now()->translatedFormat('F') }}: {{ $current }}%</span>
-      </div>
-    </div>
-    @endforeach
-  </div>
-</div>
-@endif
-
 <!-- Quick Action Cards (no-print) -->
 @unless($isAdminReport ?? false)
 <div class="no-print max-w-[850px] mx-auto">

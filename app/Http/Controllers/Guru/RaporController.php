@@ -39,7 +39,6 @@ class RaporController extends Controller
         $qrCodeBase64 = null;
         $attendanceReport = null;
         $periodOptions = [];
-        $prevReportData = null;
         if ($student) {
             $periods = app(ReportPeriodService::class);
             $period = $periods->select($student, $request->only('period_number', 'period_end'));
@@ -47,16 +46,13 @@ class RaporController extends Controller
             $reportData = app(ProgressReportService::class)->reportData($student, $period['cutoff']);
             $attendanceReport = app(AttendanceService::class)->forReport($student, $period);
             $qrCodeBase64 = RaporDownloadController::generateQrBase64($student, $period);
-            if ($period['number'] === $periods->current($student)['number']) {
-                $prevReportData = app(ProgressReportService::class)->reportData($student, now()->startOfMonth()->subDay());
-            }
         }
 
         $institutionName = Setting::get('institution_name', 'BiMBA AIUEO');
         $institutionAddress = Setting::get('institution_address', '');
         $unitName = Setting::get('unit_name', '');
 
-        return view('guru.rapor', compact('students', 'student', 'reportData', 'prevReportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
+        return view('guru.rapor', compact('students', 'student', 'reportData', 'institutionName', 'institutionAddress', 'unitName', 'qrCodeBase64', 'attendanceReport', 'periodOptions'));
     }
 
     public function saveNotes(Request $request)

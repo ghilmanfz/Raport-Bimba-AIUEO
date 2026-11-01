@@ -31,11 +31,11 @@
 
   <!-- Header -->
   <header class="no-print fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-[#dee1e6] z-50 flex items-center justify-between px-4 lg:px-8">
-    <div class="flex items-center gap-4">
-      <button id="mobile-menu-btn" class="lg:hidden p-2 hover:bg-gray-100 rounded-lg">
+    <div class="flex items-center min-w-0 gap-2 sm:gap-4">
+      <button id="mobile-menu-btn" class="lg:hidden shrink-0 p-2 hover:bg-gray-100 rounded-lg">
         <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
       </button>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center min-w-0 gap-2 sm:gap-3">
         @php $headerLogo = \App\Models\Setting::get('institution_logo'); @endphp
         <div class="w-8 h-8 {{ $headerLogo ? '' : 'logo-gradient' }} rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
           @if($headerLogo)
@@ -44,10 +44,10 @@
             <iconify-icon icon="lucide:graduation-cap" width="18" style="color:#fff"></iconify-icon>
           @endif
         </div>
-        <span class="font-bold text-lg text-[#0f172a]">E-Rapor BiMBA AIUEO</span>
+        <span class="min-w-0 font-bold text-sm sm:text-lg leading-tight text-[#0f172a]">E-Rapor BiMBA AIUEO</span>
       </div>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center shrink-0 gap-1 sm:gap-4">
       @include('partials.notification-bell')
       @include('partials.profile-dropdown')
     </div>

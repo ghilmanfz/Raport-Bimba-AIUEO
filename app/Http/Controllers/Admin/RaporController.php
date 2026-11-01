@@ -103,7 +103,6 @@ class RaporController extends Controller
             'attendanceReport' => app(AttendanceService::class)->forReport($student, $period),
             'periodOptions' => $periods->forYear($student, $reportYear),
             'qrCodeBase64' => RaporDownloadController::generateQrBase64($student, $period),
-            'prevReportData' => null,
             'institutionName' => Setting::get('institution_name', 'BiMBA AIUEO'),
             'institutionAddress' => Setting::get('institution_address', ''),
             'unitName' => Setting::get('unit_name', ''),

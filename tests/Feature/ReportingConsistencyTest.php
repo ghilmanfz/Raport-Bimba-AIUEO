@@ -98,8 +98,8 @@ class ReportingConsistencyTest extends TestCase
         $this->assertSame(100.0, $student->skillPercentage('baca'));
         $this->assertDatabaseCount('student_progress', 26);
         $dashboard = $this->actingAs($guru)->get(route('guru.dashboard'))->assertOk();
-        $this->assertSame(['T' => 6, 'P' => 0, 'K' => 0], $dashboard->viewData('stats')['status_counts']);
-        $this->assertSame(0, $dashboard->viewData('stats')['perlu_perhatian']);
+        $this->assertSame(['total_murid' => 1], $dashboard->viewData('stats'));
+        $dashboard->assertDontSee('Distribusi Nilai Modul')->assertDontSee('Status Kompetensi');
         $parent = $this->actingAs($wali)->get(route('wali.dashboard'))->assertOk();
         $this->assertSame([['level' => 'Level 1', 'skilled' => 6, 'total' => 6]], $parent->viewData('reportData')['baca']['levels']);
         $this->assertSame([], $parent->viewData('reportData')['tulis']['levels']);
